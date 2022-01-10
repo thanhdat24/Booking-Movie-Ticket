@@ -9,7 +9,7 @@
     "debug": "ndb server.js"
   },
   "author": "",
-  "license": "ISC", 
+  "license": "ISC",
   "devDependencies": {
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -23,6 +23,7 @@
     "prettier": "^2.5.1"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
     "mongoose": "^5.13.14",
