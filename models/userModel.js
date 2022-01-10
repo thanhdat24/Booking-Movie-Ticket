@@ -23,6 +23,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide a password'],
     minlength: 8,
+    // Không tự hiện thị
+    select: false,
   },
   passwordConfirm: {
     type: String,
@@ -39,7 +41,7 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre('save', async function (next) {
-    // Only run this function if password was actually modified
+  // Only run this function if password was actually modified
   if (!this.isModified('password')) return next();
 
   // Hash the password with cost of 12
@@ -49,6 +51,13 @@ userSchema.pre('save', async function (next) {
   this.passwordConfirm = undefined;
   next();
 });
+
+userSchema.methods.correctPassword = async function (
+  candiatePassword,
+  userPassword
+) {
+  return await bcrypt.compare(candiatePassword, userPassword);
+};
 
 const User = mongoose.model('User', userSchema);
 
