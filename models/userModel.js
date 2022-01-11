@@ -19,6 +19,11 @@ const userSchema = new mongoose.Schema({
   photo: {
     type: String,
   },
+  role: {
+    type: String,
+    enum: ['user', 'guide', 'lead-guide', 'admin'],
+    default: 'user',
+  },
   password: {
     type: String,
     required: [true, 'Please provide a password'],
@@ -42,7 +47,6 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre('save', async function (next) {
-
   // Only run this function if password was actually modified
   if (!this.isModified('password')) return next();
 
@@ -67,7 +71,6 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
       this.passwordChangeAt.getTime() / 1000,
       10
     );
-    console.log(changedTimestamp, JWTTimestamp);
     return JWTTimestamp < changedTimestamp; // 100 < 200
   }
 
