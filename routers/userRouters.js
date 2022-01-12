@@ -15,15 +15,11 @@ router.patch(
   authController.updatePassword
 );
 
+router.patch('/updateMe', authController.protect, userController.updateMe);
+
 router
   .route('/')
   .get(userController.getAllUsers)
   .post(userController.createUser);
-
-router
-  .route('/:id')
-  .get(userController.getUserByID)
-  .put(userController.updateUpdate)
-  .delete(userController.deleteUser);
 
 module.exports = router;
