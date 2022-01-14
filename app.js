@@ -4,6 +4,8 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const tourRoutes = require('./routers/tourRouters');
 const userRoutes = require('./routers/userRouters');
+const reviewRouters = require('./routers/reviewRouters');
+
 const rateLimit = require('express-rate-limit');
 const app = express();
 
@@ -31,6 +33,7 @@ app.use((req, res, next) => {
 // 3) Router
 app.use('/api/v1/tours', tourRoutes);
 app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/reviews', reviewRouters);
 
 // trả về đường dẫn not found
 app.all('*', (req, res, next) => {
