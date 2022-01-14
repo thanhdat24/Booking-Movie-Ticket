@@ -1,6 +1,7 @@
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
+const factory = require('../controllers/handlerFactory');
 
 const filterObj = (obj, ...allowedField) => {
   const newObj = {};
@@ -10,16 +11,6 @@ const filterObj = (obj, ...allowedField) => {
   return newObj;
 };
 
-exports.getAllUsers = catchAsync(async (req, res) => {
-  const users = await User.find();
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      users,
-    },
-  });
-});
 
 exports.getUserByID = (req, res) => {
   res.status(500).send({ status: 'error', message: 'Not Found' });
@@ -42,6 +33,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   // 2) Update user document
   // Get filtered name and email
   const filteredBody = filterObj(req.body, 'name', 'email', 'active');
+  
   const updateUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
     runValidators: true,
@@ -60,3 +52,9 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
     status: 'success ',
   });
 });
+
+exports.getAllUsers = factory.getAll(User);
+exports.getDetailUser = factory.getOne(User);
+// Do Not update password with this
+exports.updateUser = factory.updateOne(User);
+exports.deleteUser = factory.deleteOne(User);
