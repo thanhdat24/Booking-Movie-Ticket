@@ -55,24 +55,24 @@ const userSchema = new mongoose.Schema({
 });
 
 // DOCUMENT MIDDLEWARE: runs before .save() and .create()
-userSchema.pre('save', async function (next) {
-  // Only run this function if password was actually modified
-  if (!this.isModified('password')) return next();
+// userSchema.pre('save', async function (next) {
+//   // Only run this function if password was actually modified
+//   if (!this.isModified('password')) return next();
 
-  // Hash the password with cost of 12
-  this.password = await bcrypt.hash(this.password, 12);
+//   // Hash the password with cost of 12
+//   this.password = await bcrypt.hash(this.password, 12);
 
-  // Delete passwordConfirm field
-  this.passwordConfirm = undefined;
-  next();
-});
+//   // Delete passwordConfirm field
+//   this.passwordConfirm = undefined;
+//   next();
+// });
 
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password') || this.isNew) return next();
+// userSchema.pre('save', async function (next) {
+//   if (!this.isModified('password') || this.isNew) return next();
 
-  this.passwordChangeAt = Date.now() - 1000;
-  next();
-});
+//   this.passwordChangeAt = Date.now() - 1000;
+//   next();
+// });
 
 userSchema.pre(/^find/, function (next) {
   // this points to the current query

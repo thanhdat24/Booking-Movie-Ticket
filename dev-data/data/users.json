@@ -1,0 +1,83 @@
+[
+  {
+    "_id": "61e6922ac61b162464fcac61",
+    "role": "admin",
+    "active": true,
+    "name": "admin",
+    "email": "admin@gmail.com",
+    "password": "$2a$12$JkKnQNdSG6.e3Deoz7kaP.6gLyIQ.2g4ElurDkE3ZyZfuNIWwSbum",
+    "photo": "http://www.gravatar.com/avatar/75d23af433e0cea4c0e45a56dba18b30?s=100"
+  },
+  {
+    "_id": "61e69231c61b162464fcac63",
+    "role": "user",
+    "active": true,
+    "name": "user",
+    "email": "user@gmail.com",
+    "password": "$2a$12$nvSZTHytJMyaJqP8DbmFbuHk2BijoJpHFMsRD1eYVbMvu9HJMn4P2",
+    "photo": "http://www.gravatar.com/avatar/cba1f2d695a5ca39ee6f343297a761a4?s=100"
+  },
+  {
+    "_id": "61e69235c61b162464fcac65",
+    "role": "user",
+    "active": true,
+    "name": "Dat",
+    "email": "dat@gmail.com",
+    "password": "$2a$12$021fauNvtLnikq4W.ZNIzOObxGAHUocNxmbWNO2/VNEpxibMlf5Uu",
+    "photo": "http://www.gravatar.com/avatar/22aaded312328dff38c34a056769c2b1?s=100"
+  },
+  {
+    "_id": "61e6923dc61b162464fcac67",
+    "role": "user",
+    "active": true,
+    "name": "Diep",
+    "email": "diep@gmail.com",
+    "password": "$2a$12$dujNQvsrX/Cs2ZBPNyV4hOBCcIu7ZihRPgfzZssbOIZIsI.bicgyS",
+    "photo": "http://www.gravatar.com/avatar/97be4a5d79f7b22693445f98dbd980e9?s=100"
+  },
+  {
+    "_id": "61e69242c61b162464fcac69",
+    "role": "user",
+    "active": true,
+    "name": "Ngan",
+    "email": "ngan@gmail.com",
+    "password": "$2a$12$Sbcw3fqA8A4dqOBsW03zMunRtrla9o2sIheoDPQ/gjI9SPvGFCRNS",
+    "photo": "http://www.gravatar.com/avatar/edebd928acd98a8385a0d51cd44a024a?s=100"
+  },
+  {
+    "_id": "61e69248c61b162464fcac6b",
+    "role": "user",
+    "active": true,
+    "name": "Hung",
+    "email": "hung@gmail.com",
+    "password": "$2a$12$gsTGQ14CK5Fi.BZ2wgBo0OOrdNUBGEom3GCir8404rvtj6OLuVaj6",
+    "photo": "http://www.gravatar.com/avatar/fdce3d61d22844f5f343fe5629bc0d71?s=100"
+  },
+  {
+    "_id": "61e6924cc61b162464fcac6d",
+    "role": "user",
+    "active": true,
+    "name": "Ti",
+    "email": "ti@gmail.com",
+    "password": "$2a$12$D7arZvTAQmIHd5qyTdIdiunZoNjmhaLXMsGGHIlWVv2mJAY..52kq",
+    "photo": "http://www.gravatar.com/avatar/964945466de20e2e76d351a6017af82f?s=100"
+  },
+  {
+    "_id": "61e69252c61b162464fcac6f",
+    "role": "user",
+    "active": true,
+    "name": "Teo",
+    "email": "teo@gmail.com",
+    "password": "$2a$12$JV9dv9ZWotXp0uc24Cd5muHBvynGwTVwwYiTSYa3xHNSK3PcwFesu",
+    "photo": "http://www.gravatar.com/avatar/4ef11b411fab56fdf29847472fa63b8f?s=100"
+  },
+  {
+    "_id": "61e69258c61b162464fcac71",
+    "role": "user",
+    "active": true,
+    "name": "Dung",
+    "email": "dung@gmail.com",
+    "password": "$2a$12$5zg8ydmaJkwQG8B134R.Oey368QPLnAqKBpofbgEQos5BCrAKz0RC",
+    "photo": "http://www.gravatar.com/avatar/ddad182f52c2d7cf1d3a28ef805e33e1?s=100"
+  }
+]

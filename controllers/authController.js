@@ -5,6 +5,8 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const sendEmail = require('../utils/email');
 const crypto = require('crypto');
+const gravatarUrl = require('gravatar');
+
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
@@ -36,6 +38,12 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
+  // create avatar default
+  const avatarUrl = gravatarUrl.url(req.body.email, {
+    protocol: 'http',
+    s: '100',
+  });
+
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
@@ -43,6 +51,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm,
     passwordChangeAt: req.body.passwordChangeAt,
     role: req.body.role,
+    photo: avatarUrl,
   });
   createSendToken(newUser, 201, res);
 });
