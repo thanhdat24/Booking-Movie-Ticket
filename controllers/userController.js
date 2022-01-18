@@ -11,13 +11,9 @@ const filterObj = (obj, ...allowedField) => {
   return newObj;
 };
 
-
-exports.getUserByID = (req, res) => {
-  res.status(500).send({ status: 'error', message: 'Not Found' });
-};
-
-exports.createUser = (req, res) => {
-  res.status(500).send({ status: 'error', message: 'Not Found' });
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
 };
 
 exports.updateMe = catchAsync(async (req, res, next) => {
@@ -33,7 +29,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   // 2) Update user document
   // Get filtered name and email
   const filteredBody = filterObj(req.body, 'name', 'email', 'active');
-  
+
   const updateUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
     runValidators: true,
