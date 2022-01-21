@@ -27,7 +27,7 @@ mongoose
   });
 
 // lắng nghe event kết nối
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 const server = app.listen(port, () => {
   console.log(`App listening on port ${port}...`);
 });

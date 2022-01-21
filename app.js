@@ -6,15 +6,17 @@ const globalErrorHandler = require('./controllers/errorController');
 const tourRoutes = require('./routers/tourRouters');
 const userRoutes = require('./routers/userRouters');
 const reviewRouters = require('./routers/reviewRouters');
-
+const swaggerDocument = require('./swagger/swagger.json');
+const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const app = express();
 
-app.set('view engine', 'pug');
-app.set('views', path.join(__dirname, 'views'));
+// const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 
 // Serving static files
 app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(`${__dirname}/public`));
 
 // 1) Global Middleware
 console.log(process.env.NODE_ENV);
@@ -36,11 +38,12 @@ app.use((req, res, next) => {
   next();
 });
 
-// 3) Router
-app.get('/', (req, res) => {
-  res.status(200).render('base');
-});
+// const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+// 3) Router
+
+app.use(cors());
 app.use('/api/v1/tours', tourRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/reviews', reviewRouters);

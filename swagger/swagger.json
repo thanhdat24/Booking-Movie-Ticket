@@ -1,0 +1,140 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "v1",
+    "title": "My API",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "tags": [
+    {
+      "name": "QuanLyNguoiDung"
+    }
+  ],
+  "servers": [{ "url": "http://127.0.0.1:8080/" }],
+  "paths": {
+    "/api/v1/users": {
+      "get": {
+        "tags": ["QuanLyNguoiDung"],
+        "parameters": [
+          {
+            "in": "header",
+            "type": "string",
+            "description": "access token",
+            "name": "Authorization",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "schema": {
+            "type": "string"
+          },
+          "headers": {
+            "X-Rate-Limit": {
+              "type": "integer",
+              "format": "int32",
+              "description": "calls per hour allowed by the user"
+            },
+            "X-Expires-After": {
+              "type": "string",
+              "format": "date-time",
+              "description": "date in UTC when token expires"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/users/login": {
+      "post": {
+        "tags": ["QuanLyNguoiDung"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "dangnhap",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "default": "admin@gmail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "default": "Dat123456"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v1/users/signup": {
+      "post": {
+        "tags": ["QuanLyNguoiDung"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "dangky",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "default": "string"
+                },
+                "email": {
+                  "type": "string",
+                  "default": "string"
+                },
+                "password": {
+                  "type": "string",
+                  "default": "string"
+                },
+                "passwordConfirm": { "type": "string", "default": "string" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v1/users/getMe": {
+      "post": {
+        "tags": ["QuanLyNguoiDung"],
+        "parameters": [
+          {
+            "in": "header",
+            "type": "string",
+            "description": "access token",
+            "name": "Authorization",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  }
+}
