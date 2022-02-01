@@ -19,6 +19,10 @@ import {
   TextField,
   IconButton,
   Divider,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 
 import Button from "@mui/material/Button";
@@ -44,7 +48,7 @@ const ContentStyle = styled("div")(({ theme }) => ({
   minHeight: "100vh",
   flexDirection: "column",
   justifyContent: "center",
-  padding: theme.spacing(12, 0),
+  padding: theme.spacing(7, 0),
 }));
 
 export default function Register() {
@@ -60,10 +64,12 @@ export default function Register() {
   });
   const formik = useFormik({
     initialValues: {
-      name: "DatLe",
+      fullName: "DatLe",
       email: "user@gmail.com",
+      gender: "Name",
       password: "Dat123456",
       passwordConfirm: "Dat123456",
+      dateOfBirth: "2022/01/02",
       remember: true,
     },
     validationSchema: LoginSchema,
@@ -73,7 +79,11 @@ export default function Register() {
   });
   const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } =
     formik;
+  const [age, setAge] = React.useState("");
 
+  const handleChange = (event) => {
+    setAge(event.target.value);
+  };
   return (
     <div className="flex">
       <AuthLayout></AuthLayout>
@@ -93,7 +103,7 @@ export default function Register() {
             </Typography>
           </Stack>
 
-          <Stack direction="row" spacing={2}>
+          {/* <Stack direction="row" spacing={2}>
             <Button
               fullWidth
               size="large"
@@ -122,13 +132,13 @@ export default function Register() {
             >
               <Icon icon={twitterFill} color="#1C9CEA" height={24} />
             </Button>
-          </Stack>
-
+          </Stack> */}
+          {/* 
           <Divider sx={{ my: 3 }}>
             <Typography variant="body2" sx={{ color: "text.secondary" }}>
               OR
             </Typography>
-          </Divider>
+          </Divider> */}
 
           <FormikProvider value={formik}>
             <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
@@ -137,12 +147,36 @@ export default function Register() {
                   fullWidth
                   autoComplete="name"
                   type="text"
-                  label="Username"
-                  {...getFieldProps("name")}
+                  label="Họ tên"
+                  {...getFieldProps("fullName")}
                   error={Boolean(touched.name && errors.name)}
                   helperText={touched.name && errors.name}
                 />
+                <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+                  <TextField
+                    fullWidth
+                    label="Số điện thoại"
+                    {...getFieldProps("phoneNumber")}
+                    error={Boolean(touched.firstName && errors.firstName)}
+                    helperText={touched.firstName && errors.firstName}
+                  />
 
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">
+                      Giới Tính
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={age}
+                      label="Giới Tính"
+                      onChange={handleChange}
+                    >
+                      <MenuItem value={10}>Nam</MenuItem>
+                      <MenuItem value={20}>Nữ</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Stack>
                 <TextField
                   fullWidth
                   autoComplete="email"
@@ -200,6 +234,17 @@ export default function Register() {
                     touched.passwordConfirm && errors.passwordConfirm
                   )}
                   helperText={touched.passwordConfirm && errors.passwordConfirm}
+                />
+                <TextField
+                  id="date"
+                  label="Ngày tháng năm sinh"
+                  type="date"
+                  defaultValue="2017-05-24"
+                  sx={{ width: 480 }}
+                  {...getFieldProps("dateOfBirth")}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
                 />
                 <LoadingButton
                   fullWidth
