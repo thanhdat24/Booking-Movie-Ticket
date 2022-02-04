@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { useFormik, Form, FormikProvider } from "formik";
 import * as Yup from "yup";
 import { Link as RouterLink } from "react-router-dom";
@@ -22,6 +22,7 @@ import {
   IconButton,
   FormControlLabel,
   Divider,
+  Alert,
 } from "@mui/material";
 
 import Button from "@mui/material/Button";
@@ -51,7 +52,9 @@ const ContentStyle = styled("div")(({ theme }) => ({
 }));
 
 export default function Login() {
-  // const { currentUser } = useSelector((state) => state.UserManagement);
+  const { errorLogin, currentUser, loadingLogin } = useSelector(
+    (state) => state.UserManagement
+  );
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -90,7 +93,7 @@ export default function Login() {
 
       <Container maxWidth="sm">
         <ContentStyle>
-          <Stack sx={{ mb: 5 }}>
+          <Stack sx={{ mb: 3 }}>
             <Typography
               variant="h4"
               gutterBottom
@@ -100,7 +103,7 @@ export default function Login() {
             </Typography>
           </Stack>
 
-          <Stack direction="row" spacing={2}>
+          {/* <Stack direction="row" spacing={2}>
             <Button
               fullWidth
               size="large"
@@ -129,17 +132,27 @@ export default function Login() {
             >
               <Icon icon={twitterFill} color="#1C9CEA" height={24} />
             </Button>
-          </Stack>
+          </Stack> */}
 
-          <Divider sx={{ my: 3 }}>
+          {/* <Divider sx={{ my: 3 }}>
             <Typography variant="body2" sx={{ color: "text.secondary" }}>
               OR
             </Typography>
-          </Divider>
+          </Divider> */}
 
           <FormikProvider value={formik}>
             <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
               <Stack spacing={3}>
+                {errorLogin && (
+                  <Fragment>
+                    <Alert severity="error">{errorLogin}</Alert>
+                  </Fragment>
+                )}
+                {currentUser && (
+                  <Fragment>
+                    <Alert severity="success">Đăng nhập thành công!</Alert>
+                  </Fragment>
+                )}
                 <TextField
                   fullWidth
                   autoComplete="username"
@@ -200,7 +213,7 @@ export default function Login() {
                 size="large"
                 type="submit"
                 variant="contained"
-                loading={isSubmitting}
+                loading={loadingLogin}
                 color="success"
               >
                 Đăng nhập

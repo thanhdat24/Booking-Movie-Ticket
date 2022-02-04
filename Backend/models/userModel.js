@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
     trim: true,
   },
   phoneNumber: {
-    type: Number,
+    type: String,
     required: [true, 'Please provide your phoneNumber'],
     unique: true,
     validate: {
@@ -39,15 +39,6 @@ const userSchema = new mongoose.Schema({
   dateOfBirth: {
     type: Date,
     required: [true, 'Please provide your date of birth'],
-    validate: {
-      validator: function (day) {
-        return /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/.test(
-          day
-        );
-      },
-      message: (props) => `${props.value} is not a valid day!`,
-    },
-    required: [true, 'Date of Birth required'],
   },
   photo: {
     type: String,

@@ -1,7 +1,7 @@
-import React from "react";
-import { useFormik, Form, FormikProvider } from "formik";
+import React, { Fragment, useEffect } from "react";
+import { useFormik, Form, FormikProvider, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import eyeFill from "@iconify/icons-eva/eye-fill";
 import eyeOffFill from "@iconify/icons-eva/eye-off-fill";
@@ -18,27 +18,38 @@ import {
   InputAdornment,
   TextField,
   IconButton,
-  Divider,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
+  Alert,
 } from "@mui/material";
 
-import Button from "@mui/material/Button";
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
 import AuthLayout from "../../layouts/AuthLayout";
-import { useDispatch } from "react-redux";
-import { register } from "../../redux/actions/UserManagement";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  register,
+  resetErrorLoginRegister,
+} from "../../redux/actions/UserManagement";
 
+const RootStyle = styled("div")(({ theme }) => ({
+  [theme.breakpoints.up("md")]: {
+    display: "flex",
+  },
+}));
 const SectionStyle = styled(Card)(({ theme }) => ({
-  width: "100%",
-  maxWidth: 580,
+  width: "auto%",
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
   margin: theme.spacing(2, 0, 2, 2),
+  height: "auto",
+  boxShadow:
+    "rgb(145 158 171 / 24%) 0px 0px 2px 0px, rgb(145 158 171 / 24%) 0px 16px 32px -4px",
+  borderRadius: "16px",
+  zIndex: 0,
 }));
 
 const ContentStyle = styled("div")(({ theme }) => ({
@@ -48,44 +59,81 @@ const ContentStyle = styled("div")(({ theme }) => ({
   minHeight: "100vh",
   flexDirection: "column",
   justifyContent: "center",
-  padding: theme.spacing(7, 0),
+  padding: theme.spacing(2, 0),
 }));
 
 export default function Register() {
+  const { errorRegister, loadingRegister, responseRegister } = useSelector(
+    (state) => state.UserManagement
+  );
+  let location = useLocation();
+  const history = useHistory();
+  useEffect(() => {
+    if (responseRegister) {
+      // đăng ký thành công thì đăng nhập, responseRegister để bỏ qua componentditmount
+      setTimeout(() => {
+        history.push("/login", location.state);
+      }, 1000);
+    }
+  }, [responseRegister]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetErrorLoginRegister());
+    };
+  }, []);
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
   const dispatch = useDispatch();
 
-  const LoginSchema = Yup.object().shape({
+  const phoneRegExp =
+    /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/;
+
+  const RegisterSchema = Yup.object().shape({
+    fullName: Yup.string().required("*Họ tên không được bỏ trống !"),
     email: Yup.string()
-      .email("Email must be a valid email address")
-      .required("Email is required"),
-    password: Yup.string().required("Password is required"),
+      .required("*Email không được bỏ trống !")
+      .email("* Email không hợp lệ "),
+    password: Yup.string().required("*Mật khẩu không được bỏ trống!"),
+    passwordConfirm: Yup.string().oneOf(
+      [Yup.ref("password"), null],
+      "*Mật khẩu và mật khẩu xác nhận phải khớp!"
+    ),
+    phoneNumber: Yup.string()
+      .required("*Số điện thoại không được bỏ trống!")
+      .matches(phoneRegExp, "Số điện thoại không hợp lệ!"),
+    gender: Yup.string().required("*Giới tính không được bỏ trống!"),
+    dateOfBirth: Yup.date()
+      .required("*Ngày sinh không được bỏ trống!")
+      .test("checkAge", "Ngày phải nhỏ hơn ngày hôm nay", (value) => {
+        var today = new Date();
+        return value < today;
+      }),
   });
   const formik = useFormik({
     initialValues: {
-      fullName: "DatLe",
-      email: "user@gmail.com",
-      gender: "Name",
+      fullName: "user",
+      email: "",
+      phoneNumber: "0912419245",
+      gender: "",
       password: "Dat123456",
       passwordConfirm: "Dat123456",
-      dateOfBirth: "2022/01/02",
+      dateOfBirth: "",
       remember: true,
     },
-    validationSchema: LoginSchema,
+    validationSchema: RegisterSchema,
     onSubmit: (user) => {
       dispatch(register(user));
     },
   });
-  const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } =
-    formik;
-  const [age, setAge] = React.useState("");
+  const { errors, touched, handleSubmit, getFieldProps } = formik;
+  const [gender, setGender] = useState(10);
 
   const handleChange = (event) => {
-    setAge(event.target.value);
+    setGender(event.target.value);
   };
   return (
-    <div className="flex">
+    <RootStyle>
       <AuthLayout></AuthLayout>
       <SectionStyle>
         <img src="../img/illustration_register.png" alt="login" />
@@ -93,13 +141,13 @@ export default function Register() {
 
       <Container maxWidth="sm">
         <ContentStyle>
-          <Stack sx={{ mb: 5 }}>
+          <Stack sx={{ mb: 2 }}>
             <Typography
               variant="h4"
               gutterBottom
               className="text-3xl font-bold text-primary text-green-600 text-center mb-8"
             >
-              Đăng ký
+              Đăng ký MovieApp!
             </Typography>
           </Stack>
 
@@ -143,38 +191,57 @@ export default function Register() {
           <FormikProvider value={formik}>
             <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
               <Stack spacing={3}>
+                {errorRegister && (
+                  <Fragment>
+                    <Alert severity="error">{errorRegister}</Alert>
+                  </Fragment>
+                )}
+                {responseRegister && (
+                  <Fragment>
+                    <Alert severity="success">Đăng ký thành công!</Alert>
+                  </Fragment>
+                )}
                 <TextField
                   fullWidth
-                  autoComplete="name"
+                  autoComplete="fullName"
                   type="text"
                   label="Họ tên"
                   {...getFieldProps("fullName")}
-                  error={Boolean(touched.name && errors.name)}
-                  helperText={touched.name && errors.name}
+                  error={Boolean(touched.fullName && errors.fullName)}
+                  helperText={touched.fullName && errors.fullName}
                 />
                 <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
                   <TextField
                     fullWidth
                     label="Số điện thoại"
                     {...getFieldProps("phoneNumber")}
-                    error={Boolean(touched.firstName && errors.firstName)}
-                    helperText={touched.firstName && errors.firstName}
+                    error={Boolean(touched.phoneNumber && errors.phoneNumber)}
+                    helperText={touched.phoneNumber && errors.phoneNumber}
                   />
-
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">
-                      Giới Tính
-                    </InputLabel>
+                  <FormControl
+                    fullWidth
+                    error={Boolean(touched.gender && errors.gender)}
+                  >
+                    <InputLabel id="select-gender">Giới Tính</InputLabel>
                     <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={age}
+                      labelId="select-gender"
+                      id="select-gender"
+                      value={gender}
                       label="Giới Tính"
                       onChange={handleChange}
+                      {...getFieldProps("gender")}
                     >
-                      <MenuItem value={10}>Nam</MenuItem>
-                      <MenuItem value={20}>Nữ</MenuItem>
+                      <MenuItem value={`Nam`}>Nam</MenuItem>
+                      <MenuItem value={`Nữ`}>Nữ</MenuItem>
                     </Select>
+                    <ErrorMessage
+                      name="gender"
+                      render={(msg) => (
+                        <span className="text-red-600 text-xs mt-1 ml-3">
+                          {msg}
+                        </span>
+                      )}
+                    />
                   </FormControl>
                 </Stack>
                 <TextField
@@ -239,19 +306,20 @@ export default function Register() {
                   id="date"
                   label="Ngày tháng năm sinh"
                   type="date"
-                  defaultValue="2017-05-24"
                   sx={{ width: 480 }}
                   {...getFieldProps("dateOfBirth")}
                   InputLabelProps={{
                     shrink: true,
                   }}
+                  error={Boolean(touched.dateOfBirth && errors.dateOfBirth)}
+                  helperText={touched.dateOfBirth && errors.dateOfBirth}
                 />
                 <LoadingButton
                   fullWidth
                   size="large"
                   type="submit"
                   variant="contained"
-                  loading={isSubmitting}
+                  loading={loadingRegister}
                   color="success"
                 >
                   Đăng ký
@@ -274,6 +342,6 @@ export default function Register() {
           </Typography>
         </ContentStyle>
       </Container>
-    </div>
+    </RootStyle>
   );
 }

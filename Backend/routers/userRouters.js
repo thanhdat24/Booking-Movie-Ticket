@@ -8,6 +8,7 @@ router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 router.post('/forgotPassword', authController.forgetPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
+router.route('/isExists').get(userController.DuplicateField);
 
 //Protect all routers after this middleware
 router.use(authController.protect);

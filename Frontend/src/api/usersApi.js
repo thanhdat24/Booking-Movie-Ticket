@@ -9,6 +9,10 @@ const usersApi = {
     const path = "/v1/users/signup";
     return axiosClient.post(path, user);
   },
+  checkPhoneExists: (phone) => {
+    const path = `/v1/users/isExists?phoneNumber=${phone}`;
+    return axiosClient.get(path);
+  },
 };
 
 export default usersApi;

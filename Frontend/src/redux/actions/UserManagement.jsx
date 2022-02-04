@@ -1,16 +1,20 @@
 import usersApi from "../../api/usersApi";
 import {
   LOGIN_FAIL,
+  LOGIN_REQUEST,
   LOGIN_SUCCESS,
   REGISTER_FAIL,
+  REGISTER_REQUEST,
   REGISTER_SUCCESS,
+  REQUIRED,
+  RESET_ERROR_LOGIN_REGISTER,
 } from "../types/UserManagement";
 export const login = (user) => {
   return async (dispatch) => {
     try {
-      //   dispatch({
-      //     type: LOGIN_REQUEST,
-      //   });
+      dispatch({
+        type: LOGIN_REQUEST,
+      });
       const result = await usersApi.postLogin(user);
       console.log("result", result);
       dispatch({
@@ -21,22 +25,21 @@ export const login = (user) => {
         },
       });
     } catch (error) {
-      // dispatch({
-      //   type: LOGIN_FAIL,
-      //   payload: {
-      //     error: error.response?.data.message,
-      //   },
-      // });
-      console.log("error.response?.data", error.response?.data.message);
+      dispatch({
+        type: LOGIN_FAIL,
+        payload: {
+          error: error.response?.data.message,
+        },
+      });
     }
   };
 };
 
 export const register = (user) => {
   return (dispatch) => {
-    // dispatch({
-    //   type: REGISTER_REQUEST,
-    // });
+    dispatch({
+      type: REGISTER_REQUEST,
+    });
     usersApi
       .postRegister(user)
       .then((result) => {
@@ -51,16 +54,17 @@ export const register = (user) => {
         dispatch({
           type: REGISTER_FAIL,
           payload: {
-            error: error.response?.data ? error.response.data : error.message,
+            error: error.response?.data.message,
           },
         });
-        // console.log("erro error.messager", error.message);
-
-        // console.log("error.response?.data", error.response?.data);
-        // console.log(
-        //   "error.response?.data.message",
-        //   error.response?.data.message
-        // );
       });
+  };
+};
+
+export const resetErrorLoginRegister = () => {
+  return (dispatch) => {
+    dispatch({
+      type: RESET_ERROR_LOGIN_REGISTER,
+    });
   };
 };
