@@ -1,7 +1,7 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { useFormik, Form, FormikProvider } from "formik";
 import * as Yup from "yup";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import eyeFill from "@iconify/icons-eva/eye-fill";
 import eyeOffFill from "@iconify/icons-eva/eye-off-fill";
@@ -55,7 +55,23 @@ export default function Login() {
   const { errorLogin, currentUser, loadingLogin } = useSelector(
     (state) => state.UserManagement
   );
+  const history = useHistory();
+  let location = useLocation();
   const dispatch = useDispatch();
+    useEffect(() => {
+      // đăng nhập thành công thì quay về trang trước đó
+      if (currentUser) {
+        if (location.state === "/") {
+          // nếu trang trước đó là "/" thì phải hiện loading do trang home mất nhiều thời gian tải
+          // dispatch({ type: LOADING_BACKTO_HOME });
+          setTimeout(() => {
+            history.push("/");
+          }, 50);
+          return undefined;
+        }
+        history.push(location.state);
+      }
+    }, [currentUser]);
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({

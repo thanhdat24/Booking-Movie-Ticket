@@ -19,10 +19,8 @@ export const login = (user) => {
       console.log("result", result);
       dispatch({
         type: LOGIN_SUCCESS,
-        payload: {
-          data: result.data,
-          token: result.data.token,
-        },
+        data: result.data,
+        token: result.data.token,
       });
     } catch (error) {
       dispatch({

@@ -28,10 +28,10 @@ export const UserManagement = (state = stateDefault, action) => {
     }
     case LOGIN_SUCCESS: {
       console.log(action);
-      const { payload } = action;
-      localStorage.setItem(USER_LOGIN, JSON.stringify(payload));
-      localStorage.setItem(TOKEN, payload.token);
-      return { ...state, currentUser: payload.data, loadingLogin: false };
+      const { data, token } = action;
+      localStorage.setItem(USER_LOGIN, JSON.stringify(data, token));
+      localStorage.setItem(TOKEN, token);
+      return { ...state, currentUser: data, loadingLogin: false };
     }
     case LOGIN_FAIL: {
       return {
