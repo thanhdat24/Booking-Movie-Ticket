@@ -155,13 +155,11 @@ export default function AdminLayout(props) {
   };
   const menuItem = [
     {
-      id: 0,
       title: "List",
       path: "/admin/users/list",
       icon: <Icon icon="ci:dot-02-s" color="#637381" hFlip={true} />,
     },
     {
-      id: 1,
       title: "Account",
       path: "/admin/users/account",
       icon: <Icon icon="ci:dot-02-s" color="#637381" hFlip={true} />,
@@ -173,7 +171,6 @@ export default function AdminLayout(props) {
       icon: <Icon icon="ci:dot-02-s" color="#637381" hFlip={true} />,
     },
     {
-      id: 3,
       title: "Edit",
       path: "/admin/users/edit",
       icon: <Icon icon="ci:dot-02-s" color="#637381" hFlip={true} />,
@@ -341,13 +338,12 @@ export default function AdminLayout(props) {
             }}
           >
             <List component="div" disablePadding>
-              {menuItem.map((item) => (
+              {menuItem.map((item, index) => (
                 <ListItemButton
+                  key={index}
                   sx={{ pl: 4 }}
-                  selected={selectedIndex === item.id}
-                  onClick={(event) =>
-                    handleClickItem(event, item.path, item.id)
-                  }
+                  selected={selectedIndex === index}
+                  onClick={(event) => handleClickItem(event, item.path, index)}
                 >
                   <ListItemIcon>{item.icon}</ListItemIcon>
                   <ListItemText

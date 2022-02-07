@@ -17,7 +17,8 @@ import {
 } from "@mui/material";
 // components
 import MenuPopover from "./MenuPopover";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { LOGOUT } from "../../redux/types/UserManagement";
 //
 
 // ----------------------------------------------------------------------
@@ -43,6 +44,7 @@ const MENU_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
+  const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.UserManagement);
 
   const anchorRef = useRef(null);
@@ -120,7 +122,18 @@ export default function AccountPopover() {
         ))}
 
         <Box sx={{ p: 2, pt: 1.5 }}>
-          <Button fullWidth color="inherit" variant="outlined">
+          <Button
+            fullWidth
+            color="inherit"
+            variant="outlined"
+            sx={{
+              backgroundColor: "rgb(255, 255, 255)",
+              border: "1px solid rgba(145, 158, 171, 0.32)",
+              boxShadow:
+                "rgb(145 158 171 / 24%) 0px 0px 2px 0px, rgb(145 158 171 / 24%) -20px 20px 40px",
+            }}
+            onClick={() => dispatch({ type: LOGOUT })}
+          >
             Logout
           </Button>
         </Box>

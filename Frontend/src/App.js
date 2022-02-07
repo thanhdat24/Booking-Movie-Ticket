@@ -11,6 +11,7 @@ import shape from "./theme/shape";
 import palette from "./theme/palette";
 import typography from "./theme/typography";
 import shadows, { customShadows } from "./theme/shadows";
+import componentsOverride from "./theme/overrides";
 
 function App() {
   const themeOptions = useMemo(
@@ -25,6 +26,8 @@ function App() {
   );
 
   const theme = createTheme(themeOptions);
+  theme.components = componentsOverride(theme);
+
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>

@@ -58,20 +58,20 @@ export default function Login() {
   const history = useHistory();
   let location = useLocation();
   const dispatch = useDispatch();
-    useEffect(() => {
-      // đăng nhập thành công thì quay về trang trước đó
-      if (currentUser) {
-        if (location.state === "/") {
-          // nếu trang trước đó là "/" thì phải hiện loading do trang home mất nhiều thời gian tải
-          // dispatch({ type: LOADING_BACKTO_HOME });
-          setTimeout(() => {
-            history.push("/");
-          }, 50);
-          return undefined;
-        }
-        history.push(location.state);
+  useEffect(() => {
+    // đăng nhập thành công thì quay về trang trước đó
+    if (currentUser) {
+      if (location.state === "/") {
+        // nếu trang trước đó là "/" thì phải hiện loading do trang home mất nhiều thời gian tải
+        // dispatch({ type: LOADING_BACKTO_HOME });
+        setTimeout(() => {
+          history.push("/");
+        }, 50);
+        return undefined;
       }
-    }, [currentUser]);
+      history.push(location.state);
+    }
+  }, [currentUser]);
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
@@ -208,7 +208,6 @@ export default function Login() {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      color="success"
                       {...getFieldProps("remember")}
                       checked={values.remember}
                     />
@@ -216,10 +215,7 @@ export default function Login() {
                   label="Ghi nhớ tôi"
                 />
 
-                <Link
-                  to="/"
-                  class="text-green-600 font-bold text-sm no-underline hover:underline"
-                >
+                <Link to="/" component={RouterLink} variant="subtitle2">
                   Quên mật khẩu?
                 </Link>
               </Stack>
@@ -230,7 +226,6 @@ export default function Login() {
                 type="submit"
                 variant="contained"
                 loading={loadingLogin}
-                color="success"
               >
                 Đăng nhập
               </LoadingButton>
@@ -244,7 +239,6 @@ export default function Login() {
               variant="subtitle2"
               component={RouterLink}
               to="/register"
-              class="text-green-600 font-bold "
             >
               Đăng ký ngay
             </Link>
