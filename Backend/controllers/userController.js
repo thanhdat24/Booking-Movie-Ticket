@@ -28,7 +28,13 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   }
   // 2) Update user document
   // Get filtered name and email
-  const filteredBody = filterObj(req.body, 'name', 'email', 'active');
+  const filteredBody = filterObj(
+    req.body,
+    'fullName',
+    'phoneNumber',
+    'gender',
+    'dateOfBirth'
+  );
 
   const updateUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
@@ -39,6 +45,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     data: {
       user: updateUser,
     },
+    content: 'Cập nhật thành công!',
   });
 });
 
