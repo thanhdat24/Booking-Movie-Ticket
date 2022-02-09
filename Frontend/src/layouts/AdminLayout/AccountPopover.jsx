@@ -18,7 +18,8 @@ import {
 // components
 import MenuPopover from "./MenuPopover";
 import { useDispatch, useSelector } from "react-redux";
-import { LOGOUT } from "../../redux/types/UserManagement";
+import { LOGOUT } from "../../redux/types/Auth";
+
 //
 
 // ----------------------------------------------------------------------
@@ -45,7 +46,7 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
   const dispatch = useDispatch();
-  const { currentUser } = useSelector((state) => state.UserManagement);
+  const { currentUser } = useSelector((state) => state.AuthReducer);
 
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);

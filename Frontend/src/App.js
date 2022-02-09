@@ -4,6 +4,8 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import UsersManagement from "./pages/UsersManagement";
+import UserProfile from "./pages/UserProfile";
+
 import AdminRoute from "./guards/AdminRoute";
 import AdminLayout from "./layouts/AdminLayout";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -32,7 +34,7 @@ function App() {
     <BrowserRouter>
       <ThemeProvider theme={theme}>
         <Switch>
-          <Route exact path={["/admin/users/list"]}>
+          <Route exact path={["/admin/users/list", "/admin/users/account"]}>
             <AdminLayout>
               {" "}
               <AdminRoute
@@ -40,17 +42,11 @@ function App() {
                 path="/admin/users/list"
                 component={UsersManagement}
               />
-              {/* <AdminRoute
-              exact
-              path="/admin/movies"
-              component={MoviesManagement}
-            />
-  
-            <AdminRoute
-              exact
-              path="/admin/showtimes"
-              component={CreateShowtime}
-            /> */}
+              <AdminRoute
+                exact
+                path="/admin/users/account"
+                component={UserProfile}
+              />
             </AdminLayout>
           </Route>
           <Route exact path={["/login", "/register"]}>

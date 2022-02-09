@@ -1,8 +1,8 @@
 import usersApi from "../../api/usersApi";
 import {
-  GET_USER_LIST_FAIL,
-  GET_USER_LIST_REQUEST,
-  GET_USER_LIST_SUCCESS,
+  GET_USER_FAIL,
+  GET_USER_REQUEST,
+  GET_USER_SUCCESS,
   LOGIN_FAIL,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -10,8 +10,12 @@ import {
   REGISTER_REQUEST,
   REGISTER_SUCCESS,
   RESET_ERROR_LOGIN_REGISTER,
-  RESET_USER_LIST,
-} from "../types/UserManagement";
+  RESET_UPDATE,
+  UPDATE_USER_FAIL,
+  UPDATE_USER_REQUEST,
+  UPDATE_USER_SUCCESS,
+} from "../types/Auth";
+
 export const login = (user) => {
   return async (dispatch) => {
     try {
@@ -19,7 +23,6 @@ export const login = (user) => {
         type: LOGIN_REQUEST,
       });
       const result = await usersApi.postLogin(user);
-      console.log("result", result);
       dispatch({
         type: LOGIN_SUCCESS,
         data: result.data,
@@ -62,24 +65,27 @@ export const register = (user) => {
   };
 };
 
-export const getUsersList = () => {
+export const updateCurrentUser = (currentUser) => {
   return (dispatch) => {
     dispatch({
-      type: GET_USER_LIST_REQUEST,
+      type: UPDATE_USER_REQUEST,
     });
     usersApi
-      .getUsersList()
+      .updateCurrentUser(currentUser)
       .then((result) => {
+        console.log("result", result);
         dispatch({
-          type: GET_USER_LIST_SUCCESS,
+          type: UPDATE_USER_SUCCESS,
           payload: {
+            status: result.data.status,
             data: result.data,
+            token: result.data.token,
           },
         });
       })
       .catch((error) => {
         dispatch({
-          type: GET_USER_LIST_FAIL,
+          type: UPDATE_USER_FAIL,
           payload: {
             error: error,
           },
@@ -87,19 +93,20 @@ export const getUsersList = () => {
       });
   };
 };
-export const resetErrorLoginRegister = () => {
+
+export const resetUpdate = () => {
   return (dispatch) => {
     dispatch({
-      type: RESET_ERROR_LOGIN_REGISTER,
+      type: RESET_UPDATE,
     });
   };
 };
 
 
-export const resetUserList = () => {
+export const resetErrorLoginRegister = () => {
   return (dispatch) => {
     dispatch({
-      type: RESET_USER_LIST,
+      type: RESET_ERROR_LOGIN_REGISTER,
     });
   };
 };

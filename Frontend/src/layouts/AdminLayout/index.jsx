@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { SnackbarProvider } from "notistack";
 import { useSelector } from "react-redux";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -123,6 +123,7 @@ const Drawer = styled(MuiDrawer, {
     "& .MuiDrawer-paper": closedMixin(theme),
   }),
 }));
+
 export default function AdminLayout(props) {
   const classes = useStyles();
   const [selectedIndex, setSelectedIndex] = useState(1);
@@ -134,7 +135,7 @@ export default function AdminLayout(props) {
   const theme = useTheme();
   const [openDrawer, setOpenDrawer] = useState(true);
   const [open, setOpen] = useState(false);
-  const { currentUser } = useSelector((state) => state.UserManagement);
+  const { currentUser } = useSelector((state) => state.AuthReducer);
   const handleClickItem = (event, item, index) => {
     history.push(item);
     handleListItemClick(event, index);
@@ -145,9 +146,6 @@ export default function AdminLayout(props) {
   }
   const handleClick = () => {
     setOpen(!open);
-  };
-  const handleDrawerOpen = () => {
-    setOpenDrawer(true);
   };
 
   const handleDrawerClose = () => {
@@ -176,189 +174,197 @@ export default function AdminLayout(props) {
       icon: <Icon icon="ci:dot-02-s" color="#637381" hFlip={true} />,
     },
   ];
-  return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar position="fixed" open={openDrawer} className={classes.root}>
-        <ToolbarStyle>
-          {/* <Toolbar className={classes.toolBar}>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              edge="start"
-              sx={{
-                marginRight: "36px",
-                ...(openDrawer && { display: "none" }),
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
-          </Toolbar> */}
-          <Searchbar />
-          <Box sx={{ flexGrow: 1 }} />
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={{ xs: 0.5, sm: 1.5 }}
-          >
-            {/* <NotificationsPopover /> */}
-            <AccountPopover />
-          </Stack>
-        </ToolbarStyle>
-      </AppBar>
 
-      <Drawer variant="permanent" open={openDrawer}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            flexShrink: 0,
-            ...(!openDrawer && {
-              alignItems: "center",
-            }),
-          }}
-        >
-          <DrawerHeader
-            sx={{
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-            className={classes.DrawerBox}
-          >
-            <Box sx={{ px: 2, py: 3 }}>
-              <Box
-                component={RouterLink}
-                to="/"
-                sx={{ display: "inline-flex" }}
-              >
-                <Box
-                  component="img"
-                  src="/img/logo.svg"
-                  sx={{ width: 40, height: 40 }}
-                />
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                ...(!openDrawer && { display: "none" }),
-              }}
-            >
-              <IconButton onClick={handleDrawerClose}>
-                {theme.direction === "rtl" ? (
-                  <ChevronRightIcon />
-                ) : (
-                  <ChevronLeftIcon />
-                )}
-              </IconButton>
-            </Box>
-          </DrawerHeader>
-          <Box sx={{ mb: 5, mx: 2.5 }}>
-            <Link underline="none" component={RouterLink} to="#">
-              <AccountStyle
+  return (
+    <SnackbarProvider maxSnack={3}>
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <AppBar position="fixed" open={openDrawer} className={classes.root}>
+          <ToolbarStyle>
+            {/* <Toolbar className={classes.toolBar}>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
                 sx={{
-                  ...(!openDrawer && {
-                    backgroundColor: "transparent",
-                    alignItems: "center",
-                  }),
+                  marginRight: "36px",
+                  ...(openDrawer && { display: "none" }),
                 }}
               >
-                <Avatar src={currentUser.user.photo} alt="photoURL" />
+                <MenuIcon />
+              </IconButton>
+            </Toolbar> */}
+            <Searchbar />
+            <Box sx={{ flexGrow: 1 }} />
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={{ xs: 0.5, sm: 1.5 }}
+            >
+              {/* <NotificationsPopover /> */}
+              <AccountPopover />
+            </Stack>
+          </ToolbarStyle>
+        </AppBar>
+
+        <Drawer variant="permanent" open={openDrawer}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              flexShrink: 0,
+              ...(!openDrawer && {
+                alignItems: "center",
+              }),
+            }}
+          >
+            <DrawerHeader
+              sx={{
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+              className={classes.DrawerBox}
+            >
+              <Box sx={{ px: 2, py: 3 }}>
                 <Box
+                  component={RouterLink}
+                  to="/"
+                  sx={{ display: "inline-flex" }}
+                >
+                  <Box
+                    component="img"
+                    src="/img/logo.svg"
+                    sx={{ width: 40, height: 40 }}
+                  />
+                </Box>
+              </Box>
+              <Box
+                sx={{
+                  ...(!openDrawer && { display: "none" }),
+                }}
+              >
+                <IconButton onClick={handleDrawerClose}>
+                  {theme.direction === "rtl" ? (
+                    <ChevronRightIcon />
+                  ) : (
+                    <ChevronLeftIcon />
+                  )}
+                </IconButton>
+              </Box>
+            </DrawerHeader>
+            <Box sx={{ mb: 5, mx: 2.5 }}>
+              <Link underline="none" component={RouterLink} to="#">
+                <AccountStyle
                   sx={{
-                    ml: 2,
                     ...(!openDrawer && {
-                      display: "none",
+                      backgroundColor: "transparent",
+                      alignItems: "center",
                     }),
                   }}
                 >
-                  <Typography
-                    variant="subtitle2"
-                    sx={{ color: "text.primary" }}
+                  <Avatar src={currentUser.user.photo} alt="photoURL" />
+                  <Box
+                    sx={{
+                      ml: 2,
+                      ...(!openDrawer && {
+                        display: "none",
+                      }),
+                    }}
                   >
-                    {currentUser.user.fullName}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    {currentUser.user.role}
-                  </Typography>
-                </Box>
-              </AccountStyle>
-            </Link>
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ color: "text.primary" }}
+                    >
+                      {currentUser.user.fullName}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "text.secondary" }}
+                    >
+                      {currentUser.user.role}
+                    </Typography>
+                  </Box>
+                </AccountStyle>
+              </Link>
+            </Box>
           </Box>
-        </Box>
-        <List
-          sx={{
-            width: "100%",
-            maxWidth: 360,
-            backgroundColor: "background.paper",
-            padding: "0px 16px",
-          }}
-          component="nav"
-          aria-labelledby="nested-list-subheader"
-        >
-          <ListItemButton
-            onClick={handleClick}
+          <List
             sx={{
-              backgroundColor: "rgba(0, 171, 85, 0.08)",
-              color: "rgb(0, 171, 85)",
-              borderRadius: "8px",
+              width: "100%",
+              maxWidth: 360,
+              backgroundColor: "background.paper",
+              padding: "0px 16px",
             }}
+            component="nav"
+            aria-labelledby="nested-list-subheader"
           >
-            <ListItemIcon>
-              <Icon
-                icon={peopleFill}
-                width={23}
-                height={23}
-                color="#00ab55"
+            <ListItemButton
+              onClick={handleClick}
+              sx={{
+                backgroundColor: "rgba(0, 171, 85, 0.08)",
+                color: "rgb(0, 171, 85)",
+                borderRadius: "8px",
+              }}
+            >
+              <ListItemIcon>
+                <Icon
+                  icon={peopleFill}
+                  width={23}
+                  height={23}
+                  color="#00ab55"
+                  sx={{
+                    ...(!openDrawer && {
+                      marginRight: "20px",
+                    }),
+                  }}
+                />
+              </ListItemIcon>
+              <ListItemText
+                primary="User"
                 sx={{
                   ...(!openDrawer && {
-                    marginRight: "20px",
+                    display: "none",
                   }),
                 }}
               />
-            </ListItemIcon>
-            <ListItemText
-              primary="User"
+              {open ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+            <Collapse
+              in={open}
+              timeout="auto"
+              unmountOnExit
               sx={{
                 ...(!openDrawer && {
                   display: "none",
                 }),
               }}
-            />
-            {open ? <ExpandLess /> : <ExpandMore />}
-          </ListItemButton>
-          <Collapse
-            in={open}
-            timeout="auto"
-            unmountOnExit
-            sx={{
-              ...(!openDrawer && {
-                display: "none",
-              }),
-            }}
-          >
-            <List component="div" disablePadding>
-              {menuItem.map((item, index) => (
-                <ListItemButton
-                  key={index}
-                  sx={{ pl: 4 }}
-                  selected={selectedIndex === index}
-                  onClick={(event) => handleClickItem(event, item.path, index)}
-                >
-                  <ListItemIcon>{item.icon}</ListItemIcon>
-                  <ListItemText
-                    primary={item.title}
-                    style={{ color: "#637381" }}
-                  />
-                </ListItemButton>
-              ))}
-            </List>
-          </Collapse>
-        </List>
-      </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        {props.children}
+            >
+              <List component="div" disablePadding>
+                {menuItem.map((item, index) => (
+                  <ListItemButton
+                    key={index}
+                    sx={{ pl: 4 }}
+                    selected={selectedIndex === index}
+                    onClick={(event) =>
+                      handleClickItem(event, item.path, index)
+                    }
+                  >
+                    <ListItemIcon>{item.icon}</ListItemIcon>
+                    <ListItemText
+                      primary={item.title}
+                      style={{ color: "#637381" }}
+                    />
+                  </ListItemButton>
+                ))}
+              </List>
+            </Collapse>
+          </List>
+        </Drawer>
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          {props.children}
+        </Box>
       </Box>
-    </Box>
+    </SnackbarProvider>
   );
 }

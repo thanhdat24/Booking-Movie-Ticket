@@ -1,8 +1,8 @@
 import { TOKEN, USER_LOGIN } from "../../constants/config";
 import {
-  GET_USER_LIST_FAIL,
-  GET_USER_LIST_REQUEST,
-  GET_USER_LIST_SUCCESS,
+  GET_USER_FAIL,
+  GET_USER_REQUEST,
+  GET_USER_SUCCESS,
   LOGIN_FAIL,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -10,12 +10,15 @@ import {
   REGISTER_FAIL,
   REGISTER_REQUEST,
   REGISTER_SUCCESS,
-  REQUIRED,
-  RESET_USER_LIST,
-} from "../types/UserManagement";
+  RESET_UPDATE,
+  UPDATE_USER_FAIL,
+  UPDATE_USER_REQUEST,
+  UPDATE_USER_SUCCESS,
+} from "../types/Auth";
 const currentUser = localStorage.getItem(USER_LOGIN)
   ? JSON.parse(localStorage.getItem(USER_LOGIN))
   : null;
+
 const stateDefault = {
   currentUser: currentUser,
   loadingLogin: false,
@@ -25,12 +28,15 @@ const stateDefault = {
   loadingRegister: false,
   errorRegister: null,
 
-  usersList: null,
-  loadingUsersList: false,
-  errorUsersList: null,
+  successUpdateUser: null,
+  loadingUpdateUser: false,
+  errorUpdateUser: null,
+
+  successGetUser: null,
+  currentGetUser: null,
 };
 
-export const UserManagement = (state = stateDefault, action) => {
+export const AuthReducer = (state = stateDefault, action) => {
   switch (action.type) {
     case LOGIN_REQUEST: {
       return { ...state, loadingLogin: true, errorLogin: null }; // error: null trong trường error đang báo lỗi, nhấn đăng nhập lại thì cần reset lại không báo lỗi nữa
@@ -61,7 +67,6 @@ export const UserManagement = (state = stateDefault, action) => {
       return { ...state, loadingRegister: true, errorRegister: null };
     }
     case REGISTER_SUCCESS: {
-      console.log(action);
       return {
         ...state,
         responseRegister: action.payload.data,
@@ -75,28 +80,41 @@ export const UserManagement = (state = stateDefault, action) => {
         loadingRegister: false,
       };
     }
-    case GET_USER_LIST_REQUEST: {
-      return { ...state, loadingUsersList: true, errorUsersList: null };
-    }
-    case GET_USER_LIST_SUCCESS: {
+
+    case UPDATE_USER_REQUEST: {
       return {
         ...state,
-        usersList: action.payload.data,
-        loadingUsersList: false,
+        loadingUpdateUser: true,
+        errorUpdateUser: null,
+        successUpdateUser: null,
       };
     }
-    case GET_USER_LIST_FAIL: {
+    case UPDATE_USER_SUCCESS: {
+      const { data, token, status } = action.payload;
+      localStorage.setItem(USER_LOGIN, JSON.stringify(data, token));
+      localStorage.setItem(TOKEN, token);
       return {
         ...state,
-        errorUsersList: action.payload.error,
-        loadingUsersList: false,
+        loadingUpdateUser: false,
+        successUpdateUser: status,
+        errorUpdateUser: null,
+        currentUser: data,
       };
     }
-    case RESET_USER_LIST: {
+    case UPDATE_USER_FAIL: {
       return {
         ...state,
-        errorUsersList: null,
-      }
+        loadingUpdateUser: false,
+        errorUpdateUser: action.payload.error,
+        successUpdateUser: null,
+      };
+    }
+    case RESET_UPDATE: {
+      return {
+        ...state,
+        successUpdateUser: "",
+        errorUpdateUser: null,
+      };
     }
     default:
       return { ...state };

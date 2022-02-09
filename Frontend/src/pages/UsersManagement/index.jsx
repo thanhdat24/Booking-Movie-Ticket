@@ -1,5 +1,4 @@
-import React, { Fragment, useEffect } from "react";
-import { sentenceCase } from "change-case";
+import React, { useEffect } from "react";
 import {
   Card,
   Table,
@@ -17,6 +16,7 @@ import {
   Breadcrumbs,
   Link,
 } from "@mui/material";
+import { useSnackbar } from "notistack";
 
 import { Link as RouterLink } from "react-router-dom";
 import { filter } from "lodash";
@@ -25,10 +25,7 @@ import { useState } from "react";
 import plusFill from "@iconify/icons-eva/plus-fill";
 // import UserListToolbar from "../../components/user";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getUsersList,
-  resetUserList,
-} from "../../redux/actions/UserManagement";
+import { getUsersList, resetUserList } from "../../redux/actions/Users";
 import UserListHead from "../../components/user/UserListHead";
 import UserListToolbar from "../../components/user/UserListToolbar";
 import UserMoreMenu from "../../components/user/UserMoreMenu";
@@ -89,23 +86,40 @@ function applySortFilter(array, comparator, query) {
 
 export default function UsersManagement() {
   const dispatch = useDispatch();
-  const { usersList, loadingUsersList, errorUsersList } = useSelector(
+  const { enqueueSnackbar } = useSnackbar();
+  const { usersList, successDelete, errorDelete } = useSelector(
     (state) => state.UserManagement
   );
-  console.log("usersList", usersList);
-  useEffect(() => {
-    // get list user lần đầu
-    if (!usersList) {
-      dispatch(getUsersList());
-    }
-    return () => dispatch(resetUserList());
-  }, [usersList]);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState("name");
   const [filterName, setFilterName] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  useEffect(() => {
+    // get list user lần đầu
+    if (!usersList) {
+      dispatch(getUsersList());
+    }
+    return () => dispatch(resetUserList());
+  }, []);
+
+  useEffect(() => {
+    if (successDelete) {
+      dispatch(getUsersList());
+    }
+  }, [successDelete]);
+
+  useEffect(() => {
+    if (successDelete) {
+      enqueueSnackbar(successDelete, { variant: "success" });
+      return;
+    }
+    if (errorDelete) {
+      enqueueSnackbar(errorDelete, { variant: "error" });
+    }
+  }, [successDelete, errorDelete]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -284,7 +298,7 @@ export default function UsersManagement() {
                       </TableCell>
 
                       <TableCell align="right">
-                        <UserMoreMenu />
+                        <UserMoreMenu keyItemId={_id} />
                       </TableCell>
                     </TableRow>
                   );
@@ -320,26 +334,3 @@ export default function UsersManagement() {
     </Container>
   );
 }
-
-// import React, { useEffect } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import {
-//   getUsersList,
-//   resetUserList,
-// } from "../../redux/actions/UserManagement";
-
-// export default function UserManagement() {
-//   const dispatch = useDispatch();
-//   const { usersList, loadingUsersList, errorUsersList } = useSelector(
-//     (state) => state.UserManagement
-//   );
-//   console.log("usersList", usersList);
-//   useEffect(() => {
-//     // get list user lần đầu
-//     if (!usersList) {
-//       dispatch(getUsersList());
-//     }
-//     return () => dispatch(resetUserList());
-//   }, [usersList]);
-//   return <div>123</div>;
-// }

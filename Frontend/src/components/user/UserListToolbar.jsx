@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { Icon } from "@iconify/react";
 import searchFill from "@iconify/icons-eva/search-fill";
-import trash2Fill from "@iconify/icons-eva/trash-2-fill";
+import trash2Fill from "@iconify/icons-eva/trash-2-outline";
 import roundFilterList from "@iconify/icons-ic/round-filter-list";
 // material
 import { styled } from "@mui/material/styles";
@@ -81,7 +81,7 @@ export default function UserListToolbar({
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
+        <Tooltip title="Xoá">
           <IconButton>
             <Icon icon={trash2Fill} />
           </IconButton>

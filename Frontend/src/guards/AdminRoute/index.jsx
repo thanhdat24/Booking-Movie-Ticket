@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { Redirect, Route, useLocation } from "react-router";
 
 const AdminRoute = (props) => {
-  const { currentUser } = useSelector((state) => state.UserManagement);
+  const { currentUser } = useSelector((state) => state.AuthReducer);
   const { component: ComponentAdmin, ...rest } = props;
   let location = useLocation();
 

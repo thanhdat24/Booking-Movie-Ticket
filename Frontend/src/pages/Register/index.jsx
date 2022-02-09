@@ -29,10 +29,8 @@ import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
 import AuthLayout from "../../layouts/AuthLayout";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  register,
-  resetErrorLoginRegister,
-} from "../../redux/actions/UserManagement";
+import { register, resetErrorLoginRegister } from "../../redux/actions/Auth";
+
 
 const RootStyle = styled("div")(({ theme }) => ({
   [theme.breakpoints.up("md")]: {
@@ -64,7 +62,7 @@ const ContentStyle = styled("div")(({ theme }) => ({
 
 export default function Register() {
   const { errorRegister, loadingRegister, responseRegister } = useSelector(
-    (state) => state.UserManagement
+    (state) => state.AuthReducer
   );
   let location = useLocation();
   const history = useHistory();
@@ -150,44 +148,6 @@ export default function Register() {
               Đăng ký MovieApp!
             </Typography>
           </Stack>
-
-          {/* <Stack direction="row" spacing={2}>
-            <Button
-              fullWidth
-              size="large"
-              color="inherit"
-              variant="outlined"
-              style={{ border: "1px solid rgba(145, 158, 171, 0.32)" }}
-            >
-              <Icon icon={googleFill} color="#DF3E30" height={24} />
-            </Button>
-
-            <Button
-              fullWidth
-              size="large"
-              style={{ border: "1px solid rgba(145, 158, 171, 0.32)" }}
-              variant="outlined"
-            >
-              <Icon icon={facebookFill} color="#1877F2" height={24} />
-            </Button>
-
-            <Button
-              fullWidth
-              size="large"
-              color="inherit"
-              variant="outlined"
-              style={{ border: "1px solid rgba(145, 158, 171, 0.32)" }}
-            >
-              <Icon icon={twitterFill} color="#1C9CEA" height={24} />
-            </Button>
-          </Stack> */}
-          {/* 
-          <Divider sx={{ my: 3 }}>
-            <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              OR
-            </Typography>
-          </Divider> */}
-
           <FormikProvider value={formik}>
             <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
               <Stack spacing={3}>
@@ -320,7 +280,6 @@ export default function Register() {
                   type="submit"
                   variant="contained"
                   loading={loadingRegister}
-                  color="success"
                 >
                   Đăng ký
                 </LoadingButton>
@@ -335,7 +294,6 @@ export default function Register() {
               variant="subtitle2"
               component={RouterLink}
               to="/login"
-              class="text-green-600 font-bold "
             >
               Đăng nhập
             </Link>

@@ -13,6 +13,18 @@ const usersApi = {
     const path = "/v1/users";
     return axiosClient.get(path);
   },
+  deleteUser: (_id) => {
+    const path = `/v1/users/${_id}`;
+    return axiosClient.delete(path);
+  },
+  updateCurrentUser: (currentUser) => {
+    const path = `/v1/users/updateMe`;
+    return axiosClient.patch(path, currentUser);
+  },
+  getCurrentUser: () => {
+    const path = `/v1/users/getMe`;
+    return axiosClient.get(path);
+  },
 };
 
 export default usersApi;
