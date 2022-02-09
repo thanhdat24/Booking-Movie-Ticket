@@ -2,6 +2,7 @@ const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('../controllers/handlerFactory');
+const jwt = require('jsonwebtoken');
 
 const filterObj = (obj, ...allowedField) => {
   const newObj = {};
@@ -16,7 +17,47 @@ exports.getMe = (req, res, next) => {
   next();
 };
 
+const signToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
+};
+
+const createSendToken = (user, statusCode, res) => {
+  const token = signToken(user._id);
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+  };
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+
+  res.cookie('jwt', token, cookieOptions);
+
+  // Remove password from output
+  user.password = undefined;
+
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+    user,
+  });
+};
+
 exports.updateMe = catchAsync(async (req, res, next) => {
+  // const token = signToken(req.user.id);
+  // const cookieOptions = {
+  //   expires: new Date(
+  //     Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+  //   ),
+  //   httpOnly: true,
+  // };
+  // if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+
+  // res.cookie('jwt', token, cookieOptions);
+  // // Remove password from output
+  // user.password = undefined;
   // 1) Create error ì user POSTS password data
   if (req.body.password || req.body.passwordConfirm) {
     return next(
@@ -36,17 +77,16 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'dateOfBirth'
   );
 
-  const updateUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
+  const user = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
     runValidators: true,
   });
-  res.status(200).json({
-    status: 'success ',
-    data: {
-      user: updateUser,
-    },
-    content: 'Cập nhật thành công!',
-  });
+  createSendToken(user, 200, res);
+  // res.status(200).json({
+  //   status: 'success ',
+  //   user,
+  //   content: 'Cập nhật thành công!',
+  // });
 });
 
 exports.deleteMe = catchAsync(async (req, res, next) => {
