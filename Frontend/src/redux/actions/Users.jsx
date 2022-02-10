@@ -1,5 +1,8 @@
 import usersApi from "../../api/usersApi";
 import {
+  CHANGE_PASSWORD_FAIL,
+  CHANGE_PASSWORD_REQUEST,
+  CHANGE_PASSWORD_SUCCESS,
   DELETE_USER_FAIL,
   DELETE_USER_REQUEST,
   DELETE_USER_SUCCESS,
@@ -60,7 +63,31 @@ export const deleteUser = (_id) => {
   };
 };
 
-
+export const changePassword = (currentUser) => {
+  return (dispatch) => {
+    dispatch({
+      type: CHANGE_PASSWORD_REQUEST,
+    });
+    usersApi
+      .changePassword(currentUser)
+      .then((result) => {
+        dispatch({
+          type: CHANGE_PASSWORD_SUCCESS,
+          payload: {
+            status: result.data.status,
+          },
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: CHANGE_PASSWORD_FAIL,
+          payload: {
+            error: error?.response.data.message,
+          },
+        });
+      });
+  };
+};
 
 export const resetUserList = () => {
   return (dispatch) => {

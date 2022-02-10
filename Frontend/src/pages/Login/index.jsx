@@ -32,7 +32,6 @@ import AuthLayout from "../../layouts/AuthLayout";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/actions/Auth";
 
-
 const SectionStyle = styled(Card)(({ theme }) => ({
   width: "100%",
   maxWidth: 580,
@@ -124,12 +123,35 @@ export default function Login() {
               <Stack spacing={3}>
                 {errorLogin && (
                   <Fragment>
-                    <Alert severity="error">{errorLogin}</Alert>
+                    <Alert
+                      severity="error"
+                      color="error"
+                      sx={{
+                        backgroundColor: "rgb(255, 231, 217)",
+                        color: "rgb(122, 12, 46)",
+                        "& .MuiAlert-icon": {
+                          color: "rgb(255, 72, 66)",
+                        },
+                      }}
+                    >
+                      {errorLogin}
+                    </Alert>
                   </Fragment>
                 )}
                 {currentUser && (
                   <Fragment>
-                    <Alert severity="success">Đăng nhập thành công!</Alert>
+                    <Alert
+                      sx={{
+                        backgroundColor: "rgb(205, 256, 210)",
+                        color: "rgb(39, 44, 34)",
+                        "& .MuiAlert-icon": {
+                          color: "rgb(111, 180, 100)",
+                        },
+                      }}
+                      severity="success"
+                    >
+                      Đăng nhập thành công!
+                    </Alert>
                   </Fragment>
                 )}
                 <TextField

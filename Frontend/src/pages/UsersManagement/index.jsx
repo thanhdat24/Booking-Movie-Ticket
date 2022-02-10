@@ -228,7 +228,6 @@ export default function UsersManagement() {
           New User
         </Button>
       </Stack>
-
       <Card>
         <UserListToolbar
           numSelected={selected.length}

@@ -1,8 +1,5 @@
 import usersApi from "../../api/usersApi";
 import {
-  GET_USER_FAIL,
-  GET_USER_REQUEST,
-  GET_USER_SUCCESS,
   LOGIN_FAIL,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,

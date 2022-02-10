@@ -31,7 +31,6 @@ import AuthLayout from "../../layouts/AuthLayout";
 import { useDispatch, useSelector } from "react-redux";
 import { register, resetErrorLoginRegister } from "../../redux/actions/Auth";
 
-
 const RootStyle = styled("div")(({ theme }) => ({
   [theme.breakpoints.up("md")]: {
     display: "flex",
@@ -110,12 +109,12 @@ export default function Register() {
   });
   const formik = useFormik({
     initialValues: {
-      fullName: "user",
+      fullName: "",
       email: "",
-      phoneNumber: "0912419245",
+      phoneNumber: "",
       gender: "",
-      password: "Dat123456",
-      passwordConfirm: "Dat123456",
+      password: "",
+      passwordConfirm: "",
       dateOfBirth: "",
       remember: true,
     },
@@ -153,12 +152,34 @@ export default function Register() {
               <Stack spacing={3}>
                 {errorRegister && (
                   <Fragment>
-                    <Alert severity="error">{errorRegister}</Alert>
+                    <Alert
+                      severity="error"
+                      sx={{
+                        backgroundColor: "rgb(255, 231, 217)",
+                        color: "rgb(122, 12, 46)",
+                        "& .MuiAlert-icon": {
+                          color: "rgb(255, 72, 66)",
+                        },
+                      }}
+                    >
+                      {errorRegister}
+                    </Alert>
                   </Fragment>
                 )}
                 {responseRegister && (
                   <Fragment>
-                    <Alert severity="success">Đăng ký thành công!</Alert>
+                    <Alert
+                      severity="success"
+                      sx={{
+                        backgroundColor: "rgb(205, 256, 210)",
+                        color: "rgb(39, 44, 34)",
+                        "& .MuiAlert-icon": {
+                          color: "rgb(111, 180, 100)",
+                        },
+                      }}
+                    >
+                      Đăng ký thành công!
+                    </Alert>
                   </Fragment>
                 )}
                 <TextField

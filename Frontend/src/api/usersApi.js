@@ -25,6 +25,10 @@ const usersApi = {
     const path = `/v1/users/getMe`;
     return axiosClient.get(path);
   },
+  changePassword: (currentUser) => {
+    const path = `/v1/users/updateMyPassword`;
+    return axiosClient.patch(path, currentUser);
+  },
 };
 
 export default usersApi;

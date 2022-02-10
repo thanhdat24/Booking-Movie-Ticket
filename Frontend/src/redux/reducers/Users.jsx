@@ -1,5 +1,8 @@
 import { TOKEN, USER_LOGIN } from "../../constants/config";
 import {
+  CHANGE_PASSWORD_FAIL,
+  CHANGE_PASSWORD_REQUEST,
+  CHANGE_PASSWORD_SUCCESS,
   DELETE_USER_FAIL,
   DELETE_USER_REQUEST,
   DELETE_USER_SUCCESS,
@@ -16,6 +19,10 @@ const stateDefault = {
   successDelete: null,
   loadingDelete: false,
   errorDelete: null,
+
+  successChangePassword: null,
+  loadingChangePassword: false,
+  errorChangePassword: null,
 };
 
 export const UserManagement = (state = stateDefault, action) => {
@@ -62,12 +69,39 @@ export const UserManagement = (state = stateDefault, action) => {
       };
     }
 
+    case CHANGE_PASSWORD_REQUEST: {
+      return {
+        ...state,
+        loadingChangePassword: true,
+        errorChangePassword: null,
+        successChangePassword: "",
+      };
+    }
+    case CHANGE_PASSWORD_SUCCESS: {
+      return {
+        ...state,
+        loadingChangePassword: false,
+        successChangePassword: action.payload.status,
+        errorChangePassword: null,
+      };
+    }
+    case CHANGE_PASSWORD_FAIL: {
+      return {
+        ...state,
+        loadingChangePassword: false,
+        errorChangePassword: action.payload.error,
+        successChangePassword: "",
+      };
+    }
     case RESET_USER_LIST: {
       return {
         ...state,
         errorUsersList: null,
         successDelete: "",
         errorDelete: null,
+
+        errorChangePassword: null,
+        successChangePassword: "",
       };
     }
     default:

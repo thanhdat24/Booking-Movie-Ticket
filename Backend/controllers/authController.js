@@ -101,7 +101,10 @@ exports.protect = catchAsync(async (req, res, next) => {
   // 4) Check if user changed password after the token was issued
   if (currentUser.changedPasswordAfter(decoded.iat)) {
     return next(
-      new AppError('User recently changed password!. Please log in again', 401)
+      new AppError(
+        'Người dùng gần đây đã thay đổi mật khẩu!. Xin vui lòng đăng nhập lại',
+        401
+      )
     );
   }
 
@@ -199,7 +202,9 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).select('+password');
   // 2) Check if POSTED current password is correct
   if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
-    return next(new AppError('Your current password is incorrect.', 401));
+    return next(
+      new AppError('Mật khẩu hiện tại của bạn không chính xác.', 401)
+    );
   }
 
   // 3) If so, update password

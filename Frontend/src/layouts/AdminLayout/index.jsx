@@ -126,7 +126,7 @@ const Drawer = styled(MuiDrawer, {
 
 export default function AdminLayout(props) {
   const classes = useStyles();
-  const [selectedIndex, setSelectedIndex] = useState(1);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const history = useHistory();
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
@@ -328,7 +328,23 @@ export default function AdminLayout(props) {
                   }),
                 }}
               />
-              {open ? <ExpandLess /> : <ExpandMore />}
+              {open ? (
+                <ExpandLess
+                  sx={{
+                    ...(!openDrawer && {
+                      display: "none",
+                    }),
+                  }}
+                />
+              ) : (
+                <ExpandMore
+                  sx={{
+                    ...(!openDrawer && {
+                      display: "none",
+                    }),
+                  }}
+                />
+              )}
             </ListItemButton>
             <Collapse
               in={open}
