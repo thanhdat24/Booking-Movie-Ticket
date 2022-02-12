@@ -14,6 +14,7 @@ import palette from "./theme/palette";
 import typography from "./theme/typography";
 import shadows, { customShadows } from "./theme/shadows";
 import componentsOverride from "./theme/overrides";
+import UserEdit from "./pages/UserEdit";
 
 function App() {
   const themeOptions = useMemo(
@@ -34,9 +35,15 @@ function App() {
     <BrowserRouter>
       <ThemeProvider theme={theme}>
         <Switch>
-          <Route exact path={["/admin/users/list", "/admin/users/account"]}>
+          <Route
+            exact
+            path={[
+              "/admin/users/list",
+              "/admin/users/account",
+              "/admin/users/edit",
+            ]}
+          >
             <AdminLayout>
-              {" "}
               <AdminRoute
                 exact
                 path="/admin/users/list"
@@ -47,6 +54,7 @@ function App() {
                 path="/admin/users/account"
                 component={UserProfile}
               />
+              <AdminRoute exact path="/admin/users/edit" component={UserEdit} />
             </AdminLayout>
           </Route>
           <Route exact path={["/login", "/register"]}>

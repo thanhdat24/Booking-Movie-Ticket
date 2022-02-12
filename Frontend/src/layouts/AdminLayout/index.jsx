@@ -23,7 +23,6 @@ import { styled, useTheme } from "@mui/material/styles";
 import { Avatar, Collapse, Link, ListItemButton, Stack } from "@mui/material";
 import { useHistory, Link as RouterLink } from "react-router-dom";
 import Searchbar from "./Searchbar";
-// import NotificationsPopover from "./NotificationsPopover";
 import AccountPopover from "./AccountPopover";
 const drawerWidth = 280;
 const APPBAR_MOBILE = 64;
@@ -160,17 +159,6 @@ export default function AdminLayout(props) {
     {
       title: "Account",
       path: "/admin/users/account",
-      icon: <Icon icon="ci:dot-02-s" color="#637381" hFlip={true} />,
-    },
-    {
-      id: 2,
-      title: "Create",
-      path: "/admin/users/create",
-      icon: <Icon icon="ci:dot-02-s" color="#637381" hFlip={true} />,
-    },
-    {
-      title: "Edit",
-      path: "/admin/users/edit",
       icon: <Icon icon="ci:dot-02-s" color="#637381" hFlip={true} />,
     },
   ];

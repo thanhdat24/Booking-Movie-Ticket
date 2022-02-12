@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import { useEffect, useRef, useState } from "react";
 import editFill from "@iconify/icons-eva/edit-fill";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 import trash2Outline from "@iconify/icons-eva/trash-2-outline";
 import moreVerticalFill from "@iconify/icons-eva/more-vertical-fill";
 // material
@@ -14,13 +14,20 @@ import {
 } from "@mui/material";
 import { deleteUser } from "../../redux/actions/Users";
 import { useDispatch, useSelector } from "react-redux";
+import { getDetailUser, resetUpdate } from "../../redux/actions/Auth";
 
 // ----------------------------------------------------------------------
 
 export default function UserMoreMenu(props) {
-  const { loadingDelete, successDelete, errorDelete } = useSelector(
-    (state) => state.UserManagement
-  );
+  const history = useHistory();
+  let location = useLocation();
+  const { loadingDelete } = useSelector((state) => state.UserManagement);
+  const { successGetDetailUser } = useSelector((state) => state.AuthReducer);
+  useEffect(() => {
+    if (successGetDetailUser) {
+      history.push("/admin/users/edit");
+    }
+  }, [successGetDetailUser]);
 
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -35,6 +42,19 @@ export default function UserMoreMenu(props) {
     dispatch(deleteUser(_id));
   };
 
+  const handleEditDetail = (_id) => {
+    dispatch(getDetailUser(_id));
+    // if (successGetDetailUser) {
+    // history.push("/admin/users/edit");
+    // }
+  };
+  useEffect(() => {
+    if (history.push("/admin/users/list")) {
+      return () => {
+        dispatch(resetUpdate());
+      };
+    }
+  }, []);
   return (
     <>
       <IconButton ref={ref} onClick={() => setIsOpen(true)}>
@@ -68,6 +88,7 @@ export default function UserMoreMenu(props) {
           component={RouterLink}
           to="#"
           sx={{ color: "rgb(33, 43, 54)" }}
+          onClick={(e) => handleEditDetail(props.keyItemId)}
         >
           <ListItemIcon>
             <Icon icon={editFill} width={24} height={24} />

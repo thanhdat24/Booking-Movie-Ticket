@@ -84,12 +84,11 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis?.map((el) => el[0]);
 }
 
-export default function UsersManagement() {
+export default function UserEdit() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const { usersList, successDelete, errorDelete } = useSelector(
-    (state) => state.UserManagement
-  );
+  const { usersList, successDelete, errorDelete, successUpdateUser } =
+    useSelector((state) => state.UserManagement);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
   const [selected, setSelected] = useState([]);
@@ -106,10 +105,10 @@ export default function UsersManagement() {
   }, []);
 
   useEffect(() => {
-    if (successDelete) {
+    if ((successDelete, successUpdateUser)) {
       dispatch(getUsersList());
     }
-  }, [successDelete]);
+  }, [successDelete, successUpdateUser]);
 
   useEffect(() => {
     if (successDelete) {

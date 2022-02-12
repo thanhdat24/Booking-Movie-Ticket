@@ -10,6 +10,9 @@ import {
   GET_USER_LIST_REQUEST,
   GET_USER_LIST_SUCCESS,
   RESET_USER_LIST,
+  UPDATE_USER_FAIL,
+  UPDATE_USER_REQUEST,
+  UPDATE_USER_SUCCESS,
 } from "../types/Users";
 
 export const getUsersList = () => {
@@ -81,6 +84,32 @@ export const changePassword = (currentUser) => {
       .catch((error) => {
         dispatch({
           type: CHANGE_PASSWORD_FAIL,
+          payload: {
+            error: error?.response.data.message,
+          },
+        });
+      });
+  };
+};
+
+export const updateUser = (user,_id) => {
+  return (dispatch) => {
+    dispatch({
+      type: UPDATE_USER_REQUEST,
+    });
+    usersApi
+      .updateUser(user,_id)
+      .then((result) => {
+        dispatch({
+          type: UPDATE_USER_SUCCESS,
+          payload: {
+            data: result.data.data,
+          },
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: UPDATE_USER_FAIL,
           payload: {
             error: error?.response.data.message,
           },

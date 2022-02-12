@@ -10,6 +10,9 @@ import {
   GET_USER_LIST_REQUEST,
   GET_USER_LIST_SUCCESS,
   RESET_USER_LIST,
+  UPDATE_USER_FAIL,
+  UPDATE_USER_REQUEST,
+  UPDATE_USER_SUCCESS,
 } from "../types/Users";
 const stateDefault = {
   usersList: null,
@@ -23,6 +26,10 @@ const stateDefault = {
   successChangePassword: null,
   loadingChangePassword: false,
   errorChangePassword: null,
+
+  successUpdateUser: null,
+  loadingUpdateUser: false,
+  errorUpdateUser: null,
 };
 
 export const UserManagement = (state = stateDefault, action) => {
@@ -93,6 +100,33 @@ export const UserManagement = (state = stateDefault, action) => {
         successChangePassword: "",
       };
     }
+
+    case UPDATE_USER_REQUEST: {
+      return {
+        ...state,
+        loadingUpdateUser: true,
+        errorUpdateUser: null,
+        successUpdateUser: null,
+      };
+    }
+    case UPDATE_USER_SUCCESS: {
+      const { data } = action.payload;
+      return {
+        ...state,
+        loadingUpdateUser: false,
+        errorUpdateUser: null,
+        successUpdateUser: data,
+      };
+    }
+    case UPDATE_USER_FAIL: {
+      return {
+        ...state,
+        loadingUpdateUser: false,
+        errorUpdateUser: action.payload.error,
+        successUpdateUser: null,
+      };
+    }
+
     case RESET_USER_LIST: {
       return {
         ...state,
@@ -102,6 +136,10 @@ export const UserManagement = (state = stateDefault, action) => {
 
         errorChangePassword: null,
         successChangePassword: "",
+
+        errorUpdateUser: null,
+        successUpdateUser: "",
+
       };
     }
     default:
