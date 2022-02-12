@@ -1,7 +1,6 @@
 import { TOKEN, USER_LOGIN } from "../../constants/config";
 import {
   GET_USER_FAIL,
-  GET_USER_REQUEST,
   GET_USER_SUCCESS,
   LOGIN_FAIL,
   LOGIN_REQUEST,
@@ -11,9 +10,9 @@ import {
   REGISTER_REQUEST,
   REGISTER_SUCCESS,
   RESET_UPDATE,
-  UPDATE_USER_FAIL,
-  UPDATE_USER_REQUEST,
-  UPDATE_USER_SUCCESS,
+  UPDATE_USER_CURRENT_FAIL,
+  UPDATE_USER_CURRENT_REQUEST,
+  UPDATE_USER_CURRENT_SUCCESS,
 } from "../types/Auth";
 const currentUser = localStorage.getItem(USER_LOGIN)
   ? JSON.parse(localStorage.getItem(USER_LOGIN))
@@ -28,12 +27,12 @@ const stateDefault = {
   loadingRegister: false,
   errorRegister: null,
 
-  successUpdateUser: null,
-  loadingUpdateUser: false,
-  errorUpdateUser: null,
+  successUpdateUserCurrent: null,
+  loadingUpdateUserCurrent: false,
+  errorUpdateUserCurrent: null,
 
-  successGetUser: null,
-  currentGetUser: null,
+  successGetDetailUser: null,
+  errorGetDetailUser: null,
 };
 
 export const AuthReducer = (state = stateDefault, action) => {
@@ -42,7 +41,6 @@ export const AuthReducer = (state = stateDefault, action) => {
       return { ...state, loadingLogin: true, errorLogin: null }; // error: null trong trường error đang báo lỗi, nhấn đăng nhập lại thì cần reset lại không báo lỗi nữa
     }
     case LOGIN_SUCCESS: {
-      console.log(action);
       const { data, token } = action;
       localStorage.setItem(USER_LOGIN, JSON.stringify(data, token));
       localStorage.setItem(TOKEN, token);
@@ -81,39 +79,53 @@ export const AuthReducer = (state = stateDefault, action) => {
       };
     }
 
-    case UPDATE_USER_REQUEST: {
+    case UPDATE_USER_CURRENT_REQUEST: {
       return {
         ...state,
-        loadingUpdateUser: true,
-        errorUpdateUser: null,
-        successUpdateUser: null,
+        loadingUpdateUserCurrent: true,
+        errorUpdateUserCurrent: null,
+        successUpdateUserCurrent: null,
       };
     }
-    case UPDATE_USER_SUCCESS: {
+    case UPDATE_USER_CURRENT_SUCCESS: {
       const { data, token, status } = action.payload;
       localStorage.setItem(USER_LOGIN, JSON.stringify(data, token));
       localStorage.setItem(TOKEN, token);
       return {
         ...state,
-        loadingUpdateUser: false,
-        successUpdateUser: status,
-        errorUpdateUser: null,
+        loadingUpdateUserCurrent: false,
+        successUpdateUserCurrent: status,
+        errorUpdateUserCurrent: null,
         currentUser: data,
       };
     }
-    case UPDATE_USER_FAIL: {
+    case UPDATE_USER_CURRENT_FAIL: {
       return {
         ...state,
-        loadingUpdateUser: false,
-        errorUpdateUser: action.payload.error,
-        successUpdateUser: null,
+        loadingUpdateUserCurrent: false,
+        errorUpdateUserCurrent: action.payload.error,
+        successUpdateUserCurrent: null,
+      };
+    }
+    case GET_USER_SUCCESS: {
+      return {
+        ...state,
+        successGetDetailUser: action.payload.data,
+      };
+    }
+    case GET_USER_FAIL: {
+      return {
+        ...state,
+        errorGetDetailUser: action.payload.error,
       };
     }
     case RESET_UPDATE: {
       return {
         ...state,
-        successUpdateUser: "",
-        errorUpdateUser: null,
+        successUpdateUserCurrent: "",
+        errorUpdateUserCurrent: null,
+
+        successGetDetailUser: "",
       };
     }
     default:

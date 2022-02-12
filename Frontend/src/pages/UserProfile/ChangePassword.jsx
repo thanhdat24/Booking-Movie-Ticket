@@ -1,14 +1,11 @@
 import React, { Fragment, useEffect } from "react";
 import { Box, Stack, Card, TextField } from "@mui/material";
-import { Icon } from "@iconify/react";
-import { useFormik, Form, FormikProvider, ErrorMessage, Formik } from "formik";
+import { useFormik, Form, Formik } from "formik";
 
 import { useSnackbar } from "notistack";
 import { useDispatch, useSelector } from "react-redux";
-import { LoadingButton, TabContext, TabList, TabPanel } from "@mui/lab";
-import { styled } from "@mui/material/styles";
+import { LoadingButton, } from "@mui/lab";
 import * as Yup from "yup";
-import moment from "moment";
 import { changePassword, resetUserList } from "../../redux/actions/Users";
 
 export default function ChangePassword() {
@@ -40,6 +37,8 @@ export default function ChangePassword() {
         return;
       }
       dispatch(changePassword(user));
+      
+      // reset
       resetForm();
     },
   });

@@ -1,5 +1,7 @@
 import usersApi from "../../api/usersApi";
 import {
+  GET_USER_FAIL,
+  GET_USER_SUCCESS,
   LOGIN_FAIL,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -8,9 +10,9 @@ import {
   REGISTER_SUCCESS,
   RESET_ERROR_LOGIN_REGISTER,
   RESET_UPDATE,
-  UPDATE_USER_FAIL,
-  UPDATE_USER_REQUEST,
-  UPDATE_USER_SUCCESS,
+  UPDATE_USER_CURRENT_FAIL,
+  UPDATE_USER_CURRENT_REQUEST,
+  UPDATE_USER_CURRENT_SUCCESS,
 } from "../types/Auth";
 
 export const login = (user) => {
@@ -65,14 +67,13 @@ export const register = (user) => {
 export const updateCurrentUser = (currentUser) => {
   return (dispatch) => {
     dispatch({
-      type: UPDATE_USER_REQUEST,
+      type: UPDATE_USER_CURRENT_REQUEST,
     });
     usersApi
       .updateCurrentUser(currentUser)
       .then((result) => {
-        console.log("result", result);
         dispatch({
-          type: UPDATE_USER_SUCCESS,
+          type: UPDATE_USER_CURRENT_SUCCESS,
           payload: {
             status: result.data.status,
             data: result.data,
@@ -82,9 +83,32 @@ export const updateCurrentUser = (currentUser) => {
       })
       .catch((error) => {
         dispatch({
-          type: UPDATE_USER_FAIL,
+          type: UPDATE_USER_CURRENT_FAIL,
           payload: {
-            error: error,
+            error: error.response?.data.message,
+          },
+        });
+      });
+  };
+};
+
+export const getDetailUser = (_id) => {
+  return (dispatch) => {
+    usersApi
+      .getDetailUser(_id)
+      .then((result) => {
+        dispatch({
+          type: GET_USER_SUCCESS,
+          payload: {
+            data: result.data.data,
+          },
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: GET_USER_FAIL,
+          payload: {
+            error: error?.response.data.message,
           },
         });
       });
@@ -98,7 +122,6 @@ export const resetUpdate = () => {
     });
   };
 };
-
 
 export const resetErrorLoginRegister = () => {
   return (dispatch) => {

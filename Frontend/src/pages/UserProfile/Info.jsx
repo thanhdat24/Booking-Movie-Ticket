@@ -24,8 +24,12 @@ import { resetUpdate, updateCurrentUser } from "../../redux/actions/Auth";
 
 export default function Info() {
   const dispatch = useDispatch();
-  const { currentUser, successUpdateUser, loadingUpdateUser, errorUpdateUser } =
-    useSelector((state) => state.AuthReducer);
+  const {
+    currentUser,
+    successUpdateUserCurrent,
+    loadingUpdateUserCurrent,
+    errorUpdateUserCurrent,
+  } = useSelector((state) => state.AuthReducer);
   const { enqueueSnackbar } = useSnackbar();
   const phoneRegExp =
     /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/;
@@ -59,17 +63,13 @@ export default function Info() {
 
     validationSchema: UpdateSchema,
     onSubmit: (user) => {
-      if (loadingUpdateUser) {
+      if (loadingUpdateUserCurrent) {
         return;
       }
       dispatch(updateCurrentUser(user));
     },
   });
-  useEffect(() => {
-    return () => {
-      dispatch(resetUpdate());
-    };
-  }, []);
+
   const { errors, touched, handleSubmit, getFieldProps } = formik;
   const [gender, setGender] = useState(10);
 
@@ -77,41 +77,55 @@ export default function Info() {
     setGender(event.target.value);
   };
   useEffect(() => {
-    if (successUpdateUser) {
-      enqueueSnackbar("Cập nhật thành công!", { variant: "success" });
+    if (successUpdateUserCurrent) {
+      setTimeout(() => {
+        enqueueSnackbar("Cập nhật thành công!", { variant: "success" });
+      }, 100);
       return;
     }
-    if (errorUpdateUser) {
-      enqueueSnackbar(errorUpdateUser, { variant: "error" });
+    if (errorUpdateUserCurrent) {
+      enqueueSnackbar(errorUpdateUserCurrent, { variant: "error" });
     }
-  }, [successUpdateUser, errorUpdateUser]);
+  }, [successUpdateUserCurrent, errorUpdateUserCurrent]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetUpdate());
+    };
+  }, []);
+
   return (
     <Fragment>
       <Box sx={{ margin: "20px 0" }}></Box>
-      <Box sx={{ width: "100%" }}>
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          <Grid item xs={4}>
-            <Card
-              sx={{
-                borderRadius: " 16px",
-                zIndex: 0,
-                padding: " 80px 24px",
-                textAlign: "center",
-              }}
-            >
-              <div>
-                <div className="w-36 h-36 rounded-full p-2 border-2 border-dashed border-gray-300 inline-flex">
-                  <div className="w-full h-full outline-none overflow-hidden rounded-full items-center justify-center">
-                    <input
-                      accept="image/*"
-                      // className={classes.input}
-                      style={{ display: "none" }}
-                      id="raised-button-file"
-                      multiple
-                      type="file"
-                      autoComplete="off"
-                    />
-                    {/* <label htmlFor="raised-button-file">
+      <Formik value={formik}>
+        <Form onSubmit={handleSubmit}>
+          <Grid
+            container
+            rowSpacing={1}
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+          >
+            <Grid item xs={4}>
+              <Card
+                sx={{
+                  borderRadius: " 16px",
+                  zIndex: 0,
+                  padding: " 80px 24px",
+                  textAlign: "center",
+                }}
+              >
+                <div>
+                  <div className="w-36 h-36 rounded-full p-2 border-2 border-dashed border-gray-300 inline-flex">
+                    <div className="w-full h-full outline-none overflow-hidden rounded-full items-center justify-center">
+                      <input
+                        accept="image/*"
+                        // className={classes.input}
+                        style={{ display: "none" }}
+                        id="raised-button-file"
+                        multiple
+                        type="file"
+                        autoComplete="off"
+                      />
+                      {/* <label htmlFor="raised-button-file">
                               <Button
                                 variant="raised"
                                 component="span"
@@ -120,134 +134,129 @@ export default function Info() {
                                 Upload
                               </Button>
                             </label> */}
-                    <span className="overflow-hidden z-10">
-                      <img
-                        htmlFor="raised-button-file"
-                        src={currentUser?.user.photo}
-                        alt="avatar"
-                        className="w-full h-full object-cover"
-                      />
-                    </span>
+                      <span className="overflow-hidden z-10">
+                        <img
+                          htmlFor="raised-button-file"
+                          src={currentUser?.user.photo}
+                          alt="avatar"
+                          className="w-full h-full object-cover"
+                        />
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Card>
-          </Grid>
-          <Grid item xs={8}>
-            <Card
-              sx={{
-                borderRadius: " 16px",
-                zIndex: 0,
-                padding: "24px",
-              }}
-            >
-              <Formik value={formik}>
-                <Form onSubmit={handleSubmit}>
-                  <Stack spacing={3}>
-                    <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-                      <TextField
-                        fullWidth
-                        autoComplete="fullName"
-                        type="text"
-                        label="Họ tên"
-                        {...getFieldProps("fullName")}
-                        error={Boolean(touched.fullName && errors.fullName)}
-                        helperText={touched.fullName && errors.fullName}
-                      />{" "}
-                      <TextField
-                        fullWidth
-                        disabled
-                        autoComplete="email"
-                        type="email"
-                        label="Email"
-                        {...getFieldProps("email")}
-                        error={Boolean(touched.email && errors.email)}
-                        helperText={touched.email && errors.email}
-                      />
-                    </Stack>
-                    <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-                      <TextField
-                        fullWidth
-                        label="Số điện thoại"
-                        {...getFieldProps("phoneNumber")}
-                        error={Boolean(
-                          touched.phoneNumber && errors.phoneNumber
-                        )}
-                        helperText={touched.phoneNumber && errors.phoneNumber}
-                      />
-                      <FormControl
-                        fullWidth
-                        error={Boolean(touched.gender && errors.gender)}
-                      >
-                        <InputLabel id="select-gender">Giới Tính</InputLabel>
-                        <Select
-                          sx={{
-                            display: "inline-flex",
-                            textAlign: "start",
-                          }}
-                          labelId="select-gender"
-                          id="select-gender"
-                          value={gender}
-                          label="Giới Tính"
-                          onChange={handleChangeGender}
-                          {...getFieldProps("gender")}
-                        >
-                          <MenuItem value={`Nam`}>Nam</MenuItem>
-                          <MenuItem value={`Nữ`}>Nữ</MenuItem>
-                        </Select>
-                        <ErrorMessage
-                          name="gender"
-                          render={(msg) => (
-                            <span className="text-red-600 text-xs mt-1 ml-3">
-                              {msg}
-                            </span>
-                          )}
-                        />
-                      </FormControl>
-                    </Stack>
-
+              </Card>
+            </Grid>
+            <Grid item xs={8}>
+              <Card
+                sx={{
+                  borderRadius: " 16px",
+                  zIndex: 0,
+                  padding: "24px",
+                }}
+              >
+                <Stack spacing={3}>
+                  <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
                     <TextField
-                      id="date"
-                      label="Ngày tháng năm sinh"
-                      type="date"
                       fullWidth
-                      {...getFieldProps("dateOfBirth")}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      error={Boolean(touched.dateOfBirth && errors.dateOfBirth)}
-                      helperText={touched.dateOfBirth && errors.dateOfBirth}
+                      autoComplete="fullName"
+                      type="text"
+                      label="Họ tên"
+                      {...getFieldProps("fullName")}
+                      error={Boolean(touched.fullName && errors.fullName)}
+                      helperText={touched.fullName && errors.fullName}
+                    />{" "}
+                    <TextField
+                      fullWidth
+                      disabled
+                      autoComplete="email"
+                      type="email"
+                      label="Email"
+                      {...getFieldProps("email")}
+                      error={Boolean(touched.email && errors.email)}
+                      helperText={touched.email && errors.email}
                     />
-                    <Box
+                  </Stack>
+                  <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+                    <TextField
+                      fullWidth
+                      label="Số điện thoại"
+                      {...getFieldProps("phoneNumber")}
+                      error={Boolean(touched.phoneNumber && errors.phoneNumber)}
+                      helperText={touched.phoneNumber && errors.phoneNumber}
+                    />
+                    <FormControl
+                      fullWidth
+                      error={Boolean(touched.gender && errors.gender)}
+                    >
+                      <InputLabel id="select-gender">Giới Tính</InputLabel>
+                      <Select
+                        sx={{
+                          display: "inline-flex",
+                          textAlign: "start",
+                        }}
+                        labelId="select-gender"
+                        id="select-gender"
+                        value={gender}
+                        label="Giới Tính"
+                        onChange={handleChangeGender}
+                        {...getFieldProps("gender")}
+                      >
+                        <MenuItem value={`Nam`}>Nam</MenuItem>
+                        <MenuItem value={`Nữ`}>Nữ</MenuItem>
+                      </Select>
+                      <ErrorMessage
+                        name="gender"
+                        render={(msg) => (
+                          <span className="text-red-600 text-xs mt-1 ml-3">
+                            {msg}
+                          </span>
+                        )}
+                      />
+                    </FormControl>
+                  </Stack>
+
+                  <TextField
+                    id="date"
+                    label="Ngày tháng năm sinh"
+                    type="date"
+                    fullWidth
+                    {...getFieldProps("dateOfBirth")}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    error={Boolean(touched.dateOfBirth && errors.dateOfBirth)}
+                    helperText={touched.dateOfBirth && errors.dateOfBirth}
+                  />
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-end",
+                    }}
+                  >
+                    <LoadingButton
+                      size="large"
+                      type="submit"
+                      variant="contained"
+                      loading={loadingUpdateUserCurrent}
                       sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-end",
+                        padding: "6px 9px",
+                        fontWeight: "700",
+                        lineHeight: "1.71429",
+                        fontSize: "0.8rem",
+                        textTransform: "capitalize",
                       }}
                     >
-                      <LoadingButton
-                        size="large"
-                        type="submit"
-                        variant="contained"
-                        loading={loadingUpdateUser}
-                        sx={{
-                          padding: "6px 9px",
-                          fontWeight: "700",
-                          lineHeight: "1.71429",
-                          fontSize: "0.8rem",
-                          textTransform: "capitalize",
-                        }}
-                      >
-                        Lưu thay đổi
-                      </LoadingButton>
-                    </Box>
-                  </Stack>
-                </Form>
-              </Formik>
-            </Card>
+                      Lưu thay đổi
+                    </LoadingButton>
+                  </Box>
+                </Stack>
+              </Card>
+            </Grid>
           </Grid>
-        </Grid>
-      </Box>
+        </Form>
+      </Formik>
     </Fragment>
   );
 }

@@ -7,13 +7,6 @@ import {
   Box,
   Tab,
   Stack,
-  Card,
-  Button,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
@@ -32,7 +25,6 @@ export default function UsersManagement() {
       key="1"
       color="inherit"
       href="/"
-      // onClick={handleClick}
     >
       Home
     </Link>,
@@ -41,7 +33,6 @@ export default function UsersManagement() {
       key="2"
       color="inherit"
       href="/getting-started/installation/"
-      // onClick={handleClick}
     >
       User
     </Link>,
