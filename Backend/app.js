@@ -5,6 +5,8 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const tourRoutes = require('./routers/tourRouters');
 const userRoutes = require('./routers/userRouters');
+const movieRoutes = require('./routers/movieRouters');
+
 const reviewRouters = require('./routers/reviewRouters');
 const swaggerDocument = require('./swagger/swagger.json');
 const cors = require('cors');
@@ -47,6 +49,7 @@ app.use(cors());
 app.use('/api/v1/tours', tourRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/reviews', reviewRouters);
+app.use('/api/v1/movies', movieRoutes);
 
 // trả về đường dẫn not found
 app.all('*', (req, res, next) => {
