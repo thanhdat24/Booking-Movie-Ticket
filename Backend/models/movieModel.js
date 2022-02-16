@@ -20,6 +20,7 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: [true, 'A movie must have a description'],
   },
+  duration: { type: String, default: '' },
   releaseDate: {
     type: Date,
     default: Date.now,

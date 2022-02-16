@@ -15,6 +15,7 @@ import typography from "./theme/typography";
 import shadows, { customShadows } from "./theme/shadows";
 import componentsOverride from "./theme/overrides";
 import UserEdit from "./pages/UserEdit";
+import MoviesManagement from "./pages/MoviesManagement";
 
 function App() {
   const themeOptions = useMemo(
@@ -55,6 +56,20 @@ function App() {
                 component={UserProfile}
               />
               <AdminRoute exact path="/admin/users/edit" component={UserEdit} />
+            </AdminLayout>
+          </Route>
+          <Route exact path={["/admin/movies/list", "/admin/movies/edit"]}>
+            <AdminLayout>
+              <AdminRoute
+                exact
+                path="/admin/movies/list"
+                component={MoviesManagement}
+              />
+              {/* <AdminRoute
+                exact
+                path="/admin/movies/edit"
+                component={UserEdit}
+              /> */}
             </AdminLayout>
           </Route>
           <Route exact path={["/login", "/register"]}>

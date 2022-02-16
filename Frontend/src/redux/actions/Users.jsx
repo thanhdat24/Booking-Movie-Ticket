@@ -13,7 +13,7 @@ import {
   UPDATE_USER_FAIL,
   UPDATE_USER_REQUEST,
   UPDATE_USER_SUCCESS,
-} from "../types/Users";
+} from "../constants/Users";
 
 export const getUsersList = () => {
   return (dispatch) => {
