@@ -89,6 +89,7 @@ export default function UserEdit() {
   const { enqueueSnackbar } = useSnackbar();
   const { usersList, successDelete, errorDelete, successUpdateUser } =
     useSelector((state) => state.UserManagement);
+
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
   const [selected, setSelected] = useState([]);
@@ -265,7 +266,7 @@ export default function UserEdit() {
                       hover
                       key={_id}
                       tabIndex={-1}
-                      role="checkbox"
+                      _id="checkbox"
                       selected={isItemSelected}
                       aria-checked={isItemSelected}
                     >

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import { SnackbarProvider } from "notistack";
 import { useSelector } from "react-redux";
 import Box from "@mui/material/Box";
@@ -14,8 +14,7 @@ import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import peopleFill from "@iconify/icons-eva/people-fill";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
+import sidebarConfig from "../Dashboard/SidebarConfig";
 
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -24,6 +23,7 @@ import { Avatar, Collapse, Link, ListItemButton, Stack } from "@mui/material";
 import { useHistory, Link as RouterLink } from "react-router-dom";
 import Searchbar from "./Searchbar";
 import AccountPopover from "./AccountPopover";
+import NavSection from "../../components/NavSection";
 const drawerWidth = 280;
 const APPBAR_MOBILE = 64;
 const APPBAR_DESKTOP = 92;
@@ -133,7 +133,9 @@ export default function AdminLayout(props) {
 
   const theme = useTheme();
   const [openDrawer, setOpenDrawer] = useState(true);
-  const [open, setOpen] = useState(false);
+  const [openUser, setOpenUser] = useState(false);
+  const [openMovie, setOpenMOvie] = useState(false);
+
   const { currentUser } = useSelector((state) => state.AuthReducer);
   const handleClickItem = (event, item, index) => {
     history.push(item);
@@ -143,8 +145,12 @@ export default function AdminLayout(props) {
     // nếu không phải tài khoản quản trị thì ẩn đi giao diện AdminLayout, vẫn truyền vào children để hiện thông báo trong children
     return <>{props.children}</>;
   }
-  const handleClick = () => {
-    setOpen(!open);
+  const handleClickUser = () => {
+    setOpenUser(!openUser);
+  };
+
+  const handleClickMovie = () => {
+    setOpenMOvie(!openMovie);
   };
 
   const handleDrawerClose = () => {
@@ -163,26 +169,50 @@ export default function AdminLayout(props) {
     },
   ];
 
+  const menuListItem = [
+    {
+      title: "Quản lý người dùng",
+      icon: (
+        <Icon
+          icon={peopleFill}
+          width={23}
+          height={23}
+          color="#00ab55"
+          sx={{
+            ...(!openDrawer && {
+              marginRight: "20px",
+            }),
+          }}
+        />
+      ),
+      open: openUser,
+      handleClick: handleClickUser,
+    },
+    {
+      title: "Quản lý phim",
+      icon: (
+        <Icon
+          icon="bx:bxs-movie-play"
+          width={23}
+          height={23}
+          color="#00ab55"
+          sx={{
+            ...(!openDrawer && {
+              marginRight: "20px",
+            }),
+          }}
+        />
+      ),
+      open: openMovie,
+      handleClick: handleClickMovie,
+    },
+  ];
   return (
     <SnackbarProvider maxSnack={3}>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <AppBar position="fixed" open={openDrawer} className={classes.root}>
           <ToolbarStyle>
-            {/* <Toolbar className={classes.toolBar}>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={handleDrawerOpen}
-                edge="start"
-                sx={{
-                  marginRight: "36px",
-                  ...(openDrawer && { display: "none" }),
-                }}
-              >
-                <MenuIcon />
-              </IconButton>
-            </Toolbar> */}
             <Searchbar />
             <Box sx={{ flexGrow: 1 }} />
             <Stack
@@ -277,93 +307,8 @@ export default function AdminLayout(props) {
               </Link>
             </Box>
           </Box>
-          <List
-            sx={{
-              width: "100%",
-              maxWidth: 360,
-              backgroundColor: "background.paper",
-              padding: "0px 16px",
-            }}
-            component="nav"
-            aria-labelledby="nested-list-subheader"
-          >
-            <ListItemButton
-              onClick={handleClick}
-              sx={{
-                backgroundColor: "rgba(0, 171, 85, 0.08)",
-                color: "rgb(0, 171, 85)",
-                borderRadius: "8px",
-              }}
-            >
-              <ListItemIcon>
-                <Icon
-                  icon={peopleFill}
-                  width={23}
-                  height={23}
-                  color="#00ab55"
-                  sx={{
-                    ...(!openDrawer && {
-                      marginRight: "20px",
-                    }),
-                  }}
-                />
-              </ListItemIcon>
-              <ListItemText
-                primary="User"
-                sx={{
-                  ...(!openDrawer && {
-                    display: "none",
-                  }),
-                }}
-              />
-              {open ? (
-                <ExpandLess
-                  sx={{
-                    ...(!openDrawer && {
-                      display: "none",
-                    }),
-                  }}
-                />
-              ) : (
-                <ExpandMore
-                  sx={{
-                    ...(!openDrawer && {
-                      display: "none",
-                    }),
-                  }}
-                />
-              )}
-            </ListItemButton>
-            <Collapse
-              in={open}
-              timeout="auto"
-              unmountOnExit
-              sx={{
-                ...(!openDrawer && {
-                  display: "none",
-                }),
-              }}
-            >
-              <List component="div" disablePadding>
-                {menuItem.map((item, index) => (
-                  <ListItemButton
-                    key={index}
-                    sx={{ pl: 4 }}
-                    selected={selectedIndex === index}
-                    onClick={(event) =>
-                      handleClickItem(event, item.path, index)
-                    }
-                  >
-                    <ListItemIcon>{item.icon}</ListItemIcon>
-                    <ListItemText
-                      primary={item.title}
-                      style={{ color: "#637381" }}
-                    />
-                  </ListItemButton>
-                ))}
-              </List>
-            </Collapse>
-          </List>
+
+          <NavSection navConfig={sidebarConfig} />
         </Drawer>
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           {props.children}

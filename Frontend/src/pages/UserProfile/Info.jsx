@@ -159,15 +159,6 @@ export default function Info() {
                   <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
                     <TextField
                       fullWidth
-                      autoComplete="fullName"
-                      type="text"
-                      label="Họ tên"
-                      {...getFieldProps("fullName")}
-                      error={Boolean(touched.fullName && errors.fullName)}
-                      helperText={touched.fullName && errors.fullName}
-                    />{" "}
-                    <TextField
-                      fullWidth
                       disabled
                       autoComplete="email"
                       type="email"
@@ -176,6 +167,15 @@ export default function Info() {
                       error={Boolean(touched.email && errors.email)}
                       helperText={touched.email && errors.email}
                     />
+                    <TextField
+                      fullWidth
+                      autoComplete="fullName"
+                      type="text"
+                      label="Họ tên"
+                      {...getFieldProps("fullName")}
+                      error={Boolean(touched.fullName && errors.fullName)}
+                      helperText={touched.fullName && errors.fullName}
+                    />{" "}
                   </Stack>
                   <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
                     <TextField
