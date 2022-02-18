@@ -121,7 +121,6 @@ export default function Info() {
       return;
     }
     if (errorUpdateUser) {
-      console.log("errorUpdateUser", errorUpdateUser);
       enqueueSnackbar(errorUpdateUser, { variant: "error" });
     }
   }, [successUpdateUser, errorUpdateUser]);
@@ -132,6 +131,18 @@ export default function Info() {
     };
   }, []);
 
+  const [srcImage, setSrcImage] = useState(successGetDetailUser?.photo);
+  const handleChangeFile = (e) => {
+    let file = e.target.files[0];
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function (e) {
+      // sau khi thực hiên xong lênh trên thì set giá trị có được
+      setSrcImage(e.target.result);
+    };
+    // Đem dữ liệu file lưu vào formik
+    formik.setFieldValue("photo", file);
+  };
   return (
     <Fragment>
       <Box sx={{ margin: "20px 0" }}></Box>
@@ -178,34 +189,26 @@ export default function Info() {
                 </Label>
                 <div className="mb-8">
                   <div className="w-36 h-36 rounded-full p-2 border-2 border-dashed border-gray-300 inline-flex">
-                    <div className="w-full h-full outline-none overflow-hidden rounded-full items-center justify-center">
+                    <label className="w-full h-full outline-none overflow-hidden rounded-full items-center justify-center relative flex cursor-pointer">
                       <input
                         accept="image/*"
-                        // className={classes.input}
-                        style={{ display: "none" }}
-                        id="raised-button-file"
                         multiple
+                        id="fileUpload"
                         type="file"
                         autoComplete="off"
+                        className="w-full h-full hidden"
+                        onChange={handleChangeFile}
                       />
-                      {/* <label htmlFor="raised-button-file">
-                              <Button
-                                variant="raised"
-                                component="span"
-                                // className={classes.button}
-                              >
-                                Upload
-                              </Button>
-                            </label> */}
-                      <span className="overflow-hidden z-10">
-                        <img
-                          htmlFor="raised-button-file"
-                          src={values.photo}
-                          alt="avatar"
-                          className="w-full h-full object-cover"
-                        />
+                      <span className="overflow-hidden z-10 w-full h-full block">
+                        <span className=" w-full h-full bg-cover inline-block">
+                          <img
+                            src={srcImage}
+                            alt="avatar"
+                            className="w-full h-full object-cover"
+                          />
+                        </span>
                       </span>
-                    </div>
+                    </label>
                   </div>
                 </div>
                 <FormControlLabel

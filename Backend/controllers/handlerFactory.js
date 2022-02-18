@@ -2,6 +2,14 @@ const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const APIFeatures = require('../utils/apiFeatures');
 
+const filterObj = (obj, ...allowedField) => {
+  const newObj = {};
+  Object.keys(obj).forEach((el) => {
+    if (allowedField.includes(el)) newObj[el] = obj[el];
+  });
+  return newObj;
+};
+
 exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const doc = await Model.findByIdAndDelete(req.params.id);
@@ -19,6 +27,9 @@ exports.deleteOne = (Model) =>
 exports.updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const _id = req.params.id;
+    const path = req.file?.path.slice(7, req.file?.path.length);
+    const urlImage = `http://localhost:8080/${path}`;
+    if (req.file) req.body.photo = urlImage;
     const doc = await Model.findByIdAndUpdate(_id, req.body, {
       new: true,
       runValidators: true,
@@ -26,7 +37,7 @@ exports.updateOne = (Model) =>
 
     if (!doc) {
       return next(new AppError('No document found with that ID', 404));
-    } 
+    }
     res.status(200).json({
       status: 'success',
       data: doc,

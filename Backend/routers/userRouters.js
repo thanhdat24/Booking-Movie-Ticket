@@ -28,6 +28,10 @@ router.route('/').get(userController.getAllUsers);
 router
   .route('/:id')
   .get(userController.getDetailUser)
-  .patch(authController.protect, userController.updateUser)
+  .patch(
+    authController.protect,
+    userController.uploadUserPhoto,
+    userController.updateUser
+  )
   .delete(authController.protect, userController.deleteUser);
 module.exports = router;
