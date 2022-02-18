@@ -77,6 +77,7 @@ export default function Info() {
       ),
       role: successGetDetailUser?.role,
       active: successGetDetailUser?.active,
+      photo: successGetDetailUser?.photo,
       remember: true,
     },
 
@@ -199,7 +200,7 @@ export default function Info() {
                       <span className="overflow-hidden z-10">
                         <img
                           htmlFor="raised-button-file"
-                          src={currentUser?.user.photo}
+                          src={values.photo}
                           alt="avatar"
                           className="w-full h-full object-cover"
                         />

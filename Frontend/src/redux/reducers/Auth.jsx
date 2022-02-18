@@ -13,7 +13,7 @@ import {
   UPDATE_USER_CURRENT_FAIL,
   UPDATE_USER_CURRENT_REQUEST,
   UPDATE_USER_CURRENT_SUCCESS,
-} from "../types/Auth";
+} from "../constants/Auth";
 const currentUser = localStorage.getItem(USER_LOGIN)
   ? JSON.parse(localStorage.getItem(USER_LOGIN))
   : null;

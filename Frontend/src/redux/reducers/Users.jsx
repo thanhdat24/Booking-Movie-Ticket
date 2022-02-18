@@ -13,7 +13,7 @@ import {
   UPDATE_USER_FAIL,
   UPDATE_USER_REQUEST,
   UPDATE_USER_SUCCESS,
-} from "../types/Users";
+} from "../constants/Users";
 const stateDefault = {
   usersList: null,
   loadingUsersList: false,
@@ -109,6 +109,7 @@ export const UserManagement = (state = stateDefault, action) => {
         successUpdateUser: null,
       };
     }
+
     case UPDATE_USER_SUCCESS: {
       const { data } = action.payload;
       return {
@@ -118,6 +119,7 @@ export const UserManagement = (state = stateDefault, action) => {
         successUpdateUser: data,
       };
     }
+
     case UPDATE_USER_FAIL: {
       return {
         ...state,
@@ -139,7 +141,6 @@ export const UserManagement = (state = stateDefault, action) => {
 
         errorUpdateUser: null,
         successUpdateUser: "",
-
       };
     }
     default:

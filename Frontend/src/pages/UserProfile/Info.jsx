@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useRef } from "react";
 import {
   Box,
   Stack,
@@ -8,6 +8,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Button,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
 import { useFormik, Form, ErrorMessage, Formik } from "formik";
@@ -24,6 +25,8 @@ import { resetUpdate, updateCurrentUser } from "../../redux/actions/Auth";
 
 export default function Info() {
   const dispatch = useDispatch();
+  const wrapperRef = useRef(null);
+  console.log("wrapperRef", wrapperRef);
   const {
     currentUser,
     successUpdateUserCurrent,
@@ -57,7 +60,7 @@ export default function Info() {
       phoneNumber: currentUser?.user.phoneNumber,
       gender: currentUser?.user.gender,
       dateOfBirth: moment(currentUser?.user.dateOfBirth).format("YYYY-MM-DD"),
-
+      photo: currentUser?.user.photo,
       remember: true,
     },
 
@@ -93,12 +96,23 @@ export default function Info() {
       dispatch(resetUpdate());
     };
   }, []);
-
+  const [srcImage, setSrcImage] = useState(currentUser?.user.photo);
+  const handleChangeFile = (e) => {
+    let file = e.target.files[0];
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function (e) {
+      // sau khi thực hiên xong lênh trên thì set giá trị có được
+      setSrcImage(e.target.result);
+    };
+    // Đem dữ liệu file lưu vào formik
+    formik.setFieldValue("photo", file);
+  };
   return (
     <Fragment>
       <Box sx={{ margin: "20px 0" }}></Box>
       <Formik value={formik}>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit} enctype="multipart/form-data">
           <Grid
             container
             rowSpacing={1}
@@ -114,35 +128,45 @@ export default function Info() {
                 }}
               >
                 <div>
-                  <div className="w-36 h-36 rounded-full p-2 border-2 border-dashed border-gray-300 inline-flex">
-                    <div className="w-full h-full outline-none overflow-hidden rounded-full items-center justify-center">
+                  <div className="w-36 h-36 rounded-full p-2 border-2 border-dashed border-gray-200 inline-flex">
+                    <label className="w-full h-full outline-none overflow-hidden rounded-full items-center justify-center relative flex cursor-pointer">
                       <input
                         accept="image/*"
-                        // className={classes.input}
-                        style={{ display: "none" }}
-                        id="raised-button-file"
                         multiple
+                        id="fileUpload"
                         type="file"
                         autoComplete="off"
+                        className="w-full h-full hidden"
+                        onChange={handleChangeFile}
                       />
-                      {/* <label htmlFor="raised-button-file">
-                              <Button
-                                variant="raised"
-                                component="span"
-                                // className={classes.button}
-                              >
-                                Upload
-                              </Button>
-                            </label> */}
-                      <span className="overflow-hidden z-10">
-                        <img
-                          htmlFor="raised-button-file"
-                          src={currentUser?.user.photo}
-                          alt="avatar"
-                          className="w-full h-full object-cover"
-                        />
+                      <span className="overflow-hidden z-10 w-full h-full block">
+                        <span className=" w-full h-full bg-cover inline-block">
+                          <img
+                            src={srcImage}
+                            alt="avatar"
+                            className="w-full h-full object-cover"
+                          />
+                        </span>
                       </span>
-                    </div>
+                      {/* <Box
+                        sx={{
+                          display: "flex",
+                          position: "absolute",
+                          alignItems: "center",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          transition:
+                            " opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
+                          opacity: 0.72,
+                          color: "rgb(255, 255, 255)",
+                          backgroundColor: "rgb(22, 28, 36)",
+                          width: "100%",
+                          height: "100%",
+                        }}
+                      >
+                        <span>Update photo</span>
+                      </Box> */}
+                    </label>
                   </div>
                 </div>
               </Card>

@@ -18,7 +18,7 @@ import {
 // components
 import MenuPopover from "./MenuPopover";
 import { useDispatch, useSelector } from "react-redux";
-import { LOGOUT } from "../../redux/types/Auth";
+import { LOGOUT } from "../../redux/constants/Auth";
 
 //
 

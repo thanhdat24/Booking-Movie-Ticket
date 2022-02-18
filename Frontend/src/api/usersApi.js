@@ -19,7 +19,11 @@ const usersApi = {
   },
   updateCurrentUser: (currentUser) => {
     const path = `/v1/users/updateMe`;
-    return axiosClient.patch(path, currentUser);
+     const formData = new FormData();
+     for (const key in currentUser) {
+       formData.append(key, currentUser[key]);
+     }
+    return axiosClient.patch(path, formData);
   },
   getCurrentUser: () => {
     const path = `/v1/users/getMe`;

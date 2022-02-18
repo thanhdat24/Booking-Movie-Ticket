@@ -104,9 +104,9 @@ export default function UserEdit() {
     }
     return () => dispatch(resetUserList());
   }, []);
-
+  console.log("successDelete", successDelete);
   useEffect(() => {
-    if ((successDelete, successUpdateUser)) {
+    if (successDelete || successUpdateUser) {
       dispatch(getUsersList());
     }
   }, [successDelete, successUpdateUser]);
