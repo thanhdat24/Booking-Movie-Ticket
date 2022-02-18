@@ -17,7 +17,8 @@ const app = express();
 const swaggerUi = require('swagger-ui-express');
 
 // Serving static files
-app.use(express.static(path.join(__dirname, 'public')));
+// const publicPathDirectory = path.join(__dirname, 'public')
+app.use(express.static(path.join(__dirname, './public')));
 // app.use(express.static(`${__dirname}/public`));
 
 // 1) Global Middleware
