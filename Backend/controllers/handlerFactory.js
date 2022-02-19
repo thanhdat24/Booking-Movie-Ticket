@@ -27,9 +27,6 @@ exports.deleteOne = (Model) =>
 exports.updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const _id = req.params.id;
-    const path = req.file?.path.slice(7, req.file?.path.length);
-    const urlImage = `http://localhost:8080/${path}`;
-    if (req.file) req.body.photo = urlImage;
     const doc = await Model.findByIdAndUpdate(_id, req.body, {
       new: true,
       runValidators: true,
@@ -46,6 +43,10 @@ exports.updateOne = (Model) =>
 
 exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
+    const path = req.file?.path.slice(7, req.file?.path.length);
+    const urlImage = `http://localhost:8080/${path}`;
+    if (req.file) req.body.photo = urlImage;
+
     const doc = await Model.create(req.body);
 
     res.status(201).json({

@@ -12,11 +12,13 @@ router.use(authController.restrictTo('admin'));
 
 router.route('/').get(movieController.getAllMovie);
 
-router.route('/').post(movieController.createMovie);
+router
+  .route('/')
+  .post(movieController.uploadUserPhoto, movieController.createMovie);
 
 router
   .route('/:id')
   .get(movieController.getDetailMovie)
-  .patch(authController.protect, movieController.updateMovie)
-  .delete(authController.protect, movieController.deleteMovie);;
+  .patch(movieController.updateMovie)
+  .delete(movieController.deleteMovie);
 module.exports = router;

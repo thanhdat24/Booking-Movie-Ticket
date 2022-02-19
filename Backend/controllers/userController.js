@@ -107,26 +107,6 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
-// exports.updateUser = catchAsync(async (req, res, next) => {
-//   const filteredBody = filterObj(
-//     req.body,
-//     'fullName',
-//     'phoneNumber',
-//     'gender',
-//     'dateOfBirth',
-//     'photo'
-//   );
-//   const path = req.file?.path.slice(7, req.file?.path.length);
-//   const urlImage = `http://localhost:8080/${path}`;
-//   console.log('{req.file?.path', path);
-//   if (req.file) filteredBody.photo = urlImage;
-//   const user = await User.findByIdAndUpdate(req.user.id, filteredBody, {
-//     new: true,
-//     runValidators: true,
-//   });
-//   createSendToken(user, 200, res);
-// });
-
 exports.getAllUsers = factory.getAll(User);
 exports.getDetailUser = factory.getOne(User);
 // Do Not update password with this

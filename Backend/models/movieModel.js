@@ -4,10 +4,6 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: [true, 'A movie must have a name'],
   },
-  alias: {
-    type: String,
-    required: [true, 'A movie must have a alias'],
-  },
   trailer: {
     type: String,
     required: [true, 'A movie must have a trailer'],
@@ -23,7 +19,6 @@ const movieSchema = new mongoose.Schema({
   duration: { type: String, default: '' },
   releaseDate: {
     type: Date,
-    default: Date.now,
   },
   nowShowing: {
     type: Boolean,
