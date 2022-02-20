@@ -6,7 +6,8 @@ const globalErrorHandler = require('./controllers/errorController');
 const tourRoutes = require('./routers/tourRouters');
 const userRoutes = require('./routers/userRouters');
 const movieRoutes = require('./routers/movieRouters');
-
+const theaterRoutes = require('./routers/theaterRouters');
+const showtimesRoutes = require('./routers/showtimesRouters');
 const reviewRouters = require('./routers/reviewRouters');
 const swaggerDocument = require('./swagger/swagger.json');
 const cors = require('cors');
@@ -51,6 +52,8 @@ app.use('/api/v1/tours', tourRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/reviews', reviewRouters);
 app.use('/api/v1/movies', movieRoutes);
+app.use('/api/v1/theaters', theaterRoutes);
+app.use('/api/v1/showtimes', showtimesRoutes);
 
 // trả về đường dẫn not found
 app.all('*', (req, res, next) => {

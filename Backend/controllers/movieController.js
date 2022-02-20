@@ -29,6 +29,6 @@ exports.uploadUserPhoto = upload.single('photo');
 exports.getAllMovie = factory.getAll(Movie);
 
 exports.createMovie = factory.createOne(Movie);
-exports.getDetailMovie = factory.getOne(Movie);
+exports.getDetailMovie = factory.getOne(Movie, { path: 'showtimes' });
 exports.updateMovie = factory.updateOne(Movie);
 exports.deleteMovie = factory.deleteOne(Movie);
