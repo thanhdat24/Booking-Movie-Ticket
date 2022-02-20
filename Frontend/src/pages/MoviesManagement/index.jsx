@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import { filter } from "lodash";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
@@ -106,16 +106,15 @@ export default function MoviesManagement() {
     (state) => state.MovieReducer
   );
   const { enqueueSnackbar } = useSnackbar();
-
+  const history = useHistory();
   const { movieList } = useSelector((state) => state.MovieReducer);
-  console.log("movieList", movieList);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState("name");
   const [filterNameMovie, setFilterNameMovie] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
+  const { successAddMovie } = useSelector((state) => state.MovieReducer);
   useEffect(() => {
     // get list user lần đầu
     if (!movieList.result) {
@@ -125,10 +124,10 @@ export default function MoviesManagement() {
   }, []);
 
   useEffect(() => {
-    if (successDeleteMovie) {
+    if (successDeleteMovie || successAddMovie) {
       dispatch(getMovieList());
     }
-  }, [successDeleteMovie]);
+  }, [successDeleteMovie, successAddMovie]);
 
   useEffect(() => {
     if (successDeleteMovie) {
@@ -193,7 +192,6 @@ export default function MoviesManagement() {
     getComparator(order, orderBy),
     filterNameMovie
   );
-  console.log("filteredMovies", filteredMovies);
   const isUserNotFound = movieList?.result === 0;
   const breadcrumbs = [
     <Link
@@ -242,6 +240,7 @@ export default function MoviesManagement() {
           component={RouterLink}
           to="#"
           startIcon={<Icon icon={plusFill} />}
+          onClick={() => history.push("/admin/movies/create")}
         >
           New Movie
         </Button>
@@ -361,7 +360,7 @@ export default function MoviesManagement() {
                       </TableCell>
                       <TableCell align="left">{duration} phút</TableCell>
                       <TableCell align="left">
-                        {releaseDate.slice(0, 10)}
+                        {releaseDate?.slice(0, 10)}
                       </TableCell>
 
                       <TableCell align="right">

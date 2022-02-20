@@ -42,20 +42,6 @@ export default function UserMoreMenu(props) {
     }
     dispatch(deleteMovie(_id));
   };
-
-  // const handleEditDetail = (_id) => {
-  //   dispatch(getDetailUser(_id));
-  //   // if (successGetDetailUser) {
-  //   // history.push("/admin/users/edit");
-  //   // }
-  // };
-  // useEffect(() => {
-  //   if (history.push("/admin/users/list")) {
-  //     return () => {
-  //       dispatch(resetUpdate());
-  //     };
-  //   }
-  // }, []);
   return (
     <>
       <IconButton ref={ref} onClick={() => setIsOpen(true)}>

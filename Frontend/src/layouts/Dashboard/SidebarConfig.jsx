@@ -46,6 +46,11 @@ const sidebarConfig = [
     ],
     icon: getIcon("bx:bxs-movie-play"),
   },
+  {
+    title: "Quản lý rạp",
+    path: "/admin/theater/list",
+    icon: getIcon("ic:baseline-theaters"),
+  },
 ];
 
 export default sidebarConfig;

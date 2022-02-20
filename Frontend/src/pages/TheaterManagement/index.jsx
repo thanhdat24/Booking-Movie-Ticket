@@ -25,7 +25,7 @@ import { useState } from "react";
 import plusFill from "@iconify/icons-eva/plus-fill";
 // import UserListToolbar from "../../components/user";
 import { useDispatch, useSelector } from "react-redux";
-import { getUsersList, resetUserList } from "../../redux/actions/Users";
+import { getTheaterList } from "../../redux/actions/Theater";
 import UserListHead from "../../components/user/UserListHead";
 import UserListToolbar from "../../components/user/UserListToolbar";
 import UserMoreMenu from "../../components/user/UserMoreMenu";
@@ -35,12 +35,8 @@ import Label from "../../components/Label";
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: "fullName", label: "Họ tên", alignRight: false },
-  { id: "email", label: "Email", alignRight: false },
-  { id: "phoneNumber", label: "Số điện thoại", alignRight: false },
-  { id: "role", label: "Vai trò", alignRight: false },
-  { id: "active", label: "Trạng thái", alignRight: false },
-  { id: "" },
+  { id: "name", label: "Tên rạp", alignRight: false },
+  { id: "type", label: "Loại rạp", alignRight: false },
 ];
 
 // ----------------------------------------------------------------------
@@ -84,12 +80,9 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis?.map((el) => el[0]);
 }
 
-export default function UserEdit() {
+export default function TheaterManagement() {
   const dispatch = useDispatch();
-  const { enqueueSnackbar } = useSnackbar();
-  const { usersList, successDelete, errorDelete, successUpdateUser } =
-    useSelector((state) => state.UserManagement);
-
+  const { theaterList } = useSelector((state) => state.TheaterReducer);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
   const [selected, setSelected] = useState([]);
@@ -99,26 +92,11 @@ export default function UserEdit() {
 
   useEffect(() => {
     // get list user lần đầu
-    if (!usersList) {
-      dispatch(getUsersList());
+    if (!theaterList.result) {
+      dispatch(getTheaterList());
     }
-    return () => dispatch(resetUserList());
+    // return () => dispatch(resetUserList());
   }, []);
-  useEffect(() => {
-    if (successDelete || successUpdateUser) {
-      dispatch(getUsersList());
-    }
-  }, [successDelete, successUpdateUser]);
-
-  useEffect(() => {
-    if (successDelete) {
-      enqueueSnackbar(successDelete, { variant: "success" });
-      return;
-    }
-    if (errorDelete) {
-      enqueueSnackbar(errorDelete, { variant: "error" });
-    }
-  }, [successDelete, errorDelete]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -128,7 +106,7 @@ export default function UserEdit() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = usersList?.data.map((n) => n.fullName);
+      const newSelecteds = theaterList?.data.map((n) => n.fullName);
       setSelected(newSelecteds);
       return;
     }
@@ -167,15 +145,15 @@ export default function UserEdit() {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - usersList?.result) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - theaterList?.result) : 0;
 
   const filteredUsers = applySortFilter(
-    usersList?.data,
+    theaterList?.data,
     getComparator(order, orderBy),
     filterName
   );
 
-  const isUserNotFound = usersList?.result === 0;
+  const isUserNotFound = theaterList?.result === 0;
 
   const breadcrumbs = [
     <Link
@@ -194,7 +172,7 @@ export default function UserEdit() {
       href="/getting-started/installation/"
       onClick={handleClick}
     >
-      User
+      Theater
     </Link>,
     <Typography key="3" color="text.primary">
       List
@@ -211,7 +189,7 @@ export default function UserEdit() {
       >
         <Stack spacing={2}>
           <Typography variant="h4" gutterBottom>
-            User List
+            Danh sách rạp
           </Typography>
           <Breadcrumbs separator="›" aria-label="breadcrumb">
             {breadcrumbs}
@@ -240,7 +218,7 @@ export default function UserEdit() {
               order={order}
               orderBy={orderBy}
               headLabel={TABLE_HEAD}
-              rowCount={usersList?.result}
+              rowCount={theaterList?.result}
               numSelected={selected.length}
               onRequestSort={handleRequestSort}
               onSelectAllClick={handleSelectAllClick}
@@ -249,16 +227,8 @@ export default function UserEdit() {
               {filteredUsers
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
-                  const {
-                    _id,
-                    fullName,
-                    role,
-                    photo,
-                    email,
-                    phoneNumber,
-                    active,
-                  } = row;
-                  const isItemSelected = selected.indexOf(fullName) !== -1;
+                  const { _id, name, type } = row;
+                  const isItemSelected = selected.indexOf(name) !== -1;
 
                   return (
                     <TableRow
@@ -272,31 +242,14 @@ export default function UserEdit() {
                       <TableCell padding="checkbox">
                         <Checkbox
                           checked={isItemSelected}
-                          onChange={(event) => handleClick(event, fullName)}
+                          onChange={(event) => handleClick(event, name)}
                         />
                       </TableCell>
-                      <TableCell component="th" scope="row" padding="none">
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                          <Avatar alt={fullName} src={photo} />
-                          <Typography variant="subtitle2" noWrap>
-                            {fullName}
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell align="left">{email}</TableCell>
-                      <TableCell align="left">{phoneNumber}</TableCell>
-                      <TableCell align="left">{role}</TableCell>
-                      <TableCell align="left">
-                        <Label
-                          variant="ghost"
-                          color={(!active && "error") || "success"}
-                        >
-                          {changeActive(active)}
-                        </Label>
-                      </TableCell>
+                      <TableCell align="left">{name}</TableCell>
+                      <TableCell align="left">{type}</TableCell>
 
                       <TableCell align="right">
-                        <UserMoreMenu keyItemId={_id} />
+                        {/* <UserMoreMenu keyItemId={_id} /> */}
                       </TableCell>
                     </TableRow>
                   );
@@ -322,7 +275,7 @@ export default function UserEdit() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={usersList?.result}
+          count={theaterList?.result}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

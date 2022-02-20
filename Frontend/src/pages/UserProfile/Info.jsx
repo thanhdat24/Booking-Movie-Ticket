@@ -26,7 +26,6 @@ import { resetUpdate, updateCurrentUser } from "../../redux/actions/Auth";
 export default function Info() {
   const dispatch = useDispatch();
   const wrapperRef = useRef(null);
-  console.log("wrapperRef", wrapperRef);
   const {
     currentUser,
     successUpdateUserCurrent,
