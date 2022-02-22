@@ -51,6 +51,11 @@ const sidebarConfig = [
     path: "/admin/theater/list",
     icon: getIcon("ic:baseline-theaters"),
   },
+  {
+    title: "Quản lý lịch chiếu phim",
+    path: "/admin/showtimes/list",
+    icon: getIcon("map:movie-theater"),
+  },
 ];
 
 export default sidebarConfig;

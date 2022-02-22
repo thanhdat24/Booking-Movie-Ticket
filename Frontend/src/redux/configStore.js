@@ -4,12 +4,14 @@ import { AuthReducer } from "./reducers/Auth";
 import { UserManagement } from "./reducers/Users";
 import { MovieReducer } from "./reducers/Movie";
 import { TheaterReducer } from "./reducers/Theater";
+import { BookTicketReducer } from "./reducers/BookTicket";
 
 const rootReducer = combineReducers({
   UserManagement,
   AuthReducer,
   MovieReducer,
   TheaterReducer,
+  BookTicketReducer,
 });
 
 export const store = createStore(rootReducer, applyMiddleware(thunk));

@@ -14,10 +14,6 @@ import {
   TablePagination,
   Breadcrumbs,
   Link,
-  Box,
-  Tooltip,
-  styled,
-  tooltipClasses,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 
@@ -27,25 +23,27 @@ import { Icon } from "@iconify/react";
 import { useState } from "react";
 import plusFill from "@iconify/icons-eva/plus-fill";
 import { useDispatch, useSelector } from "react-redux";
-import { getmovieList, resetUserList } from "../../redux/actions/Users";
+
 import MovieListHead from "../../components/movie/MovieListHead";
 import MovieListToolbar from "../../components/movie/MovieListToolbar";
-import MovieMoreMenu from "../../components/movie/MovieMoreMenu";
 
-import Label from "../../components/Label";
-import { getMovieList, resetMoviesManagement } from "../../redux/actions/Movie";
-import ThumbnailYoutube from "./ThumbnailYoutube";
+
+import { getAllShowTimes } from "../../redux/actions/Theater";
+import ShowtimesMoreMenu from "../../components/showtimes/ShowtimesMoreMenu";
+import moment from "moment";
+import { resetCreateShowtime } from "../../redux/actions/BookTicket";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: "name", label: "Tên phim", alignRight: false },
-  { id: "trailer", label: "Trailer", alignRight: false },
-  { id: "photo", label: "Hình ảnh", alignRight: false },
-  { id: "description", label: "Mô tả", alignRight: false },
-  { id: "duration", label: "Thời lượng", alignRight: false },
-
-  { id: "releaseDate", label: "Ngày khởi chiếu", alignRight: false },
+  { id: "idMovie", label: "Phim", alignRight: false },
+  { id: "idTheater", label: "Rạp", alignRight: false },
+  {
+    id: "dateShow",
+    label: "Ngày chiếu giờ chiếu",
+    alignRight: false,
+  },
+  { id: "ticketPrice", label: "Giá vé (vnđ)", alignRight: false },
   { id: "" },
 ];
 
@@ -77,61 +75,51 @@ function applySortFilter(array, comparator, query) {
   if (query) {
     return filter(
       array,
-      (_movie) => _movie.name.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      (_movie) =>
+        _movie.idMovie.name.toLowerCase().indexOf(query.toLowerCase()) !== -1
     );
   }
   return stabilizedThis?.map((el) => el[0]);
 }
 
-const CustomTooltip = styled(({ className, ...props }) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: "#f5f5f9",
-    color: "rgba(0, 0, 0, 0.87)",
-    maxWidth: 220,
-    fontSize: theme.typography.pxToRem(12),
-    border: "1px solid #dadde9",
-  },
-}));
-export default function MoviesManagement() {
+export default function ShowtimesManagement() {
   const dispatch = useDispatch();
-  const { successDeleteMovie, errorDeleteMovie } = useSelector(
-    (state) => state.MovieReducer
-  );
+  const { showtimesList } = useSelector((state) => state.TheaterReducer);
   const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
-  const { movieList } = useSelector((state) => state.MovieReducer);
+
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState("name");
   const [filterNameMovie, setFilterNameMovie] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const { successAddMovie } = useSelector((state) => state.MovieReducer);
+  const { successCreateShowtime, successDeleteShowtime, errorDeleteShowtime } =
+    useSelector((state) => state.BookTicketReducer);
+  console.log("successDeleteShowtime", successDeleteShowtime);
   useEffect(() => {
     // get list user lần đầu
-    if (!movieList.result) {
-      dispatch(getMovieList());
+    if (!showtimesList.result) {
+      dispatch(getAllShowTimes());
     }
-    return () => dispatch(resetMoviesManagement());
+    return () => dispatch(resetCreateShowtime());
   }, []);
 
   useEffect(() => {
-    if (successDeleteMovie || successAddMovie) {
-      dispatch(getMovieList());
+    if (successCreateShowtime || successDeleteShowtime) {
+      dispatch(getAllShowTimes());
     }
-  }, [successDeleteMovie, successAddMovie]);
+  }, [successCreateShowtime, successDeleteShowtime]);
 
   useEffect(() => {
-    if (successDeleteMovie) {
-      enqueueSnackbar(successDeleteMovie, { variant: "success" });
+    if (successDeleteShowtime) {
+      enqueueSnackbar(successDeleteShowtime, { variant: "success" });
       return;
     }
-    if (errorDeleteMovie) {
-      enqueueSnackbar(errorDeleteMovie, { variant: "error" });
+    if (errorDeleteShowtime) {
+      enqueueSnackbar(errorDeleteShowtime, { variant: "error" });
     }
-  }, [successDeleteMovie, errorDeleteMovie]);
+  }, [successDeleteShowtime, errorDeleteShowtime]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -141,7 +129,7 @@ export default function MoviesManagement() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = movieList?.data.map((n) => n.name);
+      const newSelecteds = showtimesList?.data.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -179,14 +167,16 @@ export default function MoviesManagement() {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - movieList?.result) : 0;
+    page > 0
+      ? Math.max(0, (1 + page) * rowsPerPage - showtimesList?.result)
+      : 0;
 
   const filteredMovies = applySortFilter(
-    movieList?.data,
+    showtimesList?.data,
     getComparator(order, orderBy),
     filterNameMovie
   );
-  const isUserNotFound = movieList?.result === 0;
+  const isUserNotFound = showtimesList?.result === 0;
   const breadcrumbs = [
     <Link
       underline="hover"
@@ -204,7 +194,7 @@ export default function MoviesManagement() {
       href="/getting-started/installation/"
       onClick={handleClick}
     >
-      Movie
+      Showtimes
     </Link>,
     <Typography key="3" color="text.primary">
       List
@@ -222,7 +212,7 @@ export default function MoviesManagement() {
       >
         <Stack spacing={2}>
           <Typography variant="h4" gutterBottom>
-            Movie List
+            Danh sách lịch chiếu
           </Typography>
           <Breadcrumbs separator="›" aria-label="breadcrumb">
             {breadcrumbs}
@@ -234,9 +224,9 @@ export default function MoviesManagement() {
           component={RouterLink}
           to="#"
           startIcon={<Icon icon={plusFill} />}
-          onClick={() => history.push("/admin/movies/create")}
+          onClick={() => history.push("/admin/showtimes/create")}
         >
-          Thêm Phim
+          Thêm lịch chiếu
         </Button>
       </Stack>
 
@@ -253,7 +243,7 @@ export default function MoviesManagement() {
               order={order}
               orderBy={orderBy}
               headLabel={TABLE_HEAD}
-              rowCount={movieList?.result}
+              rowCount={showtimesList?.result}
               numSelected={selected.length}
               onRequestSort={handleRequestSort}
               onSelectAllClick={handleSelectAllClick}
@@ -262,103 +252,42 @@ export default function MoviesManagement() {
               {filteredMovies
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
-                  const {
-                    _id,
-                    name,
-                    trailer,
-                    photo,
-                    duration,
-                    description,
-                    releaseDate,
-                  } = row;
-                  const isItemSelected = selected.indexOf(name) !== -1;
+                  const { _id, idMovie, ticketPrice, idTheater, dateShow } =
+                    row;
+                  var formatDateShow = moment(dateShow)
+                    .add(0, "hours")
+                    .format("DD-MM-YYYY, hh:mm A");
+
+                  const isItemSelected = selected.indexOf(_id) !== -1;
 
                   return (
                     <TableRow
                       hover
                       key={_id}
                       tabIndex={-1}
-                      name="checkbox"
+                      _id="checkbox"
                       selected={isItemSelected}
                       aria-checked={isItemSelected}
                     >
                       <TableCell padding="checkbox">
                         <Checkbox
                           checked={isItemSelected}
-                          onChange={(event) => handleClick(event, name)}
+                          onChange={(event) => handleClick(event, _id)}
                         />
                       </TableCell>
                       <TableCell component="th" scope="row" padding="none">
                         <Stack direction="row" alignItems="center" spacing={2}>
                           <Typography variant="subtitle2" noWrap>
-                            {name}
+                            {idMovie.name}
                           </Typography>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">
-                        {" "}
-                        <ThumbnailYoutube urlYoutube={trailer} />
-                      </TableCell>
-                      <TableCell align="left">
-                        <Tooltip
-                          placement="right"
-                          id="test"
-                          title={<img src={photo} width={170} alt="" />}
-                        >
-                          <Box
-                            sx={{
-                              display: "inline-block",
-                              width: 64,
-                              height: 64,
-                              objectFit: "cover",
-                              position: "relative",
-                              "&:hover > div": {
-                                opacity: 1,
-                              },
-                              "& > div > img": {
-                                verticalAlign: "top",
-                              },
-                            }}
-                          >
-                            <img
-                              className="w-full h-full rounded"
-                              src={photo}
-                              alt="poster movie"
-                              aria-label="test"
-                            />
-                          </Box>
-                        </Tooltip>
-                      </TableCell>
-                      <TableCell align="left">
-                        <CustomTooltip
-                          title={
-                            <React.Fragment>
-                              <Typography variant="body2">
-                                {description}
-                              </Typography>
-                            </React.Fragment>
-                          }
-                          placement="right"
-                        >
-                          <Box
-                            sx={{
-                              maxWidth: 200, // percentage also works
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                            }}
-                          >
-                            {description}
-                          </Box>
-                        </CustomTooltip>
-                      </TableCell>
-                      <TableCell align="left">{duration} phút</TableCell>
-                      <TableCell align="left">
-                        {releaseDate?.slice(0, 10)}
-                      </TableCell>
+                      <TableCell align="left">{idTheater.name}</TableCell>
+                      <TableCell align="left">{formatDateShow}</TableCell>
+                      <TableCell align="left">{ticketPrice}</TableCell>
 
                       <TableCell align="right">
-                        <MovieMoreMenu keyItemId={_id} />
+                        <ShowtimesMoreMenu keyItemId={_id} />
                       </TableCell>
                     </TableRow>
                   );
@@ -386,7 +315,7 @@ export default function MoviesManagement() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={movieList?.result}
+          count={showtimesList?.result}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

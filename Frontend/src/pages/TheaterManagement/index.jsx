@@ -202,7 +202,7 @@ export default function TheaterManagement() {
           to="#"
           startIcon={<Icon icon={plusFill} />}
         >
-          New User
+          Thêm Rạp
         </Button>
       </Stack>
       <Card>

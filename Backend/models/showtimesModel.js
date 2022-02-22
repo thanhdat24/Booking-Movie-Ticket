@@ -23,18 +23,13 @@ const showTimesSchema = new mongoose.Schema(
 );
 
 showTimesSchema.pre(/^find/, function (next) {
-  // this.populate({
-  //   path: 'idTheater',
-  //   select: 'name type',
-  // }).populate({
-  //   path: 'idMovie',
-  //   select: 'name',
-  // });
-
-    this.populate({
-      path: 'idTheater',
-      select: 'name type',
-    })
+  this.populate({
+    path: 'idTheater',
+    select: 'name type',
+  }).populate({
+    path: 'idMovie',
+    select: 'name',
+  });
   next();
 });
 

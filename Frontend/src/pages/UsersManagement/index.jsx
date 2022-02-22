@@ -224,7 +224,7 @@ export default function UserEdit() {
           to="#"
           startIcon={<Icon icon={plusFill} />}
         >
-          New User
+          Thêm Người Dùng
         </Button>
       </Stack>
       <Card>

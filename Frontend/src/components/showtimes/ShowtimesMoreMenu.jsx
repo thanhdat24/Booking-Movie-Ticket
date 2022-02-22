@@ -13,24 +13,24 @@ import {
   ListItemText,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteMovie } from "../../redux/actions/Movie";
+import { deleteShowTimes } from "../../redux/actions/BookTicket";
 
 // ----------------------------------------------------------------------
 
-export default function UserMoreMenu(props) {
-  const { loadingDeleteMovie } = useSelector((state) => state.MovieReducer);
+export default function ShowtimesMoreMenu(props) {
+  const { loadingDeleteShowtime } = useSelector(
+    (state) => state.BookTicketReducer
+  );
 
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
 
-  // xóa một user
   const handleDeleteOne = (_id) => {
-    if (loadingDeleteMovie) {
-      // nếu click xóa liên tục một user
+    if (loadingDeleteShowtime) {
       return;
     }
-    dispatch(deleteMovie(_id));
+    dispatch(deleteShowTimes(_id));
   };
   return (
     <>
