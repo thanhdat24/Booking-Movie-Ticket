@@ -12,12 +12,10 @@ exports.createShowTime = catchAsync(async (req, res, next) => {
     seatCode = types.seatList;
   }
   let seatList = [];
-  seatCode.map((code) => {
-    const seat = new Seat({ name: code.nameSeat, code, isBooked: false });
+  seatCode.map((name) => {
+    const seat = new Seat({ name, isBooked: false });
     seatList.push(seat);
   });
-  //   seatCode.forEach((code) => {});
-  //   console.log('seatList', seatList);
   const newShowtime = new ShowTime({
     idMovie,
     idTheater,

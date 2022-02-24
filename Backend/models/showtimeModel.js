@@ -32,10 +32,6 @@ showTimesSchema.pre(/^find/, function (next) {
       path: 'idMovie',
       select: 'name',
     })
-    .populate({
-      path: 'idSeatList',
-      select: 'seatList',
-    });
   next();
 });
 

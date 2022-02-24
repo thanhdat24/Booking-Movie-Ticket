@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { seatSchema } = require('./seatModel');
-const bookingSchema = new mongoose.Schema({
+const ticketSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
@@ -19,7 +19,7 @@ const bookingSchema = new mongoose.Schema({
   },
 });
 
-bookingSchema.pre(/^find/, function (next) {
+ticketSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'userId',
     select: 'email',
@@ -31,6 +31,6 @@ bookingSchema.pre(/^find/, function (next) {
   next();
 });
 
-const Booking = mongoose.model('Booking', bookingSchema);
+const Ticket = mongoose.model('Ticket', ticketSchema);
 
-module.exports = Booking;
+module.exports = Ticket;

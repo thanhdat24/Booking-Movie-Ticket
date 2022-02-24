@@ -1,9 +1,9 @@
-const Booking = require('../models/bookingModel');
-const factory = require('../controllers/handlerFactory');
+const Ticket = require('../models/ticketModel');
+const factory = require('./handlerFactory');
 const catchAsync = require('../utils/catchAsync');
 const ShowTime = require('../models/showtimeModel');
 
-exports.createBooking = catchAsync(async (req, res, next) => {
+exports.createTicket = catchAsync(async (req, res, next) => {
   const { showtimeId, seatCodes } = req.body;
   const user = req.user;
   ShowTime.findById(showtimeId)
@@ -11,32 +11,35 @@ exports.createBooking = catchAsync(async (req, res, next) => {
     .populate('idTheater')
     .then((showtime) => {
       if (!showtime)
-        return next(new AppError('Lịch chiếu không tồn tại!', 404));
+        return Promise.reject({
+          status: 404,
+          message: 'Lịch chiếu không tồn tại!',
+        });
       const availableSeatCodes = showtime.seatList
         .filter((seat) => !seat.isBooked)
-        .map((seat) => seat._id);
+        .map((seat) => seat.name);
+
       let bookedSeatCodes = [];
-      seatCodes.forEach((code) => {
-        if (availableSeatCodes.indexOf(code) === -1) bookedSeatCodes.push(code);
+      seatCodes.forEach((name) => {
+        if (availableSeatCodes.indexOf(name) === -1) bookedSeatCodes.push(name);
       });
       if (bookedSeatCodes.length > 0)
         return Promise.reject({
           status: 400,
-          message: 'Ghế không có sẵn',
+          message: 'Ghế không tồn tại!',
           notAvaiSeat: bookedSeatCodes,
         });
-      const newTicket = new Booking({
+      const newTicket = new Ticket({
         showtimeId,
         userId: user,
         seatList: seatCodes.map((seat) => ({
           isBooked: true,
-          _id: seat,
-          name: seat.nameSeat,
+          name: seat,
         })),
         totalPrice: showtime.ticketPrice * seatCodes.length,
       });
       showtime.seatList = showtime.seatList.map((seat) => {
-        if (seatCodes.indexOf(`${seat._id}`) > -1) {
+        if (seatCodes.indexOf(seat.name) > -1) {
           seat.isBooked = true;
         }
         return seat;
@@ -52,7 +55,7 @@ exports.createBooking = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.getAllBooking = factory.getAll(Booking);
-exports.getDetailBooking = factory.getOne(Booking);
-exports.updateBooking = factory.updateOne(Booking);
-exports.deleteBooking = factory.deleteOne(Booking);
+exports.getAllTicket = factory.getAll(Ticket);
+exports.getDetailTicket = factory.getOne(Ticket);
+exports.updateTicket = factory.updateOne(Ticket);
+exports.deleteTicket = factory.deleteOne(Ticket);

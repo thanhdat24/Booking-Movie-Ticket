@@ -1,21 +1,21 @@
 const express = require('express');
 const authController = require('../controllers/authController');
-const bookingController = require('../controllers/bookingController');
+const ticketController = require('../controllers/ticketController');
 
 const router = express.Router();
 
 //Protect all routers after this middleware
 router.use(authController.protect);
 
-router.route('/').post(bookingController.createBooking);
+router.route('/').post(ticketController.createTicket);
 // RestrictTo "admin"
 router.use(authController.restrictTo('admin'));
 
-router.route('/').get(bookingController.getAllBooking);
+router.route('/').get(ticketController.getAllTicket);
 
 router
   .route('/:id')
-  .get(bookingController.getDetailBooking)
-  .patch(bookingController.updateBooking)
-  .delete(bookingController.deleteBooking);
+  .get(ticketController.getDetailTicket)
+  .patch(ticketController.updateTicket)
+  .delete(ticketController.deleteTicket);
 module.exports = router;

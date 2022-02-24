@@ -27,7 +27,6 @@ import { useDispatch, useSelector } from "react-redux";
 import MovieListHead from "../../components/movie/MovieListHead";
 import MovieListToolbar from "../../components/movie/MovieListToolbar";
 
-
 import { getAllShowTimes } from "../../redux/actions/Theater";
 import ShowtimesMoreMenu from "../../components/showtimes/ShowtimesMoreMenu";
 import moment from "moment";
@@ -85,6 +84,7 @@ function applySortFilter(array, comparator, query) {
 export default function ShowtimesManagement() {
   const dispatch = useDispatch();
   const { showtimesList } = useSelector((state) => state.TheaterReducer);
+
   const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
 
