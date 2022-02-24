@@ -1,6 +1,6 @@
 const express = require('express');
 const authController = require('../controllers/authController');
-const showTimesController = require('../controllers/showTimesController');
+const showTimeController = require('../controllers/showTimeController');
 
 const router = express.Router();
 
@@ -10,13 +10,13 @@ router.use(authController.protect);
 // RestrictTo "admin"
 router.use(authController.restrictTo('admin'));
 
-router.route('/').get(showTimesController.getAllShowTimes);
+router.route('/').get(showTimeController.getAllShowTime);
 
-router.route('/').post(showTimesController.createShowTimes);
+router.route('/').post(showTimeController.createShowTime);
 
 router
   .route('/:id')
-  .get(showTimesController.getDetailShowTimes)
-  .patch(showTimesController.updateShowTimes)
-  .delete(showTimesController.deleteShowTimes);
+  .get(showTimeController.getDetailShowTime)
+  .patch(showTimeController.updateShowTime)
+  .delete(showTimeController.deleteShowTime);
 module.exports = router;

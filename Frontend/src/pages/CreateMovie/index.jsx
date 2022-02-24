@@ -49,13 +49,13 @@ export default function CreateMovie() {
   });
   const formik = useFormik({
     initialValues: {
-      name: "abc",
-      trailer: "https://youtu.be/sx1ROHCmY-4",
+      name: "",
+      trailer: "",
       description:
-        "Trạng tí phiêu lưu ký là một bộ phim do người Việt sản xuất",
-      duration: "90",
-      releaseDate: moment("2022-02-19T18:00:00.603").format("YYYY-MM-DD"),
-      photo: "http://movieapi.cyberlearn.vn/hinhanh/raya_gp09.jpg",
+        "",
+      duration: "",
+      releaseDate: moment("").format("YYYY-MM-DD"),
+      photo: "",
       remember: true,
     },
 

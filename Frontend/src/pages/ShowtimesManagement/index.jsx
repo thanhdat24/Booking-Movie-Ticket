@@ -76,7 +76,7 @@ function applySortFilter(array, comparator, query) {
     return filter(
       array,
       (_movie) =>
-        _movie.idMovie.name.toLowerCase().indexOf(query.toLowerCase()) !== -1
+        _movie.idMovie?.name.toLowerCase().indexOf(query.toLowerCase()) !== -1
     );
   }
   return stabilizedThis?.map((el) => el[0]);
@@ -278,11 +278,11 @@ export default function ShowtimesManagement() {
                       <TableCell component="th" scope="row" padding="none">
                         <Stack direction="row" alignItems="center" spacing={2}>
                           <Typography variant="subtitle2" noWrap>
-                            {idMovie.name}
+                            {idMovie?.name}
                           </Typography>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{idTheater.name}</TableCell>
+                      <TableCell align="left">{idTheater?.name}</TableCell>
                       <TableCell align="left">{formatDateShow}</TableCell>
                       <TableCell align="left">{ticketPrice}</TableCell>
 

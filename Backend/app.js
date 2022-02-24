@@ -7,8 +7,11 @@ const tourRoutes = require('./routers/tourRouters');
 const userRoutes = require('./routers/userRouters');
 const movieRoutes = require('./routers/movieRouters');
 const theaterRoutes = require('./routers/theaterRouters');
-const showtimesRoutes = require('./routers/showtimesRouters');
+const showtimeRoutes = require('./routers/showtimeRouters');
 const reviewRouters = require('./routers/reviewRouters');
+const bookingRouters = require('./routers/bookingRouters');
+
+const seatRouters = require('./routers/seatRouters');
 const swaggerDocument = require('./swagger/swagger.json');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
@@ -53,7 +56,9 @@ app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/reviews', reviewRouters);
 app.use('/api/v1/movies', movieRoutes);
 app.use('/api/v1/theaters', theaterRoutes);
-app.use('/api/v1/showtimes', showtimesRoutes);
+app.use('/api/v1/showtimes', showtimeRoutes);
+app.use('/api/v1/seats', seatRouters);
+app.use('/api/v1/bookings', bookingRouters);
 
 // trả về đường dẫn not found
 app.all('*', (req, res, next) => {
