@@ -13,13 +13,10 @@ import { Icon } from "@iconify/react";
 import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import peopleFill from "@iconify/icons-eva/people-fill";
 import sidebarConfig from "../Dashboard/SidebarConfig";
 
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import { styled, useTheme } from "@mui/material/styles";
-import { Avatar, Collapse, Link, ListItemButton, Stack } from "@mui/material";
+import { Avatar, Link, Stack } from "@mui/material";
 import { useHistory, Link as RouterLink } from "react-router-dom";
 import Searchbar from "./Searchbar";
 import AccountPopover from "./AccountPopover";
@@ -125,88 +122,22 @@ const Drawer = styled(MuiDrawer, {
 
 export default function AdminLayout(props) {
   const classes = useStyles();
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const history = useHistory();
-  const handleListItemClick = (event, index) => {
-    setSelectedIndex(index);
-  };
 
   const theme = useTheme();
   const [openDrawer, setOpenDrawer] = useState(true);
-  const [openUser, setOpenUser] = useState(false);
-  const [openMovie, setOpenMOvie] = useState(false);
 
   const { currentUser } = useSelector((state) => state.AuthReducer);
-  const handleClickItem = (event, item, index) => {
-    history.push(item);
-    handleListItemClick(event, index);
-  };
+
   if (currentUser?.user.role !== "admin") {
     // nếu không phải tài khoản quản trị thì ẩn đi giao diện AdminLayout, vẫn truyền vào children để hiện thông báo trong children
     return <>{props.children}</>;
   }
-  const handleClickUser = () => {
-    setOpenUser(!openUser);
-  };
-
-  const handleClickMovie = () => {
-    setOpenMOvie(!openMovie);
-  };
 
   const handleDrawerClose = () => {
     setOpenDrawer(false);
   };
-  const menuItem = [
-    {
-      title: "List",
-      path: "/admin/users/list",
-      icon: <Icon icon="ci:dot-02-s" color="#637381" hFlip={true} />,
-    },
-    {
-      title: "Account",
-      path: "/admin/users/account",
-      icon: <Icon icon="ci:dot-02-s" color="#637381" hFlip={true} />,
-    },
-  ];
+  console.log("props.openDrawer", props?.openDrawer);
 
-  const menuListItem = [
-    {
-      title: "Quản lý người dùng",
-      icon: (
-        <Icon
-          icon={peopleFill}
-          width={23}
-          height={23}
-          color="#00ab55"
-          sx={{
-            ...(!openDrawer && {
-              marginRight: "20px",
-            }),
-          }}
-        />
-      ),
-      open: openUser,
-      handleClick: handleClickUser,
-    },
-    {
-      title: "Quản lý phim",
-      icon: (
-        <Icon
-          icon="bx:bxs-movie-play"
-          width={23}
-          height={23}
-          color="#00ab55"
-          sx={{
-            ...(!openDrawer && {
-              marginRight: "20px",
-            }),
-          }}
-        />
-      ),
-      open: openMovie,
-      handleClick: handleClickMovie,
-    },
-  ];
   return (
     <SnackbarProvider maxSnack={3}>
       <Box sx={{ display: "flex" }}>
@@ -308,7 +239,7 @@ export default function AdminLayout(props) {
             </Box>
           </Box>
 
-          <NavSection navConfig={sidebarConfig} />
+          <NavSection openDrawer={openDrawer} navConfig={sidebarConfig} />
         </Drawer>
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           {props.children}

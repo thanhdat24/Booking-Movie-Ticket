@@ -89,7 +89,9 @@ export default function UserEdit() {
   const { enqueueSnackbar } = useSnackbar();
   const { usersList, successDelete, errorDelete, successUpdateUser } =
     useSelector((state) => state.UserManagement);
-
+  const {
+    successUpdateUserCurrent,
+  } = useSelector((state) => state.AuthReducer);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
   const [selected, setSelected] = useState([]);
@@ -105,10 +107,10 @@ export default function UserEdit() {
     return () => dispatch(resetUserList());
   }, []);
   useEffect(() => {
-    if (successDelete || successUpdateUser) {
+    if (successDelete || successUpdateUser || successUpdateUserCurrent) {
       dispatch(getUsersList());
     }
-  }, [successDelete, successUpdateUser]);
+  }, [successDelete, successUpdateUser, successUpdateUserCurrent]);
 
   useEffect(() => {
     if (successDelete) {

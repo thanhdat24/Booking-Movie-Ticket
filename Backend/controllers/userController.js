@@ -90,8 +90,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'dateOfBirth',
     'photo'
   );
-  const path = req.file?.path.slice(7, req.file?.path.length);
-  const urlImage = `http://localhost:8080/${path}`;
+   const path = req.file?.path.replace(/\\/g, '/').substring('public'.length);
+   const urlImage = `http://localhost:8080${path}`;
   if (req.file) filteredBody.photo = urlImage;
   const user = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,

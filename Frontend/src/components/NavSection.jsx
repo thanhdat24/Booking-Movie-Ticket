@@ -185,12 +185,13 @@ NavSection.propTypes = {
   navConfig: PropTypes.array,
 };
 
-export default function NavSection({ navConfig, ...other }) {
+export default function NavSection({ navConfig, openDrawer, ...other }) {
   const [selectedIndex1, setSelectedIndex1] = useState(0);
 
   const handleListItemClick = (event, index) => {
     setSelectedIndex1(index);
   };
+
   const { pathname } = useLocation();
   const match = (path) =>
     path ? !!matchPath({ path, end: false }, pathname) : false;

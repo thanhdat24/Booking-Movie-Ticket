@@ -102,13 +102,13 @@ export default function ShowtimesManagement() {
     if (!showtimesList.result) {
       dispatch(getAllShowTimes());
     }
-    return () => dispatch(resetCreateShowtime());
   }, []);
 
   useEffect(() => {
     if (successCreateShowtime || successDeleteShowtime) {
       dispatch(getAllShowTimes());
     }
+    return () => dispatch(resetCreateShowtime());
   }, [successCreateShowtime, successDeleteShowtime]);
 
   useEffect(() => {
