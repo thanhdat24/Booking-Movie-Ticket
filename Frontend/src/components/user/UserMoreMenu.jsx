@@ -18,14 +18,14 @@ import { getDetailUser, resetUpdate } from "../../redux/actions/Auth";
 
 // ----------------------------------------------------------------------
 
-export default function UserMoreMenu(props) {
+export default function UserMoreMenu({ userId }) {
   const history = useHistory();
   let location = useLocation();
   const { loadingDelete } = useSelector((state) => state.UserManagement);
   const { successGetDetailUser } = useSelector((state) => state.AuthReducer);
   useEffect(() => {
     if (successGetDetailUser) {
-      history.push("/admin/users/edit");
+      history.push(`/admin/users/edit/${userId}`);
     }
   }, [successGetDetailUser]);
 
@@ -73,7 +73,7 @@ export default function UserMoreMenu(props) {
       >
         <MenuItem
           sx={{ color: "rgb(255, 72, 66);" }}
-          onClick={(e) => handleDeleteOne(props.keyItemId)}
+          onClick={(e) => handleDeleteOne(userId)}
         >
           <ListItemIcon>
             <Icon icon={trash2Outline} width={24} height={24} />
@@ -86,9 +86,9 @@ export default function UserMoreMenu(props) {
 
         <MenuItem
           component={RouterLink}
-          to="#"
+          // to={{ pathname: `/admin/users/edit/${userId}` }}
           sx={{ color: "rgb(33, 43, 54)" }}
-          onClick={(e) => handleEditDetail(props.keyItemId)}
+          onClick={(e) => handleEditDetail(userId)}
         >
           <ListItemIcon>
             <Icon icon={editFill} width={24} height={24} />

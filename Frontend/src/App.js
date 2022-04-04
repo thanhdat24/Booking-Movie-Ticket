@@ -45,7 +45,7 @@ function App() {
             path={[
               "/admin/users/list",
               "/admin/users/account",
-              "/admin/users/edit",
+              "/admin/users/edit/:userId",
             ]}
           >
             <AdminLayout>
@@ -59,7 +59,11 @@ function App() {
                 path="/admin/users/account"
                 component={UserProfile}
               />
-              <AdminRoute exact path="/admin/users/edit" component={UserEdit} />
+              <AdminRoute
+                exact
+                path="/admin/users/edit/:userId"
+                component={UserEdit}
+              />
             </AdminLayout>
           </Route>
           <Route exact path={["/admin/movies/list", "/admin/movies/create"]}>

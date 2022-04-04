@@ -12,10 +12,18 @@ import Info from "./Info";
 
 export default function UserEdit() {
   const breadcrumbs = [
-    <Link underline="hover" key="1" color="inherit" href="/">
+    <Link underline="hover" key="1" href="/" color="text.primary">
       Home
     </Link>,
-    <Typography key="3" color="text.primary">
+    <Link
+      underline="hover"
+      key="2"
+      href="/admin/users/list"
+      color="text.primary"
+    >
+      User
+    </Link>,
+    <Typography key="3" color="inherit">
       Edit user
     </Typography>,
   ];

@@ -20,23 +20,18 @@ export default function UsersManagement() {
     setValue(newValue);
   };
   const breadcrumbs = [
-    <Link
-      underline="hover"
-      key="1"
-      color="inherit"
-      href="/"
-    >
+    <Link underline="hover" key="1" href="/" color="text.primary">
       Home
     </Link>,
     <Link
       underline="hover"
       key="2"
-      color="inherit"
-      href="/getting-started/installation/"
+      href="/admin/users/account"
+      color="text.primary"
     >
       User
     </Link>,
-    <Typography key="3" color="text.primary">
+    <Typography key="3" color="inherit">
       Account Settings
     </Typography>,
   ];

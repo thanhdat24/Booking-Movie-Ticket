@@ -89,9 +89,9 @@ export default function UserEdit() {
   const { enqueueSnackbar } = useSnackbar();
   const { usersList, successDelete, errorDelete, successUpdateUser } =
     useSelector((state) => state.UserManagement);
-  const {
-    successUpdateUserCurrent,
-  } = useSelector((state) => state.AuthReducer);
+  const { successUpdateUserCurrent } = useSelector(
+    (state) => state.AuthReducer
+  );
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
   const [selected, setSelected] = useState([]);
@@ -183,22 +183,20 @@ export default function UserEdit() {
     <Link
       underline="hover"
       key="1"
-      color="inherit"
       href="/"
-      onClick={handleClick}
+      color="text.primary"
     >
       Home
     </Link>,
     <Link
       underline="hover"
       key="2"
-      color="inherit"
-      href="/getting-started/installation/"
-      onClick={handleClick}
+      href="/admin/users/account"
+      color="text.primary"
     >
       User
     </Link>,
-    <Typography key="3" color="text.primary">
+    <Typography key="3"  color="inherit">
       List
     </Typography>,
   ];
@@ -298,7 +296,7 @@ export default function UserEdit() {
                       </TableCell>
 
                       <TableCell align="right">
-                        <UserMoreMenu keyItemId={_id} />
+                        <UserMoreMenu userId={_id} />
                       </TableCell>
                     </TableRow>
                   );
