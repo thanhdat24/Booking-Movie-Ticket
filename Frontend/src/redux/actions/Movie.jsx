@@ -6,9 +6,12 @@ import {
   DELETE_MOVIE_FAIL,
   DELETE_MOVIE_REQUEST,
   DELETE_MOVIE_SUCCESS,
+  GET_MOVIE_FAIL,
   GET_MOVIE_LIST_FAIL,
   GET_MOVIE_LIST_REQUEST,
   GET_MOVIE_LIST_SUCCESS,
+  GET_MOVIE_REQUEST,
+  GET_MOVIE_SUCCESS,
   RESET_MOVIE_MANAGEMENT,
   UPDATE_MOVIE_FAIL,
   UPDATE_MOVIE_REQUEST,
@@ -65,14 +68,15 @@ export const deleteMovie = (_id) => {
   };
 };
 
-export const updateMovie = (_id) => {
+export const updateMovie = (movie, _id) => {
   return (dispatch) => {
     dispatch({
       type: UPDATE_MOVIE_REQUEST,
     });
     moviesApi
-      .updateMovie(_id)
+      .updateMovie(movie, _id)
       .then((result) => {
+        console.log("result",  result);
         dispatch({
           type: UPDATE_MOVIE_SUCCESS,
           payload: {
@@ -83,6 +87,32 @@ export const updateMovie = (_id) => {
       .catch((error) => {
         dispatch({
           type: UPDATE_MOVIE_FAIL,
+          payload: {
+            error: error.response?.data.message,
+          },
+        });
+      });
+  };
+};
+
+export const getDetailMovie = (_id) => {
+  return (dispatch) => {
+    dispatch({
+      type: GET_MOVIE_REQUEST,
+    });
+    moviesApi
+      .getDetailMovie(_id)
+      .then((result) => {
+        dispatch({
+          type: GET_MOVIE_SUCCESS,
+          payload: {
+            data: result.data.data,
+          },
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: GET_MOVIE_FAIL,
           payload: {
             error: error.response?.data.message,
           },
@@ -122,8 +152,6 @@ export const addMovieUploadImg = (movie) => {
       });
   };
 };
-
-
 
 export const resetMoviesManagement = () => {
   return (dispatch) => {

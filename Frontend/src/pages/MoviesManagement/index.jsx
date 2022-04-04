@@ -96,9 +96,8 @@ const CustomTooltip = styled(({ className, ...props }) => (
 }));
 export default function MoviesManagement() {
   const dispatch = useDispatch();
-  const { successDeleteMovie, errorDeleteMovie } = useSelector(
-    (state) => state.MovieReducer
-  );
+  const { successDeleteMovie, errorDeleteMovie, successUpdateMovie } =
+    useSelector((state) => state.MovieReducer);
   const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
   const { movieList } = useSelector((state) => state.MovieReducer);
@@ -118,10 +117,10 @@ export default function MoviesManagement() {
   }, []);
 
   useEffect(() => {
-    if (successDeleteMovie || successAddMovie) {
+    if (successDeleteMovie || successAddMovie || successUpdateMovie) {
       dispatch(getMovieList());
     }
-  }, [successDeleteMovie, successAddMovie]);
+  }, [successDeleteMovie, successAddMovie, successUpdateMovie]);
 
   useEffect(() => {
     if (successDeleteMovie) {
@@ -358,7 +357,7 @@ export default function MoviesManagement() {
                       </TableCell>
 
                       <TableCell align="right">
-                        <MovieMoreMenu keyItemId={_id} />
+                        <MovieMoreMenu movieId={_id} />
                       </TableCell>
                     </TableRow>
                   );

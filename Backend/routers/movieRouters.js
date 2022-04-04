@@ -19,6 +19,10 @@ router
 router
   .route('/:id')
   .get(movieController.getDetailMovie)
-  .patch(movieController.updateMovie)
+  .patch(
+    authController.protect,
+    movieController.uploadUserPhoto,
+    movieController.updateMovie
+  )
   .delete(movieController.deleteMovie);
 module.exports = router;

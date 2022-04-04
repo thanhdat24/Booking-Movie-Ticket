@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import editFill from "@iconify/icons-eva/edit-fill";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 import trash2Outline from "@iconify/icons-eva/trash-2-outline";
 import moreVerticalFill from "@iconify/icons-eva/more-vertical-fill";
 // material
@@ -13,13 +13,22 @@ import {
   ListItemText,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteMovie } from "../../redux/actions/Movie";
+import {
+  deleteMovie,
+  getDetailMovie,
+  resetMoviesManagement,
+} from "../../redux/actions/Movie";
 
 // ----------------------------------------------------------------------
 
-export default function UserMoreMenu(props) {
-  const { loadingDeleteMovie } = useSelector((state) => state.MovieReducer);
-
+export default function UserMoreMenu({ movieId }) {
+  const history = useHistory();
+  let location = useLocation();
+  const { loadingDelete } = useSelector((state) => state.UserManagement);
+  const { successDetailMovie, loadingDeleteMovie } = useSelector(
+    (state) => state.MovieReducer
+  );
+  console.log("movieId", movieId);
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
@@ -32,6 +41,24 @@ export default function UserMoreMenu(props) {
     }
     dispatch(deleteMovie(_id));
   };
+
+  const handleEditDetail = (_id) => {
+    if (!successDetailMovie) {
+    }
+    dispatch(getDetailMovie(_id));
+
+    setTimeout(() => {
+      history.push(`/admin/movies/edit/${movieId}`);
+    }, 1300);
+  };
+
+  // useEffect(() => {
+  //   if (history.push("/admin/movies/list")) {
+  //     return () => {
+  //       dispatch(resetMoviesManagement());
+  //     };
+  //   }
+  // }, []);
   return (
     <>
       <IconButton ref={ref} onClick={() => setIsOpen(true)}>
@@ -50,7 +77,7 @@ export default function UserMoreMenu(props) {
       >
         <MenuItem
           sx={{ color: "rgb(255, 72, 66);" }}
-          onClick={(e) => handleDeleteOne(props.keyItemId)}
+          onClick={(e) => handleDeleteOne(movieId)}
         >
           <ListItemIcon>
             <Icon icon={trash2Outline} width={24} height={24} />
@@ -63,9 +90,11 @@ export default function UserMoreMenu(props) {
 
         <MenuItem
           component={RouterLink}
-          to="#"
+          // to={{
+          //   pathname: `/admin/movies/edit/${movieId}`,
+          // }}
           sx={{ color: "rgb(33, 43, 54)" }}
-          // onClick={(e) => handleEditDetail(props.keyItemId)}
+          onClick={(e) => handleEditDetail(movieId)}
         >
           <ListItemIcon>
             <Icon icon={editFill} width={24} height={24} />

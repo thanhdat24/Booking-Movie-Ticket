@@ -92,14 +92,15 @@ export const changePassword = (currentUser) => {
   };
 };
 
-export const updateUser = (user,_id) => {
+export const updateUser = (user, _id) => {
   return (dispatch) => {
     dispatch({
       type: UPDATE_USER_REQUEST,
     });
     usersApi
-      .updateUser(user,_id)
+      .updateUser(user, _id)
       .then((result) => {
+        console.log("result", result);
         dispatch({
           type: UPDATE_USER_SUCCESS,
           payload: {

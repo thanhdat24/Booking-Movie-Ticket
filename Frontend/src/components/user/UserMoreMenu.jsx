@@ -23,12 +23,6 @@ export default function UserMoreMenu({ userId }) {
   let location = useLocation();
   const { loadingDelete } = useSelector((state) => state.UserManagement);
   const { successGetDetailUser } = useSelector((state) => state.AuthReducer);
-  useEffect(() => {
-    if (successGetDetailUser) {
-      history.push(`/admin/users/edit/${userId}`);
-    }
-  }, [successGetDetailUser]);
-
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
@@ -43,18 +37,21 @@ export default function UserMoreMenu({ userId }) {
   };
 
   const handleEditDetail = (_id) => {
-    dispatch(getDetailUser(_id));
-    // if (successGetDetailUser) {
-    // history.push("/admin/users/edit");
-    // }
-  };
-  useEffect(() => {
-    if (history.push("/admin/users/list")) {
-      return () => {
-        dispatch(resetUpdate());
-      };
+    if (!successGetDetailUser) {
     }
-  }, []);
+    dispatch(getDetailUser(_id));
+
+    setTimeout(() => {
+      history.push(`/admin/users/edit/${userId}`);
+    }, 1300);
+  };
+  // useEffect(() => {
+  //   if (history.push("/admin/users/list")) {
+  //     return () => {
+  //       dispatch(resetUpdate());
+  //     };
+  //   }
+  // }, []);
   return (
     <>
       <IconButton ref={ref} onClick={() => setIsOpen(true)}>

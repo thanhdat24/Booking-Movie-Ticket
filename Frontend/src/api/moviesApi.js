@@ -9,9 +9,17 @@ const moviesApi = {
     const path = `/v1/movies/${_id}`;
     return axiosClient.delete(path);
   },
-  updateMovie: (_id) => {
+  updateMovie: (movie, _id) => {
     const path = `/v1/movies/${_id}`;
-    return axiosClient.patch(path);
+    const formData = new FormData();
+    for (const key in movie) {
+      formData.append(key, movie[key]);
+    }
+    return axiosClient.patch(path, formData);
+  },
+  getDetailMovie: (_id) => {
+    const path = `/v1/movies/${_id}`;
+    return axiosClient.get(path);
   },
   addMovieUploadImg: (movie) => {
     const path = `/v1/movies`;
