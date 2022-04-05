@@ -43,6 +43,18 @@ const sidebarConfig = [
   {
     title: "Quản lý rạp",
     path: "/admin/theater/list",
+    children: [
+      {
+        title: "List",
+        path: "/admin/theater/list",
+        icon: getIcon("ci:dot-02-s"),
+      },
+      {
+        title: "Create",
+        path: "/admin/theater/create",
+        icon: getIcon("ci:dot-02-s"),
+      },
+    ],
     icon: getIcon("ic:baseline-theaters"),
   },
   {

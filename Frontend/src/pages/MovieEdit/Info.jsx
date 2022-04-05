@@ -39,6 +39,7 @@ export default function Info() {
     successDetailMovie,
     successUpdateMovie,
     errorDetailMovie,
+    errorUpdateMovie,
   } = useSelector((state) => state.MovieReducer);
   const { enqueueSnackbar } = useSnackbar();
   console.log("successDetailMovie", successDetailMovie);
@@ -99,10 +100,10 @@ export default function Info() {
       }, 150);
       return;
     }
-    if (errorDetailMovie) {
-      enqueueSnackbar(errorDetailMovie, { variant: "error" });
+    if (errorUpdateMovie) {
+      enqueueSnackbar(errorUpdateMovie, { variant: "error" });
     }
-  }, [successUpdateMovie, errorDetailMovie]);
+  }, [successUpdateMovie, errorUpdateMovie]);
 
   useEffect(() => {
     return () => {

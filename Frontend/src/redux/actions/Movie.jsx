@@ -76,7 +76,6 @@ export const updateMovie = (movie, _id) => {
     moviesApi
       .updateMovie(movie, _id)
       .then((result) => {
-        console.log("result",  result);
         dispatch({
           type: UPDATE_MOVIE_SUCCESS,
           payload: {

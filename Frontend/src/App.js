@@ -21,6 +21,8 @@ import TheaterManagement from "./pages/TheaterManagement";
 import ShowtimesManagement from "./pages/ShowtimesManagement";
 import CreateShowtimes from "./pages/CreateShowtimes";
 import MovieEdit from "./pages/MovieEdit";
+import CreateTheater from "./pages/CreateTheater";
+import TheaterEdit from "./pages/TheaterEdit";
 
 function App() {
   const themeOptions = useMemo(
@@ -93,12 +95,29 @@ function App() {
               />
             </AdminLayout>
           </Route>
-          <Route exact path={["/admin/theater/list"]}>
+          <Route
+            exact
+            path={[
+              "/admin/theater/list",
+              "/admin/theater/create",
+              "/admin/theater/edit/:theaterId",
+            ]}
+          >
             <AdminLayout>
               <AdminRoute
                 exact
                 path="/admin/theater/list"
                 component={TheaterManagement}
+              />
+              <AdminRoute
+                exact
+                path="/admin/theater/create"
+                component={CreateTheater}
+              />
+              <AdminRoute
+                exact
+                path="/admin/theater/edit/:theaterId"
+                component={TheaterEdit}
               />
             </AdminLayout>
           </Route>

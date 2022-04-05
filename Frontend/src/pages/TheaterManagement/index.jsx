@@ -25,18 +25,21 @@ import { useState } from "react";
 import plusFill from "@iconify/icons-eva/plus-fill";
 // import UserListToolbar from "../../components/user";
 import { useDispatch, useSelector } from "react-redux";
-import { getTheaterList } from "../../redux/actions/Theater";
-import UserListHead from "../../components/user/UserListHead";
-import UserListToolbar from "../../components/user/UserListToolbar";
-import UserMoreMenu from "../../components/user/UserMoreMenu";
-
-import Label from "../../components/Label";
+import {
+  getTheaterList,
+  resetCreateTheater,
+} from "../../redux/actions/Theater";
+import TheaterMoreMenu from "../../components/theater/TheaterMoreMenu";
+import TheaterListHead from "../../components/theater/TheaterListHead";
+import TheaterListToolbar from "../../components/theater/TheaterListToolbar";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: "name", label: "Tên rạp", alignRight: false },
   { id: "type", label: "Loại rạp", alignRight: false },
+  { id: "seatsTotal", label: "Số lượng ghế", alignRight: false },
+  { id: "" },
 ];
 
 // ----------------------------------------------------------------------
@@ -73,8 +76,8 @@ function applySortFilter(array, comparator, query) {
   if (query) {
     return filter(
       array,
-      (_user) =>
-        _user.fullName.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      (_theater) =>
+        _theater.name.toLowerCase().indexOf(query.toLowerCase()) !== -1
     );
   }
   return stabilizedThis?.map((el) => el[0]);
@@ -88,7 +91,14 @@ export default function TheaterManagement() {
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState("name");
   const [filterName, setFilterName] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const {
+    successUpdateTheater,
+    successCreateTheater,
+    errorDeleteTheater,
+    successDeleteTheater,
+  } = useSelector((state) => state.TheaterReducer);
 
   useEffect(() => {
     // get list user lần đầu
@@ -97,6 +107,23 @@ export default function TheaterManagement() {
     }
     // return () => dispatch(resetUserList());
   }, []);
+
+  useEffect(() => {
+    if (successCreateTheater || successDeleteTheater || successUpdateTheater) {
+      dispatch(getTheaterList());
+    }
+    return () => dispatch(resetCreateTheater());
+  }, [successCreateTheater, successDeleteTheater, successUpdateTheater]);
+
+  useEffect(() => {
+    if (successDeleteTheater) {
+      enqueueSnackbar(successDeleteTheater, { variant: "success" });
+      return;
+    }
+    if (errorDeleteTheater) {
+      enqueueSnackbar(errorDeleteTheater, { variant: "error" });
+    }
+  }, [successDeleteTheater, errorDeleteTheater]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -147,7 +174,7 @@ export default function TheaterManagement() {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - theaterList?.result) : 0;
 
-  const filteredUsers = applySortFilter(
+  const filteredTheater = applySortFilter(
     theaterList?.data,
     getComparator(order, orderBy),
     filterName
@@ -156,25 +183,18 @@ export default function TheaterManagement() {
   const isUserNotFound = theaterList?.result === 0;
 
   const breadcrumbs = [
-    <Link
-      underline="hover"
-      key="1"
-      color="inherit"
-      href="/"
-      onClick={handleClick}
-    >
+    <Link underline="hover" key="1" href="/" color="text.primary">
       Home
     </Link>,
     <Link
       underline="hover"
       key="2"
-      color="inherit"
-      href="/getting-started/installation/"
-      onClick={handleClick}
+      href="/admin/theater/list"
+      color="text.primary"
     >
       Theater
     </Link>,
-    <Typography key="3" color="text.primary">
+    <Typography key="3" color="inherit">
       List
     </Typography>,
   ];
@@ -199,14 +219,14 @@ export default function TheaterManagement() {
         <Button
           variant="contained"
           component={RouterLink}
-          to="#"
+          to="/admin/theater/create"
           startIcon={<Icon icon={plusFill} />}
         >
           Thêm Rạp
         </Button>
       </Stack>
       <Card>
-        <UserListToolbar
+        <TheaterListToolbar
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
@@ -214,7 +234,7 @@ export default function TheaterManagement() {
 
         <TableContainer sx={{ minWidth: 800 }}>
           <Table>
-            <UserListHead
+            <TheaterListHead
               order={order}
               orderBy={orderBy}
               headLabel={TABLE_HEAD}
@@ -224,10 +244,10 @@ export default function TheaterManagement() {
               onSelectAllClick={handleSelectAllClick}
             />
             <TableBody>
-              {filteredUsers
+              {filteredTheater
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
-                  const { _id, name, type } = row;
+                  const { _id, name, type, seatsTotal } = row;
                   const isItemSelected = selected.indexOf(name) !== -1;
 
                   return (
@@ -247,9 +267,10 @@ export default function TheaterManagement() {
                       </TableCell>
                       <TableCell align="left">{name}</TableCell>
                       <TableCell align="left">{type}</TableCell>
+                      <TableCell align="left">{seatsTotal}</TableCell>
 
                       <TableCell align="right">
-                        {/* <UserMoreMenu keyItemId={_id} /> */}
+                        <TheaterMoreMenu theaterId={_id} />
                       </TableCell>
                     </TableRow>
                   );

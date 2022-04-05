@@ -204,7 +204,6 @@ export default function CreateShowtimes() {
       ...data,
       setTicketPrice: e.target.value,
     }));
-    console.log("data", data);
   };
 
   const handleTaoLichChieu = () => {
@@ -219,18 +218,17 @@ export default function CreateShowtimes() {
         idTheater: data.idTheater,
         ticketPrice: data.setTicketPrice,
       })
-    ); // ngayChieuGioChieu phải có định dạng dd/MM/yyyy hh:mm:ss
-    console.log("data.dateShow", data.dateShow);
+    );
   };
 
   useEffect(() => {
     if (successCreateShowtime) {
       setTimeout(() => {
         history.push("/admin/showtimes/list");
-      }, 100);
+      }, 300);
       setTimeout(() => {
         enqueueSnackbar("Thêm lịch chiếu thành công!", { variant: "success" });
-      }, 150);
+      }, 200);
       return () => dispatch(resetCreateShowtime());
     }
     if (errorCreateShowtime) {
