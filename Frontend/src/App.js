@@ -16,13 +16,14 @@ import shadows, { customShadows } from "./theme/shadows";
 import componentsOverride from "./theme/overrides";
 import UserEdit from "./pages/UserEdit";
 import MoviesManagement from "./pages/MoviesManagement";
-import CreateMovie from "./pages/CreateMovie";
 import TheaterManagement from "./pages/TheaterManagement";
 import ShowtimesManagement from "./pages/ShowtimesManagement";
 import CreateShowtimes from "./pages/CreateShowtimes";
-import MovieEdit from "./pages/MovieEdit";
 import CreateTheater from "./pages/CreateTheater";
 import TheaterEdit from "./pages/TheaterEdit";
+import MovieEdit from "./pages/MoviesManagement/MovieEdit";
+import CreateMovie from "./pages/MoviesManagement/CreateMovie";
+import ShowtimeEdit from "./pages/ShowtimeEdit";
 
 function App() {
   const themeOptions = useMemo(
@@ -123,7 +124,11 @@ function App() {
           </Route>
           <Route
             exact
-            path={["/admin/showtimes/list", "/admin/showtimes/create"]}
+            path={[
+              "/admin/showtimes/list",
+              "/admin/showtimes/create",
+              "/admin/showtimes/edit/:showtimeId",
+            ]}
           >
             <AdminLayout>
               <AdminRoute
@@ -135,6 +140,11 @@ function App() {
                 exact
                 path="/admin/showtimes/create"
                 component={CreateShowtimes}
+              />
+              <AdminRoute
+                exact
+                path="/admin/showtimes/edit/:showtimeId"
+                component={ShowtimeEdit}
               />
             </AdminLayout>
           </Route>

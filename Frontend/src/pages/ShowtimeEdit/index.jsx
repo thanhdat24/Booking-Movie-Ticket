@@ -10,21 +10,21 @@ import {
 } from "@mui/material";
 import Info from "./Info";
 
-export default function MovieEdit() {
+export default function ShowtimeEdit() {
   const breadcrumbs = [
     <Link underline="hover" key="1" href="/" color="text.primary">
-      Home
+      Trang chủ
     </Link>,
     <Link
       underline="hover"
       key="2"
-      href="/admin/users/list"
+      href="/admin/showtimes/list"
       color="text.primary"
     >
-      User
+      Lịch chiếu
     </Link>,
     <Typography key="3" color="inherit">
-      Edit user
+      Chỉnh sửa lịch chiếu
     </Typography>,
   ];
   return (
@@ -38,7 +38,7 @@ export default function MovieEdit() {
       >
         <Stack spacing={2}>
           <Typography variant="h4" gutterBottom>
-            Edit user
+            Chỉnh sửa lịch chiếu
           </Typography>
           <Breadcrumbs separator="›" aria-label="breadcrumb">
             {breadcrumbs}

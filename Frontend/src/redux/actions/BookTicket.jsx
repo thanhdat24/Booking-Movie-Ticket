@@ -6,7 +6,13 @@ import {
   DELETE_SHOWTIME_FAIL,
   DELETE_SHOWTIME_REQUEST,
   DELETE_SHOWTIME_SUCCESS,
+  GET_SHOWTIME_FAIL,
+  GET_SHOWTIME_REQUEST,
+  GET_SHOWTIME_SUCCESS,
   RESET_CREATE_SHOWTIME,
+  UPDATE_SHOWTIME_REQUEST,
+  UPDATE_SHOWTIME_SUCCESS,
+  UPDATE_SHOWTIME_FAIL,
 } from "../constants/BookTicket";
 
 export const createShowtime = (data) => {
@@ -54,6 +60,59 @@ export const deleteShowTimes = (_id) => {
         },
       });
     }
+  };
+};
+
+export const getDetailShowtimes = (_id) => {
+  return (dispatch) => {
+    dispatch({
+      type: GET_SHOWTIME_REQUEST,
+    });
+    bookingApi
+      .getDetailShowtimes(_id)
+      .then((result) => {
+        dispatch({
+          type: GET_SHOWTIME_SUCCESS,
+          payload: {
+            data: result.data.data,
+          },
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: GET_SHOWTIME_FAIL,
+          payload: {
+            error: error.response?.data.message,
+          },
+        });
+      });
+  };
+};
+
+export const updateShowtime = (_id, showtime) => {
+  return (dispatch) => {
+    dispatch({
+      type: UPDATE_SHOWTIME_REQUEST,
+    });
+    bookingApi
+      .updateShowtimes(_id, showtime)
+      .then((result) => {
+        console.log("result", result);
+        dispatch({
+          type: UPDATE_SHOWTIME_SUCCESS,
+          payload: {
+            data: result.data.data,
+          },
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: UPDATE_SHOWTIME_FAIL,
+          payload: {
+            error: error.response?.data.message,
+          },
+        });
+      });
   };
 };
 

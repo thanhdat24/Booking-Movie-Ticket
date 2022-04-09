@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import { useRef, useState } from "react";
 import editFill from "@iconify/icons-eva/edit-fill";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import trash2Outline from "@iconify/icons-eva/trash-2-outline";
 import moreVerticalFill from "@iconify/icons-eva/more-vertical-fill";
 // material
@@ -13,14 +13,18 @@ import {
   ListItemText,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteShowTimes } from "../../redux/actions/BookTicket";
+import {
+  deleteShowTimes,
+  getDetailShowtimes,
+} from "../../redux/actions/BookTicket";
 
 // ----------------------------------------------------------------------
 
-export default function ShowtimesMoreMenu(props) {
-  const { loadingDeleteShowtime } = useSelector(
+export default function ShowtimesMoreMenu({ showtimeId }) {
+  const { loadingDeleteShowtime, successDetailShowtime } = useSelector(
     (state) => state.BookTicketReducer
   );
+  const history = useHistory();
 
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -31,6 +35,16 @@ export default function ShowtimesMoreMenu(props) {
       return;
     }
     dispatch(deleteShowTimes(_id));
+  };
+
+  const handleEditDetail = (_id) => {
+    if (!successDetailShowtime) {
+    }
+    dispatch(getDetailShowtimes(_id));
+
+    setTimeout(() => {
+      history.push(`/admin/showtimes/edit/${showtimeId}`);
+    }, 1300);
   };
   return (
     <>
@@ -50,7 +64,7 @@ export default function ShowtimesMoreMenu(props) {
       >
         <MenuItem
           sx={{ color: "rgb(255, 72, 66);" }}
-          onClick={(e) => handleDeleteOne(props.keyItemId)}
+          onClick={(e) => handleDeleteOne(showtimeId)}
         >
           <ListItemIcon>
             <Icon icon={trash2Outline} width={24} height={24} />
@@ -65,7 +79,7 @@ export default function ShowtimesMoreMenu(props) {
           component={RouterLink}
           to="#"
           sx={{ color: "rgb(33, 43, 54)" }}
-          // onClick={(e) => handleEditDetail(props.keyItemId)}
+          onClick={(e) => handleEditDetail(showtimeId)}
         >
           <ListItemIcon>
             <Icon icon={editFill} width={24} height={24} />

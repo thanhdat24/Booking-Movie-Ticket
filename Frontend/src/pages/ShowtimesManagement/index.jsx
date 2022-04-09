@@ -24,8 +24,8 @@ import { useState } from "react";
 import plusFill from "@iconify/icons-eva/plus-fill";
 import { useDispatch, useSelector } from "react-redux";
 
-import MovieListHead from "../../components/movie/MovieListHead";
-import MovieListToolbar from "../../components/movie/MovieListToolbar";
+import ShowtimesListHead from "../../components/showtimes/ShowtimesListHead";
+import ShowtimesToolbar from "../../components/showtimes/ShowtimesToolbar";
 
 import { getAllShowTimes } from "../../redux/actions/Theater";
 import ShowtimesMoreMenu from "../../components/showtimes/ShowtimesMoreMenu";
@@ -94,8 +94,12 @@ export default function ShowtimesManagement() {
   const [orderBy, setOrderBy] = useState("name");
   const [filterNameMovie, setFilterNameMovie] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const { successCreateShowtime, successDeleteShowtime, errorDeleteShowtime } =
-    useSelector((state) => state.BookTicketReducer);
+  const {
+    successCreateShowtime,
+    successDeleteShowtime,
+    errorDeleteShowtime,
+    successUpdateShowtime,
+  } = useSelector((state) => state.BookTicketReducer);
   console.log("successDeleteShowtime", successDeleteShowtime);
   useEffect(() => {
     // get list user lần đầu
@@ -105,11 +109,15 @@ export default function ShowtimesManagement() {
   }, []);
 
   useEffect(() => {
-    if (successCreateShowtime || successDeleteShowtime) {
+    if (
+      successCreateShowtime ||
+      successDeleteShowtime ||
+      successUpdateShowtime
+    ) {
       dispatch(getAllShowTimes());
     }
     return () => dispatch(resetCreateShowtime());
-  }, [successCreateShowtime, successDeleteShowtime]);
+  }, [successCreateShowtime, successDeleteShowtime, successUpdateShowtime]);
 
   useEffect(() => {
     if (successDeleteShowtime) {
@@ -178,25 +186,18 @@ export default function ShowtimesManagement() {
   );
   const isUserNotFound = showtimesList?.result === 0;
   const breadcrumbs = [
-    <Link
-      underline="hover"
-      key="1"
-      color="inherit"
-      href="/"
-      onClick={handleClick}
-    >
+    <Link underline="hover" key="1" color="text.primary" href="/">
       Home
     </Link>,
     <Link
       underline="hover"
       key="2"
-      color="inherit"
-      href="/getting-started/installation/"
-      onClick={handleClick}
+      color="text.primary"
+      href="/admin/showtimes/list"
     >
       Showtimes
     </Link>,
-    <Typography key="3" color="text.primary">
+    <Typography key="3" color="inherit">
       List
     </Typography>,
   ];
@@ -231,7 +232,7 @@ export default function ShowtimesManagement() {
       </Stack>
 
       <Card>
-        <MovieListToolbar
+        <ShowtimesToolbar
           numSelected={selected.length}
           filterNameMovie={filterNameMovie}
           onFilterName={handleFilterByName}
@@ -239,7 +240,7 @@ export default function ShowtimesManagement() {
 
         <TableContainer sx={{ minWidth: 800 }}>
           <Table>
-            <MovieListHead
+            <ShowtimesListHead
               order={order}
               orderBy={orderBy}
               headLabel={TABLE_HEAD}
@@ -287,7 +288,7 @@ export default function ShowtimesManagement() {
                       <TableCell align="left">{ticketPrice}</TableCell>
 
                       <TableCell align="right">
-                        <ShowtimesMoreMenu keyItemId={_id} />
+                        <ShowtimesMoreMenu showtimeId={_id} />
                       </TableCell>
                     </TableRow>
                   );

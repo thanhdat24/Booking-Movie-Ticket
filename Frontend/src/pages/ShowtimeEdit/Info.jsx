@@ -19,38 +19,51 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import { LoadingButton } from "@mui/lab";
 import { useDispatch, useSelector } from "react-redux";
-import { getMovieList, resetMoviesManagement } from "../../redux/actions/Movie";
 import { useSnackbar } from "notistack";
-import { useHistory } from "react-router-dom";
-import { getAllShowTimes } from "../../redux/actions/Theater";
+import { useHistory, useParams } from "react-router-dom";
 import theatersApi from "../../api/theatersApi";
+import { getMovieList, resetMoviesManagement } from "../../redux/actions/Movie";
+import moment from "moment";
 import {
-  createShowtime,
   resetCreateShowtime,
+  updateShowtime,
 } from "../../redux/actions/BookTicket";
-
-export default function CreateShowtimes() {
-  const { loadingCreateShowtime, successCreateShowtime, errorCreateShowtime } =
-    useSelector((state) => state.BookTicketReducer);
+export default function Info() {
+  const param = useParams();
+  console.log("param", param.showtimeId);
+  const {
+    loadingCreateShowtime,
+    loadingUpdateShowtime,
+    successDetailShowtime,
+    successUpdateShowtime,
+    errorUpdateShowtime,
+  } = useSelector((state) => state.BookTicketReducer);
+  console.log("successDetailShowtime", successDetailShowtime);
   const dispatch = useDispatch();
   const history = useHistory();
-  const { showtimesList } = useSelector((state) => state.TheaterReducer);
+  const { showtimeList } = useSelector((state) => state.BookTicketReducer);
   const { movieList } = useSelector((state) => state.MovieReducer);
-  const [selectedDate, setSelectedDate] = useState(null);
+  console.log("movieList", movieList);
+  var formatDateShow = moment(successDetailShowtime?.dateShow)
+    .add(0, "hours")
+    .format("MM/DD/YYYY hh:mm A");
+  const [selectedDate, setSelectedDate] = useState(formatDateShow);
   const { enqueueSnackbar } = useSnackbar();
+  console.log(
+    "dateShow",
+    moment(successDetailShowtime?.dateShow)
+      .add(0, "hours")
+      .format("MM/DD/YYYY hh:mm A")
+  );
+
   const [data, setData] = useState({
-    setMovie: "",
+    setMovie: successDetailShowtime?.idMovie._id,
     theaterRender: [],
-
-    setTheater: "",
-
-    dateShow: null,
-
-    setTicketPrice: "",
+    setTheater: successDetailShowtime?.idTheater.name,
+    dateShow: formatDateShow,
+    setTicketPrice: successDetailShowtime?.ticketPrice,
     ticketPriceRender: [75000, 100000, 120000, 150000],
-
     startRequest: false, // lựa chọn giữa hiện thị "đang tìm" hay "không tìm thấy"
-
     openCtr: {
       movie: false,
       theater: false,
@@ -58,12 +71,12 @@ export default function CreateShowtimes() {
       ticketPrice: false,
     },
   });
-  const [isReadyTaoLichChieu, setIsReadyTaoLichChieu] = useState(false);
+  const [isReadyCapNhatLichChieu, setIsReadyCapNhatLichChieu] = useState(false);
 
   useEffect(() => {
     if (data.setMovie && data.dateShow && data.idTheater && data.setTicketPrice)
-      setIsReadyTaoLichChieu(true);
-    else setIsReadyTaoLichChieu(false);
+      setIsReadyCapNhatLichChieu(true);
+    else setIsReadyCapNhatLichChieu(false);
   }, [data.setMovie, data.dateShow, data.idTheater, data.setTicketPrice]);
   const breadcrumbs = [
     <Link underline="hover" key="1" color="inherit" href="/">
@@ -73,7 +86,7 @@ export default function CreateShowtimes() {
       underline="hover"
       key="2"
       color="inherit"
-      href="/admin/showtimes/list"
+      href="/getting-started/installation/"
     >
       Lịch chiếu
     </Link>,
@@ -81,21 +94,12 @@ export default function CreateShowtimes() {
       Lịch chiếu mới
     </Typography>,
   ];
-
   useEffect(() => {
     // get list user lần đầu
     if (!movieList.result) {
       dispatch(getMovieList());
     }
     return () => dispatch(resetMoviesManagement());
-  }, []);
-
-  useEffect(() => {
-    // get list user lần đầu
-    if (!showtimesList.result) {
-      dispatch(getAllShowTimes());
-    }
-    // return () => dispatch(resetMoviesManagement());
   }, []);
 
   const handleOpenMovie = () => {
@@ -164,6 +168,7 @@ export default function CreateShowtimes() {
       }));
     });
   };
+
   const handleSelectTheater = (e) => {
     const opendateShow = data.dateShow ? false : true;
     setData((data) => ({
@@ -204,62 +209,42 @@ export default function CreateShowtimes() {
       ...data,
       setTicketPrice: e.target.value,
     }));
+    console.log("data", data);
   };
 
-  const handleTaoLichChieu = () => {
-    if (loadingCreateShowtime || !isReadyTaoLichChieu) {
-      // khi đang gửi requet hoặc chưa sẵn sàng thì không cho dispatch
-      return;
-    }
+  const handleCapNhatLichChieu = () => {
+    // if (loadingCreateShowtime || !isReadyCapNhatLichChieu) {
+    //   // khi đang gửi requet hoặc chưa sẵn sàng thì không cho dispatch
+    //   return;
+    // }
     dispatch(
-      createShowtime({
+      updateShowtime(param.showtimeId, {
         idMovie: data.setMovie,
         dateShow: data.dateShow,
         idTheater: data.idTheater,
         ticketPrice: data.setTicketPrice,
-      })
+      }) // ngayChieuGioChieu phải có định dạng dd/MM/yyyy hh:mm:ss);
     );
   };
 
   useEffect(() => {
-    if (successCreateShowtime) {
+    if (successUpdateShowtime) {
       setTimeout(() => {
         history.push("/admin/showtimes/list");
-      }, 250);
+      }, 100);
       setTimeout(() => {
-        enqueueSnackbar("Thêm lịch chiếu thành công!", { variant: "success" });
+        enqueueSnackbar("Cập nhật lịch chiếu thành công!", {
+          variant: "success",
+        });
       }, 150);
       return () => dispatch(resetCreateShowtime());
     }
-    if (errorCreateShowtime) {
-      enqueueSnackbar(errorCreateShowtime, { variant: "error" });
+    if (errorUpdateShowtime) {
+      enqueueSnackbar(errorUpdateShowtime, { variant: "error" });
     }
-  }, [successCreateShowtime, errorCreateShowtime]);
-
-  useEffect(() => {
-    return () => {
-      dispatch(resetMoviesManagement());
-    };
-  }, []);
+  }, [successUpdateShowtime, errorUpdateShowtime]);
   return (
     <Container>
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        mb={5}
-        mt={12}
-      >
-        <Stack spacing={2}>
-          <Typography variant="h4" gutterBottom>
-            Tạo lịch chiếu
-          </Typography>
-          <Breadcrumbs separator="›" aria-label="breadcrumb">
-            {breadcrumbs}
-          </Breadcrumbs>
-        </Stack>
-      </Stack>
-      <Box sx={{ width: "100%", typography: "body1" }}>
         <Fragment>
           <Box sx={{ margin: "20px 0" }}></Box>
           <Grid container rowSpacing={1} spacing={3}>
@@ -301,7 +286,7 @@ export default function CreateShowtimes() {
                         >
                           Chọn Phim
                         </MenuItem>
-                        {movieList.data?.map((movie) => (
+                        {movieList?.data?.map((movie) => (
                           <MenuItem
                             value={movie._id} // giá trị sẽ được đẩy lên
                             key={movie._id}
@@ -340,7 +325,7 @@ export default function CreateShowtimes() {
                               }`
                             : "Vui lòng chọn phim"}
                         </MenuItem>
-                        {data.theaterRender.data?.map((item) => (
+                        {data.theaterRender?.data?.map((item) => (
                           <MenuItem
                             value={item} // giá trị sẽ được đẩy lên
                             key={item._id}
@@ -362,7 +347,6 @@ export default function CreateShowtimes() {
                           value={selectedDate}
                           onChange={handleDateChange}
                           onAccept={handleDateAccept}
-                          format="yyyy-MM-dd, HH:mm" // HH:mm ~ 23:10, hh:mm là ~ 11:10 PM
                           renderInput={(params) => <TextField {...params} />}
                         />
                       </LocalizationProvider>
@@ -405,7 +389,7 @@ export default function CreateShowtimes() {
                       size="large"
                       type="submit"
                       variant="contained"
-                      loading={loadingCreateShowtime}
+                      loading={loadingUpdateShowtime}
                       sx={{
                         padding: "6px 9px",
                         fontWeight: "700",
@@ -413,9 +397,9 @@ export default function CreateShowtimes() {
                         fontSize: "0.8rem",
                         textTransform: "capitalize",
                       }}
-                      onClick={handleTaoLichChieu}
+                      onClick={handleCapNhatLichChieu}
                     >
-                      Tạo lịch chiếu
+                      Cập nhật
                     </LoadingButton>
                   </Box>
                 </Stack>
@@ -424,7 +408,6 @@ export default function CreateShowtimes() {
             <Grid item xs></Grid>
           </Grid>
         </Fragment>
-      </Box>
     </Container>
   );
 }

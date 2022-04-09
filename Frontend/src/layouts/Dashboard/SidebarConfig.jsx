@@ -60,6 +60,18 @@ const sidebarConfig = [
   {
     title: "Quản lý lịch chiếu phim",
     path: "/admin/showtimes/list",
+    children: [
+      {
+        title: "List",
+        path: "/admin/showtimes/list",
+        icon: getIcon("ci:dot-02-s"),
+      },
+      {
+        title: "Create",
+        path: "/admin/showtimes/create",
+        icon: getIcon("ci:dot-02-s"),
+      },
+    ],
     icon: getIcon("map:movie-theater"),
   },
 ];
