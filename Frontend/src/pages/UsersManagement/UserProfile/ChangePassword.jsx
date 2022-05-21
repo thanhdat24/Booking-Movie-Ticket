@@ -6,7 +6,7 @@ import { useSnackbar } from "notistack";
 import { useDispatch, useSelector } from "react-redux";
 import { LoadingButton, } from "@mui/lab";
 import * as Yup from "yup";
-import { changePassword, resetUserList } from "../../redux/actions/Users";
+import { changePassword, resetUserList } from "../../../redux/actions/Users";
 
 export default function ChangePassword() {
   const dispatch = useDispatch();

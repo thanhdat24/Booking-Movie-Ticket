@@ -258,7 +258,8 @@ export default function ShowtimesManagement() {
                   var formatDateShow = moment(dateShow)
                     .add(0, "hours")
                     .format("DD-MM-YYYY, hh:mm A");
-
+                  console.log("formatDateShow", formatDateShow);
+                  console.log("dateShow", dateShow);
                   const isItemSelected = selected.indexOf(_id) !== -1;
 
                   return (

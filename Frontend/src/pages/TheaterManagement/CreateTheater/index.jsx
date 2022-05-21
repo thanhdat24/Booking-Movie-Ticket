@@ -22,7 +22,7 @@ import { useFormik, Form, ErrorMessage, FormikProvider } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { useSnackbar } from "notistack";
 import { useHistory } from "react-router-dom";
-import { createTheater, resetCreateTheater } from "../../redux/actions/Theater";
+import { createTheater, resetCreateTheater } from "../../../redux/actions/Theater";
 
 export default function CreateTheater() {
   const dispatch = useDispatch();

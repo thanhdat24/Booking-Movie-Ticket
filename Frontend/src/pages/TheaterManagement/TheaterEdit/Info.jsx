@@ -19,13 +19,12 @@ import * as Yup from "yup";
 
 import { Icon } from "@iconify/react";
 import { LoadingButton, TabContext, TabList, TabPanel } from "@mui/lab";
-import { resetUpdate, updateCurrentUser } from "../../redux/actions/Auth";
 import { useFormik, Form, ErrorMessage, Formik, FormikProvider } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { useSnackbar } from "notistack";
 import { useHistory } from "react-router-dom";
-import { resetCreateTheater, updateTheater } from "../../redux/actions/Theater";
+import { resetCreateTheater, updateTheater } from "../../../redux/actions/Theater";
 
 export default function Info() {
   const dispatch = useDispatch();

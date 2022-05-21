@@ -135,8 +135,8 @@ export const BookTicketReducer = (state = stateDefault, action) => {
       state.errorDeleteShowtime = null;
 
       state.successUpdateShowtime = null;
-      state.loadingUpdateMShowtimee = false;
-      state.errorUpdateMShowtimee = null;
+      state.loadingUpdateShowtime = false;
+      state.errorUpdateShowtimee = null;
       
       return state;
     }

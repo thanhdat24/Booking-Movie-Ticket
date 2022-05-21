@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import { Icon } from "@iconify/react";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { resetUpdate, updateCurrentUser } from "../../redux/actions/Auth";
 import ChangePassword from "./ChangePassword";
 import Info from "./Info";
 
