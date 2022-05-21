@@ -4,7 +4,6 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import UsersManagement from "./pages/UsersManagement";
-import UserProfile from "./pages/UserProfile";
 
 import AdminRoute from "./guards/AdminRoute";
 import AdminLayout from "./layouts/AdminLayout";
@@ -14,16 +13,20 @@ import palette from "./theme/palette";
 import typography from "./theme/typography";
 import shadows, { customShadows } from "./theme/shadows";
 import componentsOverride from "./theme/overrides";
-import UserEdit from "./pages/UserEdit";
 import MoviesManagement from "./pages/MoviesManagement";
 import TheaterManagement from "./pages/TheaterManagement";
 import ShowtimesManagement from "./pages/ShowtimesManagement";
-import CreateShowtimes from "./pages/CreateShowtimes";
-import CreateTheater from "./pages/CreateTheater";
-import TheaterEdit from "./pages/TheaterEdit";
+
 import MovieEdit from "./pages/MoviesManagement/MovieEdit";
 import CreateMovie from "./pages/MoviesManagement/CreateMovie";
-import ShowtimeEdit from "./pages/ShowtimeEdit";
+
+import UserEdit from "./pages/UsersManagement/UserEdit";
+import UserProfile from "./pages/UsersManagement/UserProfile";
+import CreateTheater from "./pages/TheaterManagement/CreateTheater";
+import TheaterEdit from "./pages/TheaterManagement/TheaterEdit";
+import CreateShowtimes from "./pages/ShowtimesManagement/CreateShowtimes";
+import ShowtimeEdit from "./pages/ShowtimesManagement/ShowtimeEdit";
+import ModalTrailer from "./components/ModalTrailer/ModalTrailer";
 
 function App() {
   const themeOptions = useMemo(
@@ -43,6 +46,7 @@ function App() {
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
+        <ModalTrailer />
         <Switch>
           <Route
             exact

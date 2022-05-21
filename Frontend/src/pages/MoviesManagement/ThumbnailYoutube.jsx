@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import React from "react";
 
 import getVideoId from "../../utils/getVideoIdFromUrlYoutube";
-// import BtnPlay from '../../components/BtnPlay';
+import BtnPlay from "../../components/BtnPlay";
 // import { useStyles } from "./styles";
 
 export default function ThumbnailYoutube({ urlYoutube }) {
@@ -30,7 +30,7 @@ export default function ThumbnailYoutube({ urlYoutube }) {
         alt="trailer"
         className="w-full h-full rounded"
       />
-      {/* <BtnPlay width={40} height={40} urlYoutube={urlYoutube} /> */}
+      <BtnPlay width={40} height={40} urlYoutube={urlYoutube} />
     </Box>
   );
 }
