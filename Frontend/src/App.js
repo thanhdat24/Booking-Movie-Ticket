@@ -27,6 +27,7 @@ import TheaterEdit from "./pages/TheaterManagement/TheaterEdit";
 import CreateShowtimes from "./pages/ShowtimesManagement/CreateShowtimes";
 import ShowtimeEdit from "./pages/ShowtimesManagement/ShowtimeEdit";
 import ModalTrailer from "./components/ModalTrailer/ModalTrailer";
+import MainLayout from "./layouts/MainLayout/index";
 
 function App() {
   const themeOptions = useMemo(
@@ -48,6 +49,9 @@ function App() {
       <ThemeProvider theme={theme}>
         <ModalTrailer />
         <Switch>
+          <Route exact path={["/"]}>
+            <MainLayout></MainLayout>
+          </Route>
           <Route
             exact
             path={[
