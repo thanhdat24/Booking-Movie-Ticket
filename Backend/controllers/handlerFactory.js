@@ -50,7 +50,7 @@ exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const path = req.file?.path.replace(/\\/g, '/').substring('public'.length);
     const urlImage = `http://localhost:8080${path}`;
-    if (req.file) req.body.photo = urlImage;
+    if (req.file) req.body.logo = urlImage;
 
     const doc = await Model.create(req.body);
 

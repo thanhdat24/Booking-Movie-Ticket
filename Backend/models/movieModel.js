@@ -5,6 +5,7 @@ const movieSchema = new mongoose.Schema(
       type: String,
       required: [true, 'A movie must have a name'],
     },
+    genre: { type: String, required: [true, 'A movie must have a genre'] },
     trailer: {
       type: String,
       required: [true, 'A movie must have a trailer'],
