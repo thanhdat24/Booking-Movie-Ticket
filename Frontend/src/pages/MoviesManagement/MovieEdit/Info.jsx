@@ -1,15 +1,15 @@
 import React, { Fragment, useEffect, useState } from "react";
 import {
-  Container,
-  Typography,
-  Breadcrumbs,
-  Link,
   Box,
   Stack,
   Grid,
   Card,
   TextField,
   Button,
+  Switch,
+  FormControlLabel,
+  FormGroup,
+  FormControl,
 } from "@mui/material";
 import * as Yup from "yup";
 
@@ -31,14 +31,10 @@ import { useHistory } from "react-router-dom";
 export default function Info() {
   const dispatch = useDispatch();
   const history = useHistory();
-  // useEffect(() => {
-  //   dispatch(getDetailMovie(successDetailMovie?._id));
-  // }, []);
   const {
     loadingDetailMovie,
     successDetailMovie,
     successUpdateMovie,
-    errorDetailMovie,
     errorUpdateMovie,
   } = useSelector((state) => state.MovieReducer);
   const { enqueueSnackbar } = useSnackbar();
@@ -61,9 +57,12 @@ export default function Info() {
       trailer: successDetailMovie?.trailer,
       description: successDetailMovie?.description,
       duration: successDetailMovie?.duration,
+      genre: successDetailMovie?.genre,
       releaseDate: moment(successDetailMovie?.releaseDate).format("YYYY-MM-DD"),
       photo: successDetailMovie?.photo,
       remember: true,
+      nowShowing: successDetailMovie?.nowShowing,
+      comingSoon: successDetailMovie?.comingSoon,
     },
 
     validationSchema: UpdateSchema,
@@ -75,7 +74,14 @@ export default function Info() {
     },
   });
 
-  const { errors, touched, handleSubmit, getFieldProps, values } = formik;
+  const {
+    errors,
+    touched,
+    handleSubmit,
+    getFieldProps,
+    values,
+    setFieldValue,
+  } = formik;
 
   const [srcImage, setSrcImage] = useState(successDetailMovie?.photo);
   const handleChangeFile = (e) => {
@@ -110,11 +116,18 @@ export default function Info() {
       dispatch(resetMoviesManagement());
     };
   }, []);
+
+  const handleChangeNowShowing = (event, checked) => {
+    setFieldValue("nowShowing", checked ? true : false);
+  };
+  const handleChangeComingSoon = (event, checked) => {
+    setFieldValue("comingSoon", checked ? true : false);
+  };
   return (
     <Fragment>
       <Box sx={{ margin: "20px 0" }}></Box>
       <Formik value={formik}>
-        <Form onSubmit={handleSubmit} enctype="multipart/form-data">
+        <Form onSubmit={handleSubmit} encType="multipart/form-data">
           <Grid
             container
             rowSpacing={1}
@@ -139,7 +152,13 @@ export default function Info() {
                     error={Boolean(touched.name && errors.name)}
                     helperText={touched.name && errors.name}
                   />
-
+                  <TextField
+                    fullWidth
+                    label="Thể loại"
+                    {...getFieldProps("genre")}
+                    error={Boolean(touched.genre && errors.genre)}
+                    helperText={touched.genre && errors.genre}
+                  />
                   <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
                     <TextField
                       id="date"
@@ -180,6 +199,36 @@ export default function Info() {
                     error={Boolean(touched.trailer && errors.trailer)}
                     helperText={touched.trailer && errors.trailer}
                   />
+                  <FormControl component="fieldset">
+                    <FormGroup aria-label="position" row>
+                      <FormControlLabel
+                        sx={{ marginRight: "2rem" }}
+                        control={
+                          <Switch
+                            checked={values.nowShowing}
+                            onChange={handleChangeNowShowing}
+                            name="nowShowing"
+                            value={values.nowShowing}
+                          />
+                        }
+                        labelPlacement="start"
+                        label="Đang chiếu"
+                      />
+
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={values.comingSoon}
+                            onChange={handleChangeComingSoon}
+                            name="comingSoon"
+                            value={values.comingSoon}
+                          />
+                        }
+                        labelPlacement="start"
+                        label="Sắp chiếu"
+                      />
+                    </FormGroup>
+                  </FormControl>
                   <Box
                     sx={{
                       display: "flex",

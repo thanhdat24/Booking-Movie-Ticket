@@ -79,7 +79,10 @@ export default function TheaterMoreMenu({ theaterId }) {
         <MenuItem
           component={RouterLink}
           to="#"
-          sx={{ color: "rgb(33, 43, 54)" }}
+          sx={{
+            color: "rgb(33, 43, 54)",
+            "&:hover": { color: "rgb(33, 43, 54)" },
+          }}
           onClick={(e) => handleEditDetail(theaterId)}
         >
           <ListItemIcon>

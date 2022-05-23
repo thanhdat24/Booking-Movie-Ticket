@@ -78,7 +78,10 @@ export default function ShowtimesMoreMenu({ showtimeId }) {
         <MenuItem
           component={RouterLink}
           to="#"
-          sx={{ color: "rgb(33, 43, 54)" }}
+          sx={{
+            color: "rgb(33, 43, 54)",
+            "&:hover": { color: "rgb(33, 43, 54)" },
+          }}
           onClick={(e) => handleEditDetail(showtimeId)}
         >
           <ListItemIcon>

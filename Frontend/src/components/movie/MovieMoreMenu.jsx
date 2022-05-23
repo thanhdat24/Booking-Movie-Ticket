@@ -49,16 +49,9 @@ export default function UserMoreMenu({ movieId }) {
 
     setTimeout(() => {
       history.push(`/admin/movies/edit/${movieId}`);
-    }, 1300);
+    }, 1500);
   };
 
-  // useEffect(() => {
-  //   if (history.push("/admin/movies/list")) {
-  //     return () => {
-  //       dispatch(resetMoviesManagement());
-  //     };
-  //   }
-  // }, []);
   return (
     <>
       <IconButton ref={ref} onClick={() => setIsOpen(true)}>
@@ -90,10 +83,10 @@ export default function UserMoreMenu({ movieId }) {
 
         <MenuItem
           component={RouterLink}
-          // to={{
-          //   pathname: `/admin/movies/edit/${movieId}`,
-          // }}
-          sx={{ color: "rgb(33, 43, 54)" }}
+          sx={{
+            color: "rgb(33, 43, 54)",
+            "&:hover": { color: "rgb(33, 43, 54)" },
+          }}
           onClick={(e) => handleEditDetail(movieId)}
         >
           <ListItemIcon>

@@ -25,9 +25,9 @@ import { LoadingButton } from "@mui/lab";
 import { styled } from "@mui/material/styles";
 import * as Yup from "yup";
 import moment from "moment";
+import { useHistory } from "react-router-dom";
 import Label from "../../../components/Label";
 import { resetUserList, updateUser } from "../../../redux/actions/Users";
-import { useHistory } from "react-router-dom";
 
 function changeActive(active) {
   if (active) {

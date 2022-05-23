@@ -84,7 +84,12 @@ export default function UserMoreMenu({ userId }) {
         <MenuItem
           component={RouterLink}
           // to={{ pathname: `/admin/users/edit/${userId}` }}
-          sx={{ color: "rgb(33, 43, 54)" }}
+          sx={{
+           
+            color: "rgb(33, 43, 54)",
+          
+            "&:hover": { color: "rgb(33, 43, 54)" },
+          }}
           onClick={(e) => handleEditDetail(userId)}
         >
           <ListItemIcon>

@@ -12,19 +12,26 @@ import Info from "./Info";
 
 export default function UserEdit() {
   const breadcrumbs = [
-    <Link underline="hover" key="1" href="/" color="text.primary">
-      Home
+    <Link
+      underline="hover"
+      key="1"
+      href="/"
+      color="text.primary"
+      sx={{ "&:hover": { color: "#212B36" } }}
+    >
+      Trang chủ
     </Link>,
     <Link
       underline="hover"
       key="2"
       href="/admin/users/list"
       color="text.primary"
+      sx={{ "&:hover": { color: "#212B36" } }}
     >
-      User
+      Người dùng
     </Link>,
     <Typography key="3" color="inherit">
-      Edit user
+      Chỉnh sửa người dùng
     </Typography>,
   ];
   return (
@@ -38,7 +45,7 @@ export default function UserEdit() {
       >
         <Stack spacing={2}>
           <Typography variant="h4" gutterBottom>
-            Edit user
+            Chỉnh sửa người dùng
           </Typography>
           <Breadcrumbs separator="›" aria-label="breadcrumb">
             {breadcrumbs}

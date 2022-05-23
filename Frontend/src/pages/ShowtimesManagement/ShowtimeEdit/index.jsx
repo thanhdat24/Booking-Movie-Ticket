@@ -12,7 +12,13 @@ import Info from "./Info";
 
 export default function ShowtimeEdit() {
   const breadcrumbs = [
-    <Link underline="hover" key="1" href="/" color="text.primary">
+    <Link
+      underline="hover"
+      key="1"
+      href="/"
+      color="text.primary"
+      sx={{ "&:hover": { color: "#212B36" } }}
+    >
       Trang chủ
     </Link>,
     <Link
@@ -20,6 +26,7 @@ export default function ShowtimeEdit() {
       key="2"
       href="/admin/showtimes/list"
       color="text.primary"
+      sx={{ "&:hover": { color: "#212B36" } }}
     >
       Lịch chiếu
     </Link>,

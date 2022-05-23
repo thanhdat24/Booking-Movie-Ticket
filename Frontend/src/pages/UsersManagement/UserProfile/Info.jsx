@@ -111,7 +111,7 @@ export default function Info() {
     <Fragment>
       <Box sx={{ margin: "20px 0" }}></Box>
       <Formik value={formik}>
-        <Form onSubmit={handleSubmit} enctype="multipart/form-data">
+        <Form onSubmit={handleSubmit} encType="multipart/form-data">
           <Grid
             container
             rowSpacing={1}

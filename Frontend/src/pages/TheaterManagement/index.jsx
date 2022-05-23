@@ -183,19 +183,17 @@ export default function TheaterManagement() {
   const isUserNotFound = theaterList?.result === 0;
 
   const breadcrumbs = [
-    <Link underline="hover" key="1" href="/" color="text.primary">
-      Home
-    </Link>,
     <Link
       underline="hover"
-      key="2"
-      href="/admin/theater/list"
+      key="1"
+      href="/"
       color="text.primary"
+      sx={{ "&:hover": { color: "#212B36" } }}
     >
-      Theater
+      Trang chủ
     </Link>,
-    <Typography key="3" color="inherit">
-      List
+    <Typography key="2" color="inherit">
+      Danh sách
     </Typography>,
   ];
   return (
@@ -220,6 +218,7 @@ export default function TheaterManagement() {
           variant="contained"
           component={RouterLink}
           to="/admin/theater/create"
+          sx={{ "&:hover": { color: "#fff" } }}
           startIcon={<Icon icon={plusFill} />}
         >
           Thêm Rạp

@@ -22,10 +22,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useSnackbar } from "notistack";
 import { useHistory } from "react-router-dom";
 
-
 import theatersApi from "../../../api/theatersApi";
-import { createShowtime, resetCreateShowtime } from "../../../redux/actions/BookTicket";
-import { getMovieList, resetMoviesManagement } from "../../../redux/actions/Movie";
+import {
+  createShowtime,
+  resetCreateShowtime,
+} from "../../../redux/actions/BookTicket";
+import {
+  getMovieList,
+  resetMoviesManagement,
+} from "../../../redux/actions/Movie";
 import { getAllShowTimes } from "../../../redux/actions/Theater";
 
 export default function CreateShowtimes() {
@@ -65,18 +70,25 @@ export default function CreateShowtimes() {
     else setIsReadyTaoLichChieu(false);
   }, [data.setMovie, data.dateShow, data.idTheater, data.setTicketPrice]);
   const breadcrumbs = [
-    <Link underline="hover" key="1" color="inherit" href="/">
-      Home
+    <Link
+      underline="hover"
+      key="1"
+      color="text.primary"
+      href="/"
+      sx={{ "&:hover": { color: "#212B36" } }}
+    >
+      Trang chủ
     </Link>,
     <Link
       underline="hover"
       key="2"
-      color="inherit"
+      color="text.primary"
       href="/admin/showtimes/list"
+      sx={{ "&:hover": { color: "#212B36" } }}
     >
       Lịch chiếu
     </Link>,
-    <Typography key="3" color="text.primary">
+    <Typography key="3" color="inherit">
       Lịch chiếu mới
     </Typography>,
   ];

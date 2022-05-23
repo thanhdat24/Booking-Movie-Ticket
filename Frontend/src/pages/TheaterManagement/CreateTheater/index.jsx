@@ -22,7 +22,10 @@ import { useFormik, Form, ErrorMessage, FormikProvider } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { useSnackbar } from "notistack";
 import { useHistory } from "react-router-dom";
-import { createTheater, resetCreateTheater } from "../../../redux/actions/Theater";
+import {
+  createTheater,
+  resetCreateTheater,
+} from "../../../redux/actions/Theater";
 
 export default function CreateTheater() {
   const dispatch = useDispatch();
@@ -59,7 +62,13 @@ export default function CreateTheater() {
     setType(event.target.value);
   };
   const breadcrumbs = [
-    <Link underline="hover" key="1" color="text.primary" href="/">
+    <Link
+      underline="hover"
+      key="1"
+      color="text.primary"
+      href="/"
+      sx={{ "&:hover": { color: "#212B36" } }}
+    >
       Trang chủ
     </Link>,
     <Link
@@ -67,6 +76,7 @@ export default function CreateTheater() {
       key="2"
       color="text.primary"
       href="/admin/theater/list"
+      sx={{ "&:hover": { color: "#212B36" } }}
     >
       Rạp
     </Link>,
@@ -105,7 +115,7 @@ export default function CreateTheater() {
       >
         <Stack spacing={2}>
           <Typography variant="h4" gutterBottom>
-            Tạo phim
+            Tạo rạp
           </Typography>
           <Breadcrumbs separator="›" aria-label="breadcrumb">
             {breadcrumbs}

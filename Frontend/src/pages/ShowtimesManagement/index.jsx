@@ -186,19 +186,17 @@ export default function ShowtimesManagement() {
   );
   const isUserNotFound = showtimesList?.result === 0;
   const breadcrumbs = [
-    <Link underline="hover" key="1" color="text.primary" href="/">
-      Home
-    </Link>,
     <Link
       underline="hover"
-      key="2"
+      key="1"
       color="text.primary"
-      href="/admin/showtimes/list"
+      href="/"
+      sx={{ "&:hover": { color: "#212B36" } }}
     >
-      Showtimes
+      Trang chủ
     </Link>,
     <Typography key="3" color="inherit">
-      List
+      Danh sách
     </Typography>,
   ];
 
@@ -225,6 +223,7 @@ export default function ShowtimesManagement() {
           component={RouterLink}
           to="#"
           startIcon={<Icon icon={plusFill} />}
+          sx={{ "&:hover": { color: "#fff" } }}
           onClick={() => history.push("/admin/showtimes/create")}
         >
           Thêm lịch chiếu

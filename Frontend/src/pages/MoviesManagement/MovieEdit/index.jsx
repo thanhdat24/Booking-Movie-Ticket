@@ -12,19 +12,26 @@ import Info from "./Info";
 
 export default function MovieEdit() {
   const breadcrumbs = [
-    <Link underline="hover" key="1" href="/" color="text.primary">
-      Home
+    <Link
+      underline="hover"
+      key="1"
+      color="text.primary"
+      href="/"
+      sx={{ "&:hover": { color: "#212B36" } }}
+    >
+      Trang chủ
     </Link>,
     <Link
       underline="hover"
       key="2"
-      href="/admin/users/list"
       color="text.primary"
+      href="/admin/movies/list"
+      sx={{ "&:hover": { color: "#212B36" } }}
     >
-      User
+      Phim
     </Link>,
     <Typography key="3" color="inherit">
-      Edit user
+      Chỉnh sửa phim
     </Typography>,
   ];
   return (
@@ -38,7 +45,7 @@ export default function MovieEdit() {
       >
         <Stack spacing={2}>
           <Typography variant="h4" gutterBottom>
-            Edit user
+            Chỉnh sửa phim
           </Typography>
           <Breadcrumbs separator="›" aria-label="breadcrumb">
             {breadcrumbs}

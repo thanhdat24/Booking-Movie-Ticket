@@ -125,11 +125,9 @@ export const addMovieUploadImg = (movie) => {
     dispatch({
       type: ADD_MOVIE_REQUEST,
     });
-    console.log("123");
     moviesApi
       .addMovieUploadImg(movie)
       .then((result) => {
-        console.log("result", result);
         dispatch({
           type: ADD_MOVIE_SUCCESS,
           payload: {
@@ -138,10 +136,6 @@ export const addMovieUploadImg = (movie) => {
         });
       })
       .catch((error) => {
-        console.log("1234");
-        console.log("error", error);
-        console.log("error", error.response);
-
         dispatch({
           type: ADD_MOVIE_FAIL,
           payload: {

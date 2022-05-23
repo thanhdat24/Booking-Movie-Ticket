@@ -10,6 +10,10 @@ import {
   Card,
   TextField,
   Button,
+  Switch,
+  FormControlLabel,
+  FormGroup,
+  FormControl,
 } from "@mui/material";
 import * as Yup from "yup";
 
@@ -20,9 +24,17 @@ import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { useSnackbar } from "notistack";
 import { useHistory } from "react-router-dom";
-import { addMovieUploadImg, resetMoviesManagement } from "../../../redux/actions/Movie";
+import {
+  addMovieUploadImg,
+  resetMoviesManagement,
+} from "../../../redux/actions/Movie";
 
 export default function CreateMovie() {
+  // const [dataSubmit, setDataSubmit] = useState({
+  //   nowShowing: false,
+  //   comingSoon: false,
+  // });
+
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -33,30 +45,35 @@ export default function CreateMovie() {
 
   const UpdateSchema = Yup.object().shape({
     name: Yup.string().required("*Tên phim không được bỏ trống !"),
+    genre: Yup.string().required("*Thể loại phim không được bỏ trống !"),
     trailer: Yup.string().required("*Trailer không được bỏ trống !"),
     description: Yup.string().required("*Nội dung không được bỏ trống !"),
 
     releaseDate: Yup.date()
       .required("*Thời gian chiếu không được bỏ trống!")
-      .test("checkDate", "Ngày chiếu phải lớn hơn ngày hôm nay", (value) => {
+      .test("checkDate", "Ngày chiếu phải lớn hơn ngày hôm nay!", (value) => {
         var today = new Date();
         return value > today;
       }),
+    duration: Yup.string().required("*Vui lòng nhập thời lượng phim!"),
   });
   const formik = useFormik({
     initialValues: {
       name: "",
       trailer: "",
-      description:
-        "",
+      description: "",
       duration: "",
       releaseDate: moment("").format("YYYY-MM-DD"),
       photo: "",
+      genre: "",
       remember: true,
+      nowShowing: false,
+      comingSoon: false,
     },
 
     validationSchema: UpdateSchema,
     onSubmit: (movie) => {
+      console.log("movie", movie);
       if (loadingAddMovie) {
         return;
       }
@@ -64,21 +81,41 @@ export default function CreateMovie() {
     },
   });
 
-  const { errors, touched, handleSubmit, getFieldProps, values } = formik;
+  const {
+    errors,
+    touched,
+    handleSubmit,
+    getFieldProps,
+    values,
+    setFieldValue,
+  } = formik;
 
+  const handleChangeNowShowing = (event, checked) => {
+    setFieldValue("nowShowing", checked ? true : false);
+  };
+  const handleChangeComingSoon = (event, checked) => {
+    setFieldValue("comingSoon", checked ? true : false);
+  };
   const breadcrumbs = [
-    <Link underline="hover" key="1" color="inherit" href="/">
-      Home
+    <Link
+      underline="hover"
+      key="1"
+      color="text.primary"
+      href="/"
+      sx={{ "&:hover": { color: "#212B36" } }}
+    >
+      Trang chủ
     </Link>,
     <Link
       underline="hover"
       key="2"
-      color="inherit"
-      href="/getting-started/installation/"
+      color="text.primary"
+      href="/admin/movies/list"
+      sx={{ "&:hover": { color: "#212B36" } }}
     >
-      Movie
+      Phim
     </Link>,
-    <Typography key="3" color="text.primary">
+    <Typography key="3" color="inherit">
       Phim mới
     </Typography>,
   ];
@@ -137,7 +174,7 @@ export default function CreateMovie() {
         <Fragment>
           <Box sx={{ margin: "20px 0" }}></Box>
           <Formik value={formik}>
-            <Form onSubmit={handleSubmit} enctype="multipart/form-data">
+            <Form onSubmit={handleSubmit} encType="multipart/form-data">
               <Grid
                 container
                 rowSpacing={1}
@@ -151,7 +188,7 @@ export default function CreateMovie() {
                       padding: "24px",
                     }}
                   >
-                    <div className="mb-5 text-lg font-semibold">
+                    <div className="mb-4 text-lg font-semibold">
                       Thông tin phim
                     </div>
                     <Stack spacing={3}>
@@ -164,7 +201,13 @@ export default function CreateMovie() {
                         error={Boolean(touched.name && errors.name)}
                         helperText={touched.name && errors.name}
                       />
-
+                      <TextField
+                        fullWidth
+                        label="Thể loại"
+                        {...getFieldProps("genre")}
+                        error={Boolean(touched.genre && errors.genre)}
+                        helperText={touched.genre && errors.genre}
+                      />
                       <Stack
                         direction={{ xs: "column", sm: "row" }}
                         spacing={2}
@@ -212,6 +255,37 @@ export default function CreateMovie() {
                         error={Boolean(touched.trailer && errors.trailer)}
                         helperText={touched.trailer && errors.trailer}
                       />
+                      <FormControl component="fieldset">
+                        <FormGroup aria-label="position" row>
+                          <FormControlLabel
+                            sx={{ marginRight: "2rem" }}
+                            control={
+                              <Switch
+                                checked={values.nowShowing}
+                                onChange={handleChangeNowShowing}
+                                name="nowShowing"
+                                value={values.nowShowing}
+                              />
+                            }
+                            labelPlacement="start"
+                            label="Đang chiếu"
+                          />
+
+                          <FormControlLabel
+                            control={
+                              <Switch
+                                checked={values.comingSoon}
+                                onChange={handleChangeComingSoon}
+                                name="comingSoon"
+                                value={values.comingSoon}
+                              />
+                            }
+                            labelPlacement="start"
+                            label="Sắp chiếu"
+                          />
+                        </FormGroup>
+                      </FormControl>
+
                       <Box
                         sx={{
                           display: "flex",
@@ -246,7 +320,7 @@ export default function CreateMovie() {
                       padding: " 26px 24px",
                     }}
                   >
-                    <div className="mb-5 text-lg font-semibold">
+                    <div className="mb-4 text-lg font-semibold">
                       Hình ảnh phim
                     </div>
                     <hr />

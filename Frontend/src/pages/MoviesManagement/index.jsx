@@ -113,9 +113,10 @@ export default function MoviesManagement() {
     if (!movieList.result) {
       dispatch(getMovieList());
     }
+
     return () => dispatch(resetMoviesManagement());
   }, []);
-
+  console.log("movieList", movieList);
   useEffect(() => {
     if (successDeleteMovie || successAddMovie || successUpdateMovie) {
       dispatch(getMovieList());
@@ -190,23 +191,15 @@ export default function MoviesManagement() {
     <Link
       underline="hover"
       key="1"
-      color="inherit"
+      color="text.primary"
       href="/"
       onClick={handleClick}
+      sx={{ "&:hover": { color: "#212B36" } }}
     >
-      Home
+      Trang chủ
     </Link>,
-    <Link
-      underline="hover"
-      key="2"
-      color="inherit"
-      href="/getting-started/installation/"
-      onClick={handleClick}
-    >
-      Movie
-    </Link>,
-    <Typography key="3" color="text.primary">
-      List
+    <Typography key="2" color="inherit">
+      Danh sách
     </Typography>,
   ];
 
@@ -221,7 +214,7 @@ export default function MoviesManagement() {
       >
         <Stack spacing={2}>
           <Typography variant="h4" gutterBottom>
-            Movie List
+            Danh sách phim
           </Typography>
           <Breadcrumbs separator="›" aria-label="breadcrumb">
             {breadcrumbs}
@@ -234,6 +227,7 @@ export default function MoviesManagement() {
           to="#"
           startIcon={<Icon icon={plusFill} />}
           onClick={() => history.push("/admin/movies/create")}
+          sx={{ "&:hover": { color: "#fff" } }}
         >
           Thêm Phim
         </Button>

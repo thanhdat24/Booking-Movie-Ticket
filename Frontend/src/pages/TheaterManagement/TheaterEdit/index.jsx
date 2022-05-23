@@ -12,7 +12,13 @@ import Info from "./Info";
 
 export default function TheaterEdit() {
   const breadcrumbs = [
-    <Link underline="hover" key="1" href="/" color="text.primary">
+    <Link
+      underline="hover"
+      key="1"
+      href="/"
+      color="text.primary"
+      sx={{ "&:hover": { color: "#212B36" } }}
+    >
       Trang chủ
     </Link>,
     <Link
@@ -20,6 +26,7 @@ export default function TheaterEdit() {
       key="2"
       href="/admin/theater/list"
       color="text.primary"
+      sx={{ "&:hover": { color: "#212B36" } }}
     >
       Rạp
     </Link>,
@@ -38,7 +45,7 @@ export default function TheaterEdit() {
       >
         <Stack spacing={2}>
           <Typography variant="h4" gutterBottom>
-            Edit user
+            Chỉnh sửa rạp
           </Typography>
           <Breadcrumbs separator="›" aria-label="breadcrumb">
             {breadcrumbs}

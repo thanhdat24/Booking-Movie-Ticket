@@ -185,19 +185,21 @@ export default function UserEdit() {
       key="1"
       href="/"
       color="text.primary"
+      sx={{ "&:hover": { color: "#212B36" } }}
     >
-      Home
+      Trang chủ
     </Link>,
     <Link
       underline="hover"
       key="2"
       href="/admin/users/account"
       color="text.primary"
+      sx={{ "&:hover": { color: "#212B36" } }}
     >
-      User
+      Người dùng
     </Link>,
-    <Typography key="3"  color="inherit">
-      List
+    <Typography key="3" color="inherit">
+      Danh sách
     </Typography>,
   ];
   return (
@@ -211,7 +213,7 @@ export default function UserEdit() {
       >
         <Stack spacing={2}>
           <Typography variant="h4" gutterBottom>
-            User List
+            Danh sách người dùng
           </Typography>
           <Breadcrumbs separator="›" aria-label="breadcrumb">
             {breadcrumbs}
@@ -223,6 +225,7 @@ export default function UserEdit() {
           component={RouterLink}
           to="#"
           startIcon={<Icon icon={plusFill} />}
+          sx={{ "&:hover": { color: "#fff" } }}
         >
           Thêm Người Dùng
         </Button>

@@ -78,7 +78,7 @@ export default function Info() {
   }, [data.setMovie, data.dateShow, data.idTheater, data.setTicketPrice]);
   const breadcrumbs = [
     <Link underline="hover" key="1" color="inherit" href="/">
-      Home
+      Trang chủ
     </Link>,
     <Link
       underline="hover"

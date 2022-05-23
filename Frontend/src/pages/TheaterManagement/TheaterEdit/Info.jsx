@@ -92,7 +92,7 @@ export default function Info() {
     <Fragment>
       <Box sx={{ margin: "20px 0" }}></Box>
       <Formik value={formik}>
-        <Form onSubmit={handleSubmit} enctype="multipart/form-data">
+        <Form onSubmit={handleSubmit} encType="multipart/form-data">
           <Container>
             <Box sx={{ width: "100%", typography: "body1" }}>
               <Fragment>

@@ -14,7 +14,7 @@ body {
 }
 /* bootstrap normalize */
 button:focus {
-  outline: none ;
+  outline: none;
 }
 p {
   margin-bottom: 0px !important;
