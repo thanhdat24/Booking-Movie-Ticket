@@ -67,8 +67,8 @@ export const TheaterReducer = (state = stateDefault, action) => {
     case GET_THEATER_LIST_FAIL: {
       return {
         ...state,
-        errorShowtimesList: action.payload.error,
-        loadingShowtimesList: false,
+        errorTheaterList: action.payload.error,
+        loadingTheaterList: false,
       };
     }
 
@@ -90,8 +90,9 @@ export const TheaterReducer = (state = stateDefault, action) => {
     case GET_SHOWTIMES_LIST_FAIL: {
       return {
         ...state,
-        errorTheaterList: action.payload.error,
-        loadingTheaterList: false,
+
+        errorShowtimesList: action.payload.error,
+        loadingShowtimesList: false,
       };
     }
 

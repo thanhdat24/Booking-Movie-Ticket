@@ -242,7 +242,7 @@ export default function Info() {
     }
   }, [successUpdateShowtime, errorUpdateShowtime]);
   return (
-    <Container>
+    <Container  sx={{ paddingRight: "0px !important", paddingLeft: "0px !important" }}>
       <Fragment>
         <Box sx={{ margin: "20px 0" }}></Box>
         <Grid container rowSpacing={1} spacing={3}>

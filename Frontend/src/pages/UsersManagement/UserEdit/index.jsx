@@ -35,7 +35,9 @@ export default function UserEdit() {
     </Typography>,
   ];
   return (
-    <Container>
+    <Container
+      sx={{ paddingRight: "0px !important", paddingLeft: "0px !important" }}
+    >
       <Stack
         direction="row"
         alignItems="center"

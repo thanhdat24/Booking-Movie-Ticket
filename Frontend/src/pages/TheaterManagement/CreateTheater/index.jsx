@@ -26,6 +26,7 @@ import {
   createTheater,
   resetCreateTheater,
 } from "../../../redux/actions/Theater";
+import { getTheaterClusterList } from "../../../redux/actions/TheaterCluster";
 
 export default function CreateTheater() {
   const dispatch = useDispatch();
@@ -33,18 +34,26 @@ export default function CreateTheater() {
 
   const { loadingCreateTheater, successCreateTheater, errorCreateTheater } =
     useSelector((state) => state.TheaterReducer);
-  const { enqueueSnackbar } = useSnackbar();
 
+  const { theaterClusterList } = useSelector(
+    (state) => state.TheaterClusterReducer
+  );
+
+  useEffect(() => {
+    dispatch(getTheaterClusterList());
+  }, []);
+  const { enqueueSnackbar } = useSnackbar();
+  console.log("theaterClusterList", theaterClusterList);
   const UpdateSchema = Yup.object().shape({
     name: Yup.string().required("*Tên rạp không được bỏ trống !"),
     type: Yup.string().required("*Loại rạp không được bỏ trống !"),
-    seatsTotal: Yup.string().required("*Số lượng ghế không được bỏ trống !"),
+    idTheaterCluster: Yup.string().required("*Cụm rạp không được bỏ trống !"),
   });
   const formik = useFormik({
     initialValues: {
       name: "",
       type: "",
-      seatsTotal: "160",
+      idTheaterCluster: "",
     },
 
     validationSchema: UpdateSchema,
@@ -55,9 +64,15 @@ export default function CreateTheater() {
       dispatch(createTheater(theater));
     },
   });
+  const [theaterCluster, setTheaterCluster] = React.useState("");
+
+  const handleTheaterCluster = (event) => {
+    setTheaterCluster(event.target.value);
+  };
 
   const { errors, touched, handleSubmit, getFieldProps } = formik;
   const [type, setType] = useState(10);
+
   const handleChange = (event) => {
     setType(event.target.value);
   };
@@ -90,7 +105,7 @@ export default function CreateTheater() {
         history.push("/admin/theater/list");
       }, 100);
       setTimeout(() => {
-        enqueueSnackbar("Thêm phim thành công!", { variant: "success" });
+        enqueueSnackbar("Thêm rạp thành công!", { variant: "success" });
       }, 150);
       return;
     }
@@ -105,7 +120,9 @@ export default function CreateTheater() {
     };
   }, []);
   return (
-    <Container>
+    <Container
+      sx={{ paddingRight: "0px !important", paddingLeft: "0px !important" }}
+    >
       <Stack
         direction="row"
         alignItems="center"
@@ -183,14 +200,56 @@ export default function CreateTheater() {
                           />
                         </FormControl>
                       </Stack>
-                      <TextField
+                      <FormControl
                         fullWidth
-                        type="text"
-                        label="Số lượng ghế"
-                        {...getFieldProps("seatsTotal")}
-                        error={Boolean(touched.seatsTotal && errors.seatsTotal)}
-                        helperText={touched.seatsTotal && errors.seatsTotal}
-                      />
+                        error={Boolean(
+                          touched.idTheaterCluster && errors.idTheaterCluster
+                        )}
+                        helperText={
+                          touched.idTheaterCluster && errors.idTheaterCluster
+                        }
+                      >
+                        <InputLabel id="theater-cluster">
+                          Chọn cụm rạp
+                        </InputLabel>
+                        <Select
+                          labelId="theater-cluster"
+                          id="theater-cluster"
+                          value={theaterCluster}
+                          label="Chọn cụm rạp"
+                          onChange={handleTheaterCluster}
+                          {...getFieldProps("idTheaterCluster")}
+                        >
+                          {theaterClusterList?.data?.map((item) => (
+                            <MenuItem key={item._id} value={item._id}>
+                              {item.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+
+                      {/* <TextField
+                        select
+                        label="Chọn cụm rạp"
+                        value={theaterCluster}
+                        onChange={handleTheaterCluster}
+                        SelectProps={{
+                          native: true,
+                        }}
+                        {...getFieldProps("idTheaterCluster")}
+                        error={Boolean(
+                          touched.idTheaterCluster && errors.idTheaterCluster
+                        )}
+                        helperText={
+                          touched.idTheaterCluster && errors.idTheaterCluster
+                        }
+                      >
+                        {theaterClusterList?.data?.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.idTheaterCluster.name}
+                          </option>
+                        ))}
+                      </TextField> */}
 
                       <Box
                         sx={{

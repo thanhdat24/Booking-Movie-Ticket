@@ -37,8 +37,11 @@ import TheaterListToolbar from "../../components/theater/TheaterListToolbar";
 
 const TABLE_HEAD = [
   { id: "name", label: "Tên rạp", alignRight: false },
-  { id: "type", label: "Loại rạp", alignRight: false },
-  { id: "seatsTotal", label: "Số lượng ghế", alignRight: false },
+  { id: "idTheaterCluster", label: "Hệ Thống Rạp", alignRight: false },
+  { id: "idTheaterCluster", label: "Tên Cụm Rạp", alignRight: false },
+  { id: "idTheaterCluster", label: "Địa Chỉ", alignRight: false },
+  // { id: "type", label: "Loại Rạp", alignRight: false },
+  { id: "seatsTotal", label: "Số Lượng Ghế", alignRight: false },
   { id: "" },
 ];
 
@@ -52,13 +55,6 @@ function descendingComparator(a, b, orderBy) {
     return 1;
   }
   return 0;
-}
-function changeActive(active) {
-  if (active) {
-    return "Active";
-  } else {
-    return "Banned";
-  }
 }
 function getComparator(order, orderBy) {
   return order === "desc"
@@ -102,9 +98,7 @@ export default function TheaterManagement() {
 
   useEffect(() => {
     // get list user lần đầu
-    if (!theaterList.result) {
       dispatch(getTheaterList());
-    }
     // return () => dispatch(resetUserList());
   }, []);
 
@@ -197,7 +191,7 @@ export default function TheaterManagement() {
     </Typography>,
   ];
   return (
-    <Container>
+    <Container  sx={{ paddingRight: "0px !important", paddingLeft: "0px !important" }}>
       <Stack
         direction="row"
         alignItems="center"
@@ -246,7 +240,13 @@ export default function TheaterManagement() {
               {filteredTheater
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
-                  const { _id, name, type, seatsTotal } = row;
+                  const {
+                    _id,
+                    name,
+                    type,
+                    seatsTotal,
+                    idTheaterCluster
+                  } = row;
                   const isItemSelected = selected.indexOf(name) !== -1;
 
                   return (
@@ -265,7 +265,22 @@ export default function TheaterManagement() {
                         />
                       </TableCell>
                       <TableCell align="left">{name}</TableCell>
-                      <TableCell align="left">{type}</TableCell>
+                      <TableCell align="left">
+                        <img
+                          class="max-w-2xl h-14 rounded"
+                          src={idTheaterCluster?.idTheaterSystem.logo}
+                          alt="logo"
+                        />
+                      </TableCell>
+                      <TableCell align="left">
+                        {idTheaterCluster?.name}
+                      </TableCell>
+
+                      <TableCell align="left">
+                        {idTheaterCluster?.address}
+                      </TableCell>
+
+                      {/* <TableCell align="left">{type}</TableCell> */}
                       <TableCell align="left">{seatsTotal}</TableCell>
 
                       <TableCell align="right">

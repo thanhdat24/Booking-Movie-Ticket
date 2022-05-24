@@ -36,7 +36,11 @@ import { resetCreateShowtime } from "../../redux/actions/BookTicket";
 
 const TABLE_HEAD = [
   { id: "idMovie", label: "Phim", alignRight: false },
+  { id: "TheaterSystem", label: "Hệ Thống Rạp", alignRight: false },
+  { id: "NameTheaterCluster", label: "Tên Cụm Rạp", alignRight: false },
+  { id: "Address", label: "Địa Chỉ", alignRight: false },
   { id: "idTheater", label: "Rạp", alignRight: false },
+
   {
     id: "dateShow",
     label: "Ngày chiếu giờ chiếu",
@@ -103,9 +107,9 @@ export default function ShowtimesManagement() {
   console.log("successDeleteShowtime", successDeleteShowtime);
   useEffect(() => {
     // get list user lần đầu
-    if (!showtimesList.result) {
-      dispatch(getAllShowTimes());
-    }
+    // if (!showtimesList.result) {
+    dispatch(getAllShowTimes());
+    // }
   }, []);
 
   useEffect(() => {
@@ -201,7 +205,9 @@ export default function ShowtimesManagement() {
   ];
 
   return (
-    <Container>
+    <Container
+      sx={{ paddingRight: "0px !important", paddingLeft: "0px !important" }}
+    >
       <Stack
         direction="row"
         alignItems="center"
@@ -283,6 +289,20 @@ export default function ShowtimesManagement() {
                           </Typography>
                         </Stack>
                       </TableCell>
+                      <TableCell align="left">
+                        <img
+                          class="max-w-2xl h-14 rounded"
+                          src={idTheater?.idTheaterCluster.idTheaterSystem.logo}
+                          alt="logo"
+                        />
+                      </TableCell>
+                      <TableCell align="left">
+                        {idTheater?.idTheaterCluster.name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {idTheater?.idTheaterCluster.address}
+                      </TableCell>
+
                       <TableCell align="left">{idTheater?.name}</TableCell>
                       <TableCell align="left">{formatDateShow}</TableCell>
                       <TableCell align="left">{ticketPrice}</TableCell>

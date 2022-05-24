@@ -23,6 +23,8 @@ import { useSnackbar } from "notistack";
 import { useHistory } from "react-router-dom";
 
 import theatersApi from "../../../api/theatersApi";
+import theatersClusterApi from "../../../api/theatersClusterApi";
+import theatersSystemApi from "../../../api/theatersSystemApi";
 import {
   createShowtime,
   resetCreateShowtime,
@@ -44,9 +46,13 @@ export default function CreateShowtimes() {
   const { enqueueSnackbar } = useSnackbar();
   const [data, setData] = useState({
     setMovie: "",
+    theaterSystemRender: [],
+    theaterClusterRender: [],
     theaterRender: [],
 
     setTheater: "",
+    setTheaterSystem: "",
+    setTheaterCluster: "",
 
     dateShow: null,
 
@@ -57,6 +63,8 @@ export default function CreateShowtimes() {
 
     openCtr: {
       movie: false,
+      theaterSystem: false,
+      theaterCluster: false,
       theater: false,
       dateShow: false,
       ticketPrice: false,
@@ -70,13 +78,7 @@ export default function CreateShowtimes() {
     else setIsReadyTaoLichChieu(false);
   }, [data.setMovie, data.dateShow, data.idTheater, data.setTicketPrice]);
   const breadcrumbs = [
-    <Link
-      underline="hover"
-      key="1"
-      color="text.primary"
-      href="/"
-      sx={{ "&:hover": { color: "#212B36" } }}
-    >
+    <Link underline="hover" key="1" color="text.primary" href="/">
       Trang chủ
     </Link>,
     <Link
@@ -84,7 +86,6 @@ export default function CreateShowtimes() {
       key="2"
       color="text.primary"
       href="/admin/showtimes/list"
-      sx={{ "&:hover": { color: "#212B36" } }}
     >
       Lịch chiếu
     </Link>,
@@ -95,22 +96,34 @@ export default function CreateShowtimes() {
 
   useEffect(() => {
     // get list user lần đầu
-    if (!movieList.result) {
-      dispatch(getMovieList());
-    }
+    // if (!movieList.result) {
+    dispatch(getMovieList());
+    // }
     return () => dispatch(resetMoviesManagement());
   }, []);
 
   useEffect(() => {
     // get list user lần đầu
-    if (!showtimesList.result) {
-      dispatch(getAllShowTimes());
-    }
+    // if (!showtimesList.result) {
+    dispatch(getAllShowTimes());
+    // }
     // return () => dispatch(resetMoviesManagement());
   }, []);
 
   const handleOpenMovie = () => {
     setData((data) => ({ ...data, openCtr: { ...data.openCtr, movie: true } }));
+  };
+  const handleOpenTheaterSystem = () => {
+    setData((data) => ({
+      ...data,
+      openCtr: { ...data.openCtr, theaterSystem: true },
+    }));
+  };
+  const handleOpenTheaterCluster = () => {
+    setData((data) => ({
+      ...data,
+      openCtr: { ...data.openCtr, theaterCluster: true },
+    }));
   };
   const handleOpenTheater = () => {
     setData((data) => ({
@@ -137,6 +150,18 @@ export default function CreateShowtimes() {
       openCtr: { ...data.openCtr, movie: false },
     }));
   };
+  const handleCloseTheaterSystem = () => {
+    setData((data) => ({
+      ...data,
+      openCtr: { ...data.openCtr, theaterSystem: false },
+    }));
+  };
+  const handleCloseTheaterCluster = () => {
+    setData((data) => ({
+      ...data,
+      openCtr: { ...data.openCtr, theaterCluster: false },
+    }));
+  };
   const handleCloseTheater = () => {
     setData((data) => ({
       ...data,
@@ -157,23 +182,70 @@ export default function CreateShowtimes() {
   };
 
   const handleSelectMovie = (e) => {
-    const isOpenTheater = data.setTheater ? false : true;
+    const isOpenTheaterSystem = data.setTheaterSystem ? false : true;
     setData((data) => ({
       ...data,
       setMovie: e.target.value,
       startRequest: true,
       openCtr: {
         ...data.openCtr,
-        theater: isOpenTheater,
+        theaterSystem: isOpenTheaterSystem,
       },
     }));
-    theatersApi.getTheaterList(e.target.value).then((result) => {
+
+    theatersSystemApi.getTheaterSystemList(e.target.value).then((result) => {
       setData((data) => ({
         ...data,
-        theaterRender: result.data,
+        theaterSystemRender: result.data,
         startRequest: false,
       }));
     });
+  };
+  const handleSelectTheaterSystem = async (e) => {
+    setData((data) => ({
+      ...data,
+      setTheaterSystem: e.target.value.name,
+      startRequest: true,
+      openCtr: { ...data.openCtr, theaterCluster: true },
+      //reset
+      setTheaterCluster: "",
+      theaterRender: [],
+      setTheater: "",
+    }));
+
+    await theatersSystemApi
+      .getDetailTheaterSystem(e.target.value._id)
+      .then((result) => {
+        setData((data) => ({
+          ...data,
+          theaterClusterRender: result.data,
+          startRequest: false,
+        }));
+      });
+  };
+
+  const handleSelectTheaterCluster = async (e) => {
+    const openTheater = data.theaterCluster ? false : true;
+    setData((data) => ({
+      ...data,
+      setTheaterCluster: e.target.value.name,
+      startRequest: true,
+      openCtr: { ...data.openCtr, theater: openTheater },
+      //reset
+      setTheater: "",
+      idTheater: "",
+    }));
+
+    await theatersClusterApi
+      .getDetailTheaterCluster(e.target.value._id)
+      .then((result) => {
+        setData((data) => ({
+          ...data,
+          theaterRender: result.data,
+          startRequest: false,
+        }));
+      });
+    console.log("dâta", data);
   };
   const handleSelectTheater = (e) => {
     const opendateShow = data.dateShow ? false : true;
@@ -215,6 +287,8 @@ export default function CreateShowtimes() {
       ...data,
       setTicketPrice: e.target.value,
     }));
+
+    console.log("data", data);
   };
 
   const handleTaoLichChieu = () => {
@@ -253,7 +327,7 @@ export default function CreateShowtimes() {
     };
   }, []);
   return (
-    <Container>
+    <Container  sx={{ paddingRight: "0px !important", paddingLeft: "0px !important" }}>
       <Stack
         direction="row"
         alignItems="center"
@@ -305,10 +379,6 @@ export default function CreateShowtimes() {
                           style={{
                             display: data.openCtr?.movie ? "none" : "block",
                           }}
-                          // classes={{
-                          //   root: classes.menu__item,
-                          //   selected: classes["menu__item--selected"],
-                          // }}
                         >
                           Chọn Phim
                         </MenuItem>
@@ -323,35 +393,39 @@ export default function CreateShowtimes() {
                       </Select>
                     </FormControl>
                     <FormControl fullWidth>
-                      <InputLabel id="selectTheater"></InputLabel>
+                      <InputLabel id="theater-system">
+                        Chọn hệ thống rạp
+                      </InputLabel>
                       <Select
-                        labelId="selectTheater"
-                        id="selectTheater"
-                        // label="Chọn rạp"
-                        open={data.openCtr.theater} // control open
-                        onClose={handleCloseTheater}
-                        onOpen={handleOpenTheater}
-                        onChange={handleSelectTheater} // value={phim.maPhim} tự động truyền vào handleSelectPhim sau khi chọn phim
-                        renderValue={(value) => `${value ? value : "Chọn rạp"}`} // hiển thị giá trị đã chọn
-                        value={data.setTheater} // giá trị truyền vào quyết định MenuItem nào sẽ được hiển thị sao khi chọn dựa vào value của MenuItem
+                        labelId="theater-system"
+                        id="theater-system"
+                        label="Chọn hệ thống rạp"
+                        open={data.openCtr.theaterSystem} // control open
+                        onClose={handleCloseTheaterSystem}
+                        onOpen={handleOpenTheaterSystem}
+                        onChange={handleSelectTheaterSystem} // value={phim.maPhim} tự động truyền vào handleSelectPhim sau khi chọn phim
+                        renderValue={(value) => `${value ? value : ""}`} // hiển thị giá trị đã chọn
+                        value={data.setTheaterSystem} // giá trị truyền vào quyết định MenuItem nào sẽ được hiển thị sao khi chọn dựa vào value của MenuItem
                         displayEmpty // hiển thị item đầu tiên
                       >
                         <MenuItem
                           value=""
                           style={{
                             display:
-                              data.theaterRender?.result > 0 ? "none" : "block",
+                              data.theaterSystemRender?.result > 0
+                                ? "none"
+                                : "block",
                           }}
                         >
                           {data.setMovie
                             ? `${
                                 data.startRequest
-                                  ? "Đang tìm rạp"
+                                  ? "Đang tìm hệ thống rạp"
                                   : "Không tìm thấy, vui lòng chọn phim khác"
                               }`
                             : "Vui lòng chọn phim"}
                         </MenuItem>
-                        {data.theaterRender.data?.map((item) => (
+                        {data.theaterSystemRender.data?.map((item) => (
                           <MenuItem
                             value={item} // giá trị sẽ được đẩy lên
                             key={item._id}
@@ -362,6 +436,96 @@ export default function CreateShowtimes() {
                       </Select>
                     </FormControl>
                   </Stack>
+
+                  <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+                    <FormControl fullWidth>
+                      <InputLabel id="selectTheaterCluster">
+                        Chọn cụm rạp
+                      </InputLabel>
+                      <Select
+                        labelId="selectTheaterCluster"
+                        id="selectTheaterCluster"
+                        label="Chọn cụm rạp"
+                        open={data.openCtr.theaterCluster} // control open
+                        onClose={handleCloseTheaterCluster}
+                        onOpen={handleOpenTheaterCluster}
+                        onChange={handleSelectTheaterCluster} // value={phim.maPhim} tự động truyền vào handleSelectPhim sau khi chọn phim
+                        renderValue={(value) => `${value ? value : ""}`} // hiển thị giá trị đã chọn
+                        value={data.setTheaterCluster} // giá trị truyền vào quyết định MenuItem nào sẽ được hiển thị sao khi chọn dựa vào value của MenuItem
+                        displayEmpty // hiển thị item đầu tiên
+                      >
+                        <MenuItem
+                          value=""
+                          style={{
+                            display:
+                              data.theaterClusterRender?.length > 0
+                                ? "none"
+                                : "block",
+                          }}
+                        >
+                          {data.setTheaterSystem
+                            ? `${
+                                data.startRequest
+                                  ? "Đang tìm cụm rạp"
+                                  : "Không tìm thấy, vui lòng chọn hệ thống rạp khác"
+                              }`
+                            : "Vui lòng chọn hệ thống rạp"}
+                        </MenuItem>
+                        {data.theaterClusterRender?.data?.theatercluster.map(
+                          (item) => (
+                            <MenuItem
+                              value={item} // giá trị sẽ được đẩy lên
+                              key={item._id}
+                            >
+                              {item.name}
+                            </MenuItem>
+                          )
+                        )}
+                      </Select>
+                    </FormControl>
+                    <FormControl fullWidth>
+                      <InputLabel id="selectTheater">Chọn rạp</InputLabel>
+                      <Select
+                        labelId="selectTheater"
+                        id="selectTheater"
+                        label="Chọn rạp"
+                        open={data.openCtr.theater} // control open
+                        onClose={handleCloseTheater}
+                        onOpen={handleOpenTheater}
+                        onChange={handleSelectTheater} // value={phim.maPhim} tự động truyền vào handleSelectPhim sau khi chọn phim
+                        renderValue={(value) => `${value ? value : ""}`} // hiển thị giá trị đã chọn
+                        value={data.setTheater} // giá trị truyền vào quyết định MenuItem nào sẽ được hiển thị sao khi chọn dựa vào value của MenuItem
+                        displayEmpty // hiển thị item đầu tiên
+                      >
+                        <MenuItem
+                          value=""
+                          style={{
+                            display:
+                              data.theaterRender?.data?.theaterList.length > 0
+                                ? "none"
+                                : "block",
+                          }}
+                        >
+                          {data.setTheaterCluster
+                            ? `${
+                                data.startRequest
+                                  ? "Đang tìm rạp"
+                                  : "Không tìm thấy, vui lòng chọn cụm rạp khác"
+                              }`
+                            : "Vui lòng chọn cụm rạp"}
+                        </MenuItem>
+                        {data.theaterRender?.data?.theaterList?.map((item) => (
+                          <MenuItem
+                            value={item} // giá trị sẽ được đẩy lên
+                            key={item._id}
+                          >
+                            {item.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Stack>
+
                   <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
                     <FormControl fullWidth>
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -379,14 +543,20 @@ export default function CreateShowtimes() {
                       </LocalizationProvider>
                     </FormControl>
                     <FormControl fullWidth>
+                      <InputLabel id="selectTicketPrice">
+                        Chọn giá vé
+                      </InputLabel>
                       <Select
+                        labelId="selectTicketPrice"
+                        id="selectTicketPrice"
+                        label="Chọn giá vé"
                         open={data.openCtr.ticketPrice}
                         onClose={handleCloseTicketPrice}
                         onOpen={handleOpenTicketPrice}
                         onChange={handleSelectTicketPrice}
                         value={data.setTicketPrice}
                         renderValue={(value) =>
-                          `${value ? value + " vnđ" : "Chọn giá vé"}`
+                          `${value ? value + " vnđ" : ""}`
                         }
                         displayEmpty
                       >
