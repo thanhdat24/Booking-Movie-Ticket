@@ -26,11 +26,9 @@ exports.deleteOne = (Model) =>
 
 exports.updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
-      const path = req.file?.path
-        .replace(/\\/g, '/')
-        .substring('public'.length);
-      const urlImage = `http://localhost:8080${path}`;
-      if (req.file) req.body.photo = urlImage;
+    const path = req.file?.path.replace(/\\/g, '/').substring('public'.length);
+    const urlImage = `http://localhost:8080${path}`;
+    if (req.file) req.body.photo = urlImage;
     const _id = req.params.id;
     const doc = await Model.findByIdAndUpdate(_id, req.body, {
       new: true,
@@ -42,6 +40,7 @@ exports.updateOne = (Model) =>
     }
     res.status(200).json({
       status: 'success',
+      result: doc.length,
       data: doc,
     });
   });
@@ -56,6 +55,7 @@ exports.createOne = (Model) =>
 
     res.status(201).json({
       status: 'success',
+      length: doc.length,
       data: doc,
     });
   });
@@ -70,6 +70,7 @@ exports.getOne = (Model, populateOptions) =>
     }
     res.status(200).json({
       status: 'success',
+      length: 1,
       data: doc,
     });
   });

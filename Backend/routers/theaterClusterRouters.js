@@ -17,6 +17,9 @@ router.route('/').post(theaterClusterController.createTheaterCluster);
 router
   .route('/:id')
   .get(theaterClusterController.getDetailTheaterCluster)
-  .patch(theaterClusterController.updateTheaterCluster)
+  .patch(
+    theaterClusterController.uploadTheaterCluster
+    ,theaterClusterController.updateTheaterCluster
+  )
   .delete(theaterClusterController.deleteTheaterCluster);
 module.exports = router;
