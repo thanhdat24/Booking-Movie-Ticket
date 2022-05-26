@@ -5,6 +5,7 @@ import {
   LOGIN_FAIL,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
+  LOGOUT,
   REGISTER_FAIL,
   REGISTER_REQUEST,
   REGISTER_SUCCESS,
@@ -61,6 +62,14 @@ export const register = (user) => {
           },
         });
       });
+  };
+};
+
+export const logout = () => {
+  return (dispatch) => {
+    dispatch({
+      type: LOGOUT,
+    });
   };
 };
 

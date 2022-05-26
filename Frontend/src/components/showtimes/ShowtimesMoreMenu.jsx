@@ -43,7 +43,7 @@ export default function ShowtimesMoreMenu({ _id }) {
 
     setTimeout(() => {
       history.push(`/admin/showtimes/edit/${_id}`);
-    }, 1500);
+    }, 2000);
   };
   return (
     <>

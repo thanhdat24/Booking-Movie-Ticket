@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: 10,
     minWidth: "fit-content",
     "&:hover": {
-      backgroundColor: "transparent",
+      backgroundColor: "#fff !important",
       "& .MuiTypography-root": {
         color: "#fb4226",
       },

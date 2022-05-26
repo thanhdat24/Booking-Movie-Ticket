@@ -12,9 +12,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import DirectionsIcon from "@mui/icons-material/Directions";
 import { styled, alpha } from "@mui/material/styles";
 import {
-  AppBar,
   Avatar,
-  Divider,
   Drawer,
   Grid,
   IconButton,
@@ -28,6 +26,8 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import useStyles from "./style";
+import { LOGOUT } from "../../../redux/constants/Auth";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const headMenu = [
   { nameLink: "Lịch chiếu", id: "lichchieu" },
@@ -100,16 +100,16 @@ export default function Header() {
     }
   };
 
-  // const handleLogout = () => {
-  //   setOpenDrawer(false)
-  //   dispatch({ type: LOGOUT })
-  // }
+  const handleLogout = () => {
+    setOpenDrawer(false)
+    dispatch({ type: LOGOUT });
+  }
 
   const handleLogin = () => {
-    history.push("/dangnhap", location.pathname); // truyền kèm location.pathname để đăng nhập xong quay lại
+    history.push("/login", location.pathname); // truyền kèm location.pathname để đăng nhập xong quay lại
   };
   const handleRegister = () => {
-    history.push("/dangky", location.pathname);
+    history.push("/register", location.pathname);
   };
 
   const handleUser = () => {
@@ -203,7 +203,11 @@ export default function Header() {
                   </ListItemIcon>
                   <ListItemText primary={currentUser?.user.fullName} />
                 </ListItem>
-                <ListItem button classes={{ root: classes.itemAuth }}>
+                <ListItem
+                  button
+                  classes={{ root: classes.itemAuth }}
+                  onClick={handleLogout}
+                >
                   <ListItemText primary="Đăng Xuất" />
                 </ListItem>
               </List>
@@ -215,7 +219,7 @@ export default function Header() {
                   onClick={handleLogin}
                 >
                   <ListItemIcon classes={{ root: classes.icon }}>
-                    {/* <AccountCircleIcon fontSize="large" /> */}
+                    <AccountCircleIcon fontSize="large" />
                   </ListItemIcon>
                   <ListItemText primary="Đăng Nhập" />
                 </ListItem>
@@ -279,7 +283,7 @@ export default function Header() {
               onClick={handleLogin}
             >
               <ListItemIcon classes={{ root: classes.icon }}>
-                {/* <AccountCircleIcon fontSize="large" /> */}
+                <AccountCircleIcon fontSize="large" />
               </ListItemIcon>
               <span className={classes.link} style={{ fontWeight: 500 }}>
                 Đăng Nhập
@@ -305,7 +309,9 @@ export default function Header() {
           ))}
 
           {currentUser ? (
-            <span className={classes.itemMenu}>Đăng Xuất</span>
+            <span className={classes.itemMenu} onClick={handleLogout}>
+              Đăng Xuất
+            </span>
           ) : (
             <span className={classes.itemMenu} onClick={handleRegister}>
               Đăng Ký

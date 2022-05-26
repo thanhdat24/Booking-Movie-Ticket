@@ -9,3 +9,4 @@ const currentUser = localStorage.getItem("user")
 const avtIdUser = currentUser ? currentUser?.avtIdUser : nanoid(10);
 export { avtIdUser };
 export const FAKE_AVATAR = `https://i.pravatar.cc/300?u=${avtIdUser}`;
+

@@ -28,6 +28,7 @@ import CreateShowtimes from "./pages/ShowtimesManagement/CreateShowtimes";
 import ShowtimeEdit from "./pages/ShowtimesManagement/ShowtimeEdit";
 import ModalTrailer from "./components/ModalTrailer/ModalTrailer";
 import MainLayout from "./layouts/MainLayout/index";
+import Homepage from "./pages/Homepage";
 
 function App() {
   const themeOptions = useMemo(
@@ -50,7 +51,10 @@ function App() {
         <ModalTrailer />
         <Switch>
           <Route exact path={["/"]}>
-            <MainLayout></MainLayout>
+            <MainLayout>
+              {" "}
+              <Route exact path="/" component={Homepage} />
+            </MainLayout>
           </Route>
           <Route
             exact
