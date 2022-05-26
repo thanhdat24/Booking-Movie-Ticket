@@ -29,7 +29,7 @@ showTimesSchema.pre(/^find/, function (next) {
     select: 'name type',
   }).populate({
     path: 'idMovie',
-    select: 'name',
+    select: 'name photo',
   });
   next();
 });

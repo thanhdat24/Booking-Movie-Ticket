@@ -8,7 +8,7 @@ const theaterClusterSchema = new mongoose.Schema(
     },
     address: {
       type: String,
-      required: [true, 'A theater cluster must have a logo'],
+      required: [true, 'A theater cluster must have a address'],
     },
     photo: {
       type: String,

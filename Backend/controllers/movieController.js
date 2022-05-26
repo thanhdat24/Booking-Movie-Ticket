@@ -24,7 +24,7 @@ const multerFilter = (req, file, cb) => {
 };
 const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
 
-exports.uploadUserPhoto = upload.single('photo');
+exports.uploadMoviePhoto = upload.single('photo');
 
 exports.getAllMovie = factory.getAll(Movie);
 

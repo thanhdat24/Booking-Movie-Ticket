@@ -49,17 +49,30 @@ exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const path = req.file?.path.replace(/\\/g, '/').substring('public'.length);
     const urlImage = `http://localhost:8080${path}`;
+    if (req.file) req.body.photo = urlImage;
+
+    const doc = await Model.create(req.body);
+
+    res.status(201).json({
+      status: 'success',
+      result: doc.length,
+      data: doc,
+    });
+  });
+exports.createOneTheaterSystem = (Model) =>
+  catchAsync(async (req, res, next) => {
+    const path = req.file?.path.replace(/\\/g, '/').substring('public'.length);
+    const urlImage = `http://localhost:8080${path}`;
     if (req.file) req.body.logo = urlImage;
 
     const doc = await Model.create(req.body);
 
     res.status(201).json({
       status: 'success',
-      length: doc.length,
+      result: doc.length,
       data: doc,
     });
   });
-
 exports.getOne = (Model, populateOptions) =>
   catchAsync(async (req, res, next) => {
     let query = Model.findById(req.params.id);

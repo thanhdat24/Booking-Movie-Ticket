@@ -14,14 +14,14 @@ router.route('/').get(movieController.getAllMovie);
 
 router
   .route('/')
-  .post(movieController.uploadUserPhoto, movieController.createMovie);
+  .post(movieController.uploadMoviePhoto, movieController.createMovie);
 
 router
   .route('/:id')
   .get(movieController.getDetailMovie)
   .patch(
     authController.protect,
-    movieController.uploadUserPhoto,
+    movieController.uploadMoviePhoto,
     movieController.updateMovie
   )
   .delete(movieController.deleteMovie);
