@@ -43,7 +43,6 @@ export default function CreateTheater() {
     dispatch(getTheaterClusterList());
   }, []);
   const { enqueueSnackbar } = useSnackbar();
-  console.log("theaterClusterList", theaterClusterList);
   const UpdateSchema = Yup.object().shape({
     name: Yup.string().required("*Tên rạp không được bỏ trống !"),
     type: Yup.string().required("*Loại rạp không được bỏ trống !"),

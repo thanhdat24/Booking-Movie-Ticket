@@ -28,7 +28,6 @@ export default function UserMoreMenu({ movieId }) {
   const { successDetailMovie, loadingDeleteMovie } = useSelector(
     (state) => state.MovieReducer
   );
-  console.log("movieId", movieId);
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
@@ -49,7 +48,7 @@ export default function UserMoreMenu({ movieId }) {
 
     setTimeout(() => {
       history.push(`/admin/movies/edit/${movieId}`);
-    }, 1500);
+    }, 2000);
   };
 
   return (

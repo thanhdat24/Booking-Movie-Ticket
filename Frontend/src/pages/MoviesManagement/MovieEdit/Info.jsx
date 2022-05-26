@@ -26,9 +26,10 @@ import {
 } from "../../../redux/actions/Movie";
 import moment from "moment";
 import { useSnackbar } from "notistack";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
 export default function Info() {
+  const params = useParams();
   const dispatch = useDispatch();
   const history = useHistory();
   const {
@@ -36,9 +37,9 @@ export default function Info() {
     successDetailMovie,
     successUpdateMovie,
     errorUpdateMovie,
+    loadingUpdateMovie,
   } = useSelector((state) => state.MovieReducer);
   const { enqueueSnackbar } = useSnackbar();
-  console.log("successDetailMovie", successDetailMovie);
   const UpdateSchema = Yup.object().shape({
     name: Yup.string().required("*Tên phim không được bỏ trống !"),
     trailer: Yup.string().required("*Trailer không được bỏ trống !"),
@@ -70,7 +71,8 @@ export default function Info() {
       if (loadingDetailMovie) {
         return;
       }
-      dispatch(updateMovie(movie, successDetailMovie?._id));
+      console.log("movie", movie);
+      dispatch(updateMovie(movie, params.movieId));
     },
   });
 
@@ -240,7 +242,7 @@ export default function Info() {
                       size="large"
                       type="submit"
                       variant="contained"
-                      loading={loadingDetailMovie}
+                      loading={loadingUpdateMovie}
                       sx={{
                         padding: "6px 9px",
                         fontWeight: "700",

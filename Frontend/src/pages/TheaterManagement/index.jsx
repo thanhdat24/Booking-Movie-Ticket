@@ -37,11 +37,11 @@ import TheaterListToolbar from "../../components/theater/TheaterListToolbar";
 
 const TABLE_HEAD = [
   { id: "name", label: "Tên rạp", alignRight: false },
-  { id: "idTheaterCluster", label: "Hệ Thống Rạp", alignRight: false },
-  { id: "idTheaterCluster", label: "Tên Cụm Rạp", alignRight: false },
+  { id: "idTheaterCluster", label: "Hệ thống rạp", alignRight: false },
+  { id: "idTheaterCluster", label: "Tên cụm rạp", alignRight: false },
   { id: "idTheaterCluster", label: "Địa Chỉ", alignRight: false },
   // { id: "type", label: "Loại Rạp", alignRight: false },
-  { id: "seatsTotal", label: "Số Lượng Ghế", alignRight: false },
+  { id: "seatsTotal", label: "Số lượng ghế", alignRight: false },
   { id: "" },
 ];
 
@@ -267,7 +267,7 @@ export default function TheaterManagement() {
                       <TableCell align="left">{name}</TableCell>
                       <TableCell align="left">
                         <img
-                          class="max-w-2xl h-14 rounded"
+                          className="max-w-2xl h-14 rounded"
                           src={idTheaterCluster?.idTheaterSystem.logo}
                           alt="logo"
                         />

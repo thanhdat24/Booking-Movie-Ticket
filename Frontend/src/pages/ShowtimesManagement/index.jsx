@@ -14,10 +14,13 @@ import {
   TablePagination,
   Breadcrumbs,
   Link,
+  Tooltip,
+  Zoom,
+  IconButton,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 
-import { Link as RouterLink, useHistory } from "react-router-dom";
+import { Link as RouterLink, NavLink, useHistory } from "react-router-dom";
 import { filter } from "lodash";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
@@ -31,14 +34,16 @@ import { getAllShowTimes } from "../../redux/actions/Theater";
 import ShowtimesMoreMenu from "../../components/showtimes/ShowtimesMoreMenu";
 import moment from "moment";
 import { resetCreateShowtime } from "../../redux/actions/BookTicket";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import EditIcon from "@mui/icons-material/Edit";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: "idMovie", label: "Phim", alignRight: false },
-  { id: "TheaterSystem", label: "Hệ Thống Rạp", alignRight: false },
-  { id: "NameTheaterCluster", label: "Tên Cụm Rạp", alignRight: false },
-  { id: "Address", label: "Địa Chỉ", alignRight: false },
+  { id: "TheaterSystem", label: "Hệ thống rạp", alignRight: false },
+  { id: "NameTheaterCluster", label: "Tên cụm rạp", alignRight: false },
+  { id: "Address", label: "Địa chỉ", alignRight: false },
   { id: "idTheater", label: "Rạp", alignRight: false },
 
   {
@@ -104,7 +109,6 @@ export default function ShowtimesManagement() {
     errorDeleteShowtime,
     successUpdateShowtime,
   } = useSelector((state) => state.BookTicketReducer);
-  console.log("successDeleteShowtime", successDeleteShowtime);
   useEffect(() => {
     // get list user lần đầu
     // if (!showtimesList.result) {
@@ -263,8 +267,6 @@ export default function ShowtimesManagement() {
                   var formatDateShow = moment(dateShow)
                     .add(0, "hours")
                     .format("DD-MM-YYYY, hh:mm A");
-                  console.log("formatDateShow", formatDateShow);
-                  console.log("dateShow", dateShow);
                   const isItemSelected = selected.indexOf(_id) !== -1;
 
                   return (
@@ -290,11 +292,20 @@ export default function ShowtimesManagement() {
                         </Stack>
                       </TableCell>
                       <TableCell align="left">
-                        <img
-                          class="max-w-2xl h-14 rounded"
-                          src={idTheater?.idTheaterCluster.idTheaterSystem.logo}
-                          alt="logo"
-                        />
+                        <Tooltip
+                          TransitionComponent={Zoom}
+                          title={
+                            idTheater?.idTheaterCluster.idTheaterSystem.name
+                          }
+                        >
+                          <img
+                            className="max-w-xl h-14 rounded"
+                            src={
+                              idTheater?.idTheaterCluster.idTheaterSystem.logo
+                            }
+                            alt="logo"
+                          />
+                        </Tooltip>
                       </TableCell>
                       <TableCell align="left">
                         {idTheater?.idTheaterCluster.name}
@@ -303,12 +314,32 @@ export default function ShowtimesManagement() {
                         {idTheater?.idTheaterCluster.address}
                       </TableCell>
 
-                      <TableCell align="left">{idTheater?.name}</TableCell>
-                      <TableCell align="left">{formatDateShow}</TableCell>
+                      <TableCell align="left" className="whitespace-nowrap">
+                        {idTheater?.name}
+                      </TableCell>
+                      <TableCell align="left" className="whitespace-nowrap">
+                        {formatDateShow}
+                      </TableCell>
                       <TableCell align="left">{ticketPrice}</TableCell>
 
                       <TableCell align="right">
-                        <ShowtimesMoreMenu showtimeId={_id} />
+                        <ShowtimesMoreMenu _id={_id} />
+                        {/* <NavLink
+                          to={`/admin/showtimes/edit/${_id}`}
+                        >
+                          <Tooltip title="Xoá">
+                            <IconButton>
+                              <DeleteForeverIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </NavLink> */}
+                        {/* <NavLink to={`/admin/showtimes/edit/${row?._id}`}>
+                          <Tooltip title="Chỉnh sửa">
+                            <IconButton>
+                              <EditIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </NavLink> */}
                       </TableCell>
                     </TableRow>
                   );

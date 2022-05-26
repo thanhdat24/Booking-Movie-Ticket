@@ -73,7 +73,6 @@ export const MovieReducer = (state = stateDefault, action) => {
       };
     }
     case GET_MOVIE_SUCCESS: {
-      
       return {
         ...state,
         loadingDetailMovie: false,
@@ -143,7 +142,6 @@ export const MovieReducer = (state = stateDefault, action) => {
       return { ...state, loadingAddMovie: true, errorAddMovie: null };
     }
     case ADD_MOVIE_SUCCESS: {
-      console.log("action", action);
       return {
         ...state,
         successAddMovie: action.payload.data,
@@ -161,6 +159,8 @@ export const MovieReducer = (state = stateDefault, action) => {
     case RESET_MOVIE_MANAGEMENT: {
       return {
         ...state,
+        successDetailMovie: "",
+
         loadingMovieList: false,
         errorMovieList: null,
 

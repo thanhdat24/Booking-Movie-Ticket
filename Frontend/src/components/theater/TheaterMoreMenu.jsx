@@ -24,7 +24,6 @@ export default function TheaterMoreMenu({ theaterId }) {
   const { successDetailTheater, loadingDeleteTheater } = useSelector(
     (state) => state.TheaterReducer
   );
-  console.log("theaterId", theaterId);
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();

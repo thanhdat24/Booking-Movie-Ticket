@@ -45,7 +45,6 @@ export default function BtnPlay({ cssRoot, width, height, urlYoutube }) {
   const dispatch = useDispatch();
 
   const openModal = () => {
-    console.log("123", 123);
     dispatch({
       type: OPEN_MODAL,
       payload: {

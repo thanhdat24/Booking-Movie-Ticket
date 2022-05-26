@@ -8,7 +8,6 @@ const initialState = {
 export const ModalTrailerReducer = (state = initialState, action) => {
   switch (action.type) {
     case OPEN_MODAL: {
-      console.log("1234", action);
       return {
         open: action.payload.open,
         urlYoutube: action.payload.urlYoutube,

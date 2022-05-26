@@ -73,8 +73,7 @@ export default function CreateMovie() {
 
     validationSchema: UpdateSchema,
     onSubmit: (movie) => {
-      console.log("movie", movie);
-      if (loadingAddMovie) {
+      if (loadingAddMovie || !isReadyTaoLichChieu) {
         return;
       }
       dispatch(addMovieUploadImg(movie));
@@ -90,6 +89,31 @@ export default function CreateMovie() {
     setFieldValue,
   } = formik;
 
+  const [isReadyTaoLichChieu, setIsReadyTaoLichChieu] = useState(false);
+  useEffect(() => {
+    if (
+      values.name &&
+      values.trailer &&
+      values.description &&
+      values.duration &&
+      values.releaseDate &&
+      values.photo &&
+      values.genre &&
+      (values.nowShowing || values.comingSoon)
+    )
+      setIsReadyTaoLichChieu(true);
+    else setIsReadyTaoLichChieu(false);
+  }, [
+    values.name,
+    values.trailer,
+    values.description,
+    values.duration,
+    values.releaseDate,
+    values.photo,
+    values.genre,
+    values.nowShowing,
+    values.comingSoon,
+  ]);
   const handleChangeNowShowing = (event, checked) => {
     setFieldValue("nowShowing", checked ? true : false);
   };
@@ -176,7 +200,7 @@ export default function CreateMovie() {
         <Fragment>
           <Box sx={{ margin: "20px 0" }}></Box>
           <Formik value={formik}>
-            <Form onSubmit={handleSubmit} encType="multipart/form-data">
+            <Form onSubmit={handleSubmit} enctype="multipart/form-data">
               <Grid
                 container
                 rowSpacing={1}
@@ -300,6 +324,7 @@ export default function CreateMovie() {
                           type="submit"
                           variant="contained"
                           loading={loadingAddMovie}
+                          disabled={!isReadyTaoLichChieu}
                           sx={{
                             padding: "6px 9px",
                             fontWeight: "700",

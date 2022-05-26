@@ -22,7 +22,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useSnackbar } from "notistack";
 import { useHistory } from "react-router-dom";
 
-import theatersApi from "../../../api/theatersApi";
 import theatersClusterApi from "../../../api/theatersClusterApi";
 import theatersSystemApi from "../../../api/theatersSystemApi";
 import {
@@ -40,7 +39,6 @@ export default function CreateShowtimes() {
     useSelector((state) => state.BookTicketReducer);
   const dispatch = useDispatch();
   const history = useHistory();
-  const { showtimesList } = useSelector((state) => state.TheaterReducer);
   const { movieList } = useSelector((state) => state.MovieReducer);
   const [selectedDate, setSelectedDate] = useState(null);
   const { enqueueSnackbar } = useSnackbar();
@@ -73,12 +71,32 @@ export default function CreateShowtimes() {
   const [isReadyTaoLichChieu, setIsReadyTaoLichChieu] = useState(false);
 
   useEffect(() => {
-    if (data.setMovie && data.dateShow && data.idTheater && data.setTicketPrice)
+    if (
+      data.setMovie &&
+      data.dateShow &&
+      data.idTheater &&
+      data.setTicketPrice &&
+      data.setTheaterSystem &&
+      data.setTheaterCluster
+    )
       setIsReadyTaoLichChieu(true);
     else setIsReadyTaoLichChieu(false);
-  }, [data.setMovie, data.dateShow, data.idTheater, data.setTicketPrice]);
+  }, [
+    data.setMovie,
+    data.dateShow,
+    data.idTheater,
+    data.setTicketPrice,
+    data.setTheaterSystem,
+    data.setTheaterCluster,
+  ]);
   const breadcrumbs = [
-    <Link underline="hover" key="1" color="text.primary" href="/">
+    <Link
+      underline="hover"
+      key="1"
+      color="text.primary"
+      href="/"
+      sx={{ "&:hover": { color: "#212B36" } }}
+    >
       Trang chủ
     </Link>,
     <Link
@@ -86,6 +104,7 @@ export default function CreateShowtimes() {
       key="2"
       color="text.primary"
       href="/admin/showtimes/list"
+      sx={{ "&:hover": { color: "#212B36" } }}
     >
       Lịch chiếu
     </Link>,
@@ -105,7 +124,7 @@ export default function CreateShowtimes() {
   useEffect(() => {
     // get list user lần đầu
     // if (!showtimesList.result) {
-    dispatch(getAllShowTimes());
+      dispatch(getAllShowTimes());
     // }
     // return () => dispatch(resetMoviesManagement());
   }, []);
@@ -201,6 +220,7 @@ export default function CreateShowtimes() {
       }));
     });
   };
+  console.log("Data",data);
   const handleSelectTheaterSystem = async (e) => {
     setData((data) => ({
       ...data,
@@ -245,7 +265,6 @@ export default function CreateShowtimes() {
           startRequest: false,
         }));
       });
-    console.log("dâta", data);
   };
   const handleSelectTheater = (e) => {
     const opendateShow = data.dateShow ? false : true;
@@ -287,8 +306,6 @@ export default function CreateShowtimes() {
       ...data,
       setTicketPrice: e.target.value,
     }));
-
-    console.log("data", data);
   };
 
   const handleTaoLichChieu = () => {
@@ -327,7 +344,9 @@ export default function CreateShowtimes() {
     };
   }, []);
   return (
-    <Container  sx={{ paddingRight: "0px !important", paddingLeft: "0px !important" }}>
+    <Container
+      sx={{ paddingRight: "0px !important", paddingLeft: "0px !important" }}
+    >
       <Stack
         direction="row"
         alignItems="center"
@@ -594,6 +613,7 @@ export default function CreateShowtimes() {
                         fontSize: "0.8rem",
                         textTransform: "capitalize",
                       }}
+                      disabled={!isReadyTaoLichChieu}
                       onClick={handleTaoLichChieu}
                     >
                       Tạo lịch chiếu

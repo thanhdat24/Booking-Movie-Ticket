@@ -136,7 +136,6 @@ export default function AdminLayout(props) {
   const handleDrawerClose = () => {
     setOpenDrawer(false);
   };
-  console.log("props.openDrawer", props?.openDrawer);
 
   return (
     <SnackbarProvider maxSnack={3}>

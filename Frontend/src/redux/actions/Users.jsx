@@ -100,7 +100,6 @@ export const updateUser = (user, _id) => {
     usersApi
       .updateUser(user, _id)
       .then((result) => {
-        console.log("result", result);
         dispatch({
           type: UPDATE_USER_SUCCESS,
           payload: {

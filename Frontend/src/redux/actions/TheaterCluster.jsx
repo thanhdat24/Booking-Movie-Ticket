@@ -15,7 +15,6 @@ export const getTheaterClusterList = () => {
         type: GET_THEATER_CLUSTER_LIST_REQUEST,
       });
       const result = await theatersClusterApi.getTheaterClusterList();
-      console.log("result123", result);
       dispatch({
         type: GET_THEATER_CLUSTER_LIST_SUCCESS,
         payload: {

@@ -64,28 +64,26 @@ export const deleteShowTimes = (_id) => {
 };
 
 export const getDetailShowtimes = (_id) => {
-  return (dispatch) => {
-    dispatch({
-      type: GET_SHOWTIME_REQUEST,
-    });
-    bookingApi
-      .getDetailShowtimes(_id)
-      .then((result) => {
-        dispatch({
-          type: GET_SHOWTIME_SUCCESS,
-          payload: {
-            data: result.data.data,
-          },
-        });
-      })
-      .catch((error) => {
-        dispatch({
-          type: GET_SHOWTIME_FAIL,
-          payload: {
-            error: error.response?.data.message,
-          },
-        });
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: GET_SHOWTIME_REQUEST,
       });
+      const result = await bookingApi.getDetailShowtimes(_id);
+      dispatch({
+        type: GET_SHOWTIME_SUCCESS,
+        payload: {
+          data: result.data.data,
+        },
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_SHOWTIME_FAIL,
+        payload: {
+          error: error.response?.data.message,
+        },
+      });
+    }
   };
 };
 
@@ -97,7 +95,6 @@ export const updateShowtime = (_id, showtime) => {
     bookingApi
       .updateShowtimes(_id, showtime)
       .then((result) => {
-        console.log("result", result);
         dispatch({
           type: UPDATE_SHOWTIME_SUCCESS,
           payload: {

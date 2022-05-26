@@ -10,6 +10,7 @@ import { FAKE_AVATAR } from "../../../constants/config";
 import { useTheme } from "@mui/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 import DirectionsIcon from "@mui/icons-material/Directions";
+import { styled, alpha } from "@mui/material/styles";
 import {
   AppBar,
   Avatar,
@@ -37,7 +38,6 @@ const headMenu = [
 
 export default function Header() {
   const { currentUser } = useSelector((state) => state.AuthReducer);
-  console.log("currentUser", currentUser);
   const dispatch = useDispatch();
   let location = useLocation();
   const history = useHistory();
@@ -45,7 +45,46 @@ export default function Header() {
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
   const [openDrawer, setOpenDrawer] = useState(false);
   const classes = useStyles({ isDesktop, openDrawer });
-
+  const SearchIconWrapper = styled("div")(({ theme }) => ({
+    padding: theme.spacing(0, 2),
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }));
+  const StyledInputBase = styled(InputBase)(({ theme }) => ({
+    color: "inherit",
+    "& .MuiInputBase-input": {
+      padding: theme.spacing(1, 1, 1, 0),
+      // vertical padding + font size from searchIcon
+      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+      transition: theme.transitions.create("width"),
+      width: "100%",
+      [theme.breakpoints.up("sm")]: {
+        width: "18ch",
+        "&:focus": {
+          width: "23ch",
+        },
+      },
+    },
+  }));
+  const Search = styled("div")(({ theme }) => ({
+    position: "relative",
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: alpha(theme.palette.common.white, 0.15),
+    "&:hover": {
+      backgroundColor: alpha(theme.palette.common.white, 0.25),
+    },
+    marginLeft: 0,
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: theme.spacing(1),
+      width: "auto",
+    },
+    boxShadow: "0 1px 4px 0px rgb(0 0 0 / 25%)",
+  }));
   const handleClickLink = (id) => {
     setOpenDrawer(false);
     if (location.pathname === "/") {
@@ -88,44 +127,43 @@ export default function Header() {
   return (
     <div className={classes.root}>
       {/* START HEADER */}
-      <AppBar
-        class="bg-white p-2 shadow border-b border-transparent z-20 top-0 fixed w-screen"
+      <div
+        className="bg-white p-2 shadow border-b border-transparent z-20 top-0 fixed w-screen"
         position="fixed"
         color="default"
       >
-        <Toolbar class="relative max-w-full md:max-w-screen-xl mx-auto flex justify-between items-center">
+        <Toolbar className="relative max-w-full md:max-w-screen-xl mx-auto flex justify-between items-center">
           {/* logo */}
-          <div class="flex space-x-4 flex-shrink-0 items-center">
+          <div className="flex space-x-4 flex-shrink-0 items-center">
             <span className={classes.logo}>
               <img
                 src="/img/favicon.png"
                 alt="logo"
-                class="h-11 w-11 cursor-pointer"
+                className="h-11 w-11 cursor-pointer"
               />
             </span>
             <Paper
-              class="bg-gray-100 "
+              className="bg-gray-100 "
               component="form"
               sx={{
                 p: "2px 4px",
                 display: "flex",
                 alignItems: "center",
-                width: 300,
+                // width: 300,
                 "&:focus": {
                   border: "5px solid red",
                 },
               }}
             >
-              <IconButton type="submit" aria-label="search">
-                <SearchIcon />
-              </IconButton>
-              <InputBase
-                type="search"
-                sx={{ ml: 1, flex: 1 }}
-                placeholder="Tìm phim..."
-                inputProps={{ "aria-label": "Tìm phim..." }}
-              />
-              <IconButton></IconButton>
+              <Search>
+                <SearchIconWrapper>
+                  <SearchIcon />
+                </SearchIconWrapper>
+                <StyledInputBase
+                  placeholder="Tìm phim..."
+                  inputProps={{ "aria-label": "search" }}
+                />
+              </Search>
             </Paper>
           </div>
           <div className={classes.linkTobody}>
@@ -204,7 +242,7 @@ export default function Header() {
             </IconButton>
           </div>
         </Toolbar>
-      </AppBar>
+      </div>
 
       {/* content open menu*/}
       <Drawer

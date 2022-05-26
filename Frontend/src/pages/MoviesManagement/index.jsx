@@ -113,10 +113,8 @@ export default function MoviesManagement() {
     if (!movieList.result) {
       dispatch(getMovieList());
     }
-
     return () => dispatch(resetMoviesManagement());
   }, []);
-  console.log("movieList", movieList);
   useEffect(() => {
     if (successDeleteMovie || successAddMovie || successUpdateMovie) {
       dispatch(getMovieList());
@@ -353,7 +351,7 @@ export default function MoviesManagement() {
                       </TableCell>
 
                       <TableCell align="right">
-                        <MovieMoreMenu movieId={_id} />
+                        <MovieMoreMenu movieId={row._id} />
                       </TableCell>
                     </TableRow>
                   );
