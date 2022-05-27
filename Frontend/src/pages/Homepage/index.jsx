@@ -7,6 +7,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { getMovieList } from "../../redux/actions/Movie";
 import { getTheaterList } from "../../redux/actions/Theater";
 import Carousel from "./Carousel";
+import Showtime from "./Showtime";
 
 export default function Homepage() {
   const dispatch = useDispatch();
@@ -23,5 +24,10 @@ export default function Homepage() {
     }
   }, []);
 
-  return <div>{<Carousel />}</div>;
+  return (
+    <div>
+      <Carousel />
+      <Showtime />
+    </div>
+  );
 }

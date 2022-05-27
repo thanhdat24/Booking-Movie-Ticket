@@ -46,6 +46,7 @@ const TABLE_HEAD = [
   { id: "duration", label: "Thời lượng", alignRight: false },
 
   { id: "releaseDate", label: "Ngày khởi chiếu", alignRight: false },
+  { id: "nowShowing", label: "Đang chiếu", alignRight: false },
   { id: "" },
 ];
 
@@ -263,6 +264,7 @@ export default function MoviesManagement() {
                     duration,
                     description,
                     releaseDate,
+                    nowShowing,
                   } = row;
                   const isItemSelected = selected.indexOf(name) !== -1;
 
@@ -349,7 +351,9 @@ export default function MoviesManagement() {
                       <TableCell align="left">
                         {releaseDate?.slice(0, 10)}
                       </TableCell>
-
+                      <TableCell align="left">
+                        {nowShowing ? "Đang chiếu" : "Sắp chiếu"}
+                      </TableCell>
                       <TableCell align="right">
                         <MovieMoreMenu movieId={row._id} />
                       </TableCell>

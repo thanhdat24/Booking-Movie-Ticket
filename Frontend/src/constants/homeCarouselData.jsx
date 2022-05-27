@@ -4,19 +4,19 @@
 
 const homeCarouselData = [
   {
-    photo: "img/carousel/rsz_dr-strange-980x448.jpg",
+    photo: "img/carousel/doctor-strange-in-the-multiverse-of-madness.jpg",
     trailer: "https://www.youtube.com/watch?v=nBNtRvpCmms",
     name: "PHÙ THỦY TỐI THƯỢNG TRONG ĐA VŨ TRỤ HỖN LOẠN",
     idMovie: "",
   },
   {
-    photo: "img/carousel/578-980x448.jpg",
-    trailer: "https://www.youtube.com/watch?v=TakNp0Iibt4",
-    name: "578 PHÁT ĐẠN CỦA KẺ ĐIÊN",
+    photo: "img/carousel/the-batman.jpg",
+    trailer: "https://www.youtube.com/watch?v=u34gHaRiBIU",
+    name: "Người Dơi: Vạch Trần Sự Thật",
     idMovie: "",
   },
   {
-    photo: "img/carousel/980_x_448_topgun.jpg",
+    photo: "img/carousel/top-gun-maverick.jpg",
     trailer: "https://www.youtube.com/watch?v=ZR99nOkEolM",
     tenPhim: "PHI CÔNG SIÊU ĐẲNG MAVERICK",
     idMovie: "",
