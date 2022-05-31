@@ -29,6 +29,7 @@ import ShowtimeEdit from "./pages/ShowtimesManagement/ShowtimeEdit";
 import ModalTrailer from "./components/ModalTrailer/ModalTrailer";
 import MainLayout from "./layouts/MainLayout/index";
 import Homepage from "./pages/Homepage";
+import MovieDetail from "./pages/MovieDetail";
 
 function App() {
   const themeOptions = useMemo(
@@ -50,10 +51,10 @@ function App() {
       <ThemeProvider theme={theme}>
         <ModalTrailer />
         <Switch>
-          <Route exact path={["/"]}>
+          <Route exact path={["/", "/movie/:idMovie"]}>
             <MainLayout>
-              {" "}
               <Route exact path="/" component={Homepage} />
+              <Route exact path="/movie/:idMovie" component={MovieDetail} />
             </MainLayout>
           </Route>
           <Route
@@ -87,7 +88,7 @@ function App() {
             path={[
               "/admin/movies/list",
               "/admin/movies/create",
-              "/admin/movies/edit/:movieId",
+              "/admin/movies/edit/:idMovie",
             ]}
           >
             <AdminLayout>
@@ -103,7 +104,7 @@ function App() {
               />{" "}
               <AdminRoute
                 exact
-                path="/admin/movies/edit/:movieId"
+                path="/admin/movies/edit/:idMovie"
                 component={MovieEdit}
               />
             </AdminLayout>

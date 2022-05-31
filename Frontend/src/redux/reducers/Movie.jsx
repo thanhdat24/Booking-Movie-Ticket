@@ -11,6 +11,7 @@ import {
   GET_MOVIE_LIST_SUCCESS,
   GET_MOVIE_REQUEST,
   GET_MOVIE_SUCCESS,
+  RESET_MOVIE_DETAIL,
   RESET_MOVIE_MANAGEMENT,
   UPDATE_MOVIE_FAIL,
   UPDATE_MOVIE_REQUEST,
@@ -175,6 +176,14 @@ export const MovieReducer = (state = stateDefault, action) => {
         successAddMovie: "",
         loadingAddMovie: false,
         errorAddMovie: null,
+      };
+    }
+    case RESET_MOVIE_DETAIL: {
+      return {
+        ...state,
+        successDetailMovie: "",
+        loadingDetailMovie: false,
+        errorDetailMovie: null,
       };
     }
     default:

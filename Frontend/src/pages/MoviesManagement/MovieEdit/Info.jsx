@@ -72,7 +72,7 @@ export default function Info() {
         return;
       }
       console.log("movie", movie);
-      dispatch(updateMovie(movie, params.movieId));
+      dispatch(updateMovie(movie, params.idMovie));
     },
   });
 

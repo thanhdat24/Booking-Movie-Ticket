@@ -355,7 +355,7 @@ export default function MoviesManagement() {
                         {nowShowing ? "Đang chiếu" : "Sắp chiếu"}
                       </TableCell>
                       <TableCell align="right">
-                        <MovieMoreMenu movieId={row._id} />
+                        <MovieMoreMenu idMovie={row._id} />
                       </TableCell>
                     </TableRow>
                   );

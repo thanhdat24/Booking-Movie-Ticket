@@ -27,7 +27,10 @@ import {
 } from "@mui/material";
 import useStyles from "./style";
 import { LOGOUT } from "../../../redux/constants/Auth";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { getMovieList } from "../../../redux/actions/Movie";
+import { getTheaterList } from "../../../redux/actions/Theater";
+import { LOADING_BACKTO_HOME } from "../../../redux/constants/Lazy";
 
 const headMenu = [
   { nameLink: "Lịch chiếu", id: "lichchieu" },
@@ -101,15 +104,26 @@ export default function Header() {
   };
 
   const handleLogout = () => {
-    setOpenDrawer(false)
+    setOpenDrawer(false);
     dispatch({ type: LOGOUT });
-  }
+  };
 
   const handleLogin = () => {
     history.push("/login", location.pathname); // truyền kèm location.pathname để đăng nhập xong quay lại
   };
   const handleRegister = () => {
     history.push("/register", location.pathname);
+  };
+  const handleClickLogo = () => {
+    if (location.pathname === "/") {
+      dispatch(getMovieList());
+      dispatch(getTheaterList());
+      return;
+    }
+    dispatch({ type: LOADING_BACKTO_HOME });
+    setTimeout(() => {
+      history.push("/", "");
+    }, 50);
   };
 
   const handleUser = () => {
@@ -135,7 +149,7 @@ export default function Header() {
         <Toolbar className="relative max-w-full md:max-w-screen-xl mx-auto flex justify-between items-center">
           {/* logo */}
           <div className="flex space-x-4 flex-shrink-0 items-center">
-            <span className={classes.logo}>
+            <span className={classes.logo} onClick={handleClickLogo}>
               <img
                 src="/img/favicon.png"
                 alt="logo"

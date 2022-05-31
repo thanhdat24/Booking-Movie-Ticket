@@ -21,7 +21,7 @@ import {
 
 // ----------------------------------------------------------------------
 
-export default function UserMoreMenu({ movieId }) {
+export default function UserMoreMenu({ idMovie }) {
   const history = useHistory();
   let location = useLocation();
   const { loadingDelete } = useSelector((state) => state.UserManagement);
@@ -47,7 +47,7 @@ export default function UserMoreMenu({ movieId }) {
     dispatch(getDetailMovie(_id));
 
     setTimeout(() => {
-      history.push(`/admin/movies/edit/${movieId}`);
+      history.push(`/admin/movies/edit/${idMovie}`);
     }, 2000);
   };
 
@@ -69,7 +69,7 @@ export default function UserMoreMenu({ movieId }) {
       >
         <MenuItem
           sx={{ color: "rgb(255, 72, 66);" }}
-          onClick={(e) => handleDeleteOne(movieId)}
+          onClick={(e) => handleDeleteOne(idMovie)}
         >
           <ListItemIcon>
             <Icon icon={trash2Outline} width={24} height={24} />
@@ -86,7 +86,7 @@ export default function UserMoreMenu({ movieId }) {
             color: "rgb(33, 43, 54)",
             "&:hover": { color: "rgb(33, 43, 54)" },
           }}
-          onClick={(e) => handleEditDetail(movieId)}
+          onClick={(e) => handleEditDetail(idMovie)}
         >
           <ListItemIcon>
             <Icon icon={editFill} width={24} height={24} />

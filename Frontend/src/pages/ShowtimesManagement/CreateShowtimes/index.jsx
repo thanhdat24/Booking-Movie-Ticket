@@ -124,7 +124,7 @@ export default function CreateShowtimes() {
   useEffect(() => {
     // get list user lần đầu
     // if (!showtimesList.result) {
-      dispatch(getAllShowTimes());
+    dispatch(getAllShowTimes());
     // }
     // return () => dispatch(resetMoviesManagement());
   }, []);
@@ -220,13 +220,14 @@ export default function CreateShowtimes() {
       }));
     });
   };
-  console.log("Data",data);
+  console.log("Data", data);
   const handleSelectTheaterSystem = async (e) => {
     setData((data) => ({
       ...data,
       setTheaterSystem: e.target.value.name,
       startRequest: true,
       openCtr: { ...data.openCtr, theaterCluster: true },
+      idTheaterSystem: e.target.value._id,
       //reset
       setTheaterCluster: "",
       theaterRender: [],
@@ -254,6 +255,7 @@ export default function CreateShowtimes() {
       //reset
       setTheater: "",
       idTheater: "",
+      idTheaterCluster: e.target.value._id,
     }));
 
     await theatersClusterApi
@@ -306,6 +308,7 @@ export default function CreateShowtimes() {
       ...data,
       setTicketPrice: e.target.value,
     }));
+    console.log("data", data);
   };
 
   const handleTaoLichChieu = () => {
@@ -318,6 +321,8 @@ export default function CreateShowtimes() {
         idMovie: data.setMovie,
         dateShow: data.dateShow,
         idTheater: data.idTheater,
+        idTheaterSystem: data.idTheaterSystem,
+        idTheaterCluster: data.idTheaterCluster,
         ticketPrice: data.setTicketPrice,
       })
     );
@@ -490,7 +495,7 @@ export default function CreateShowtimes() {
                               }`
                             : "Vui lòng chọn hệ thống rạp"}
                         </MenuItem>
-                        {data.theaterClusterRender?.data?.theatercluster.map(
+                        {data.theaterClusterRender?.data?.idTheaterCluster.map(
                           (item) => (
                             <MenuItem
                               value={item} // giá trị sẽ được đẩy lên
