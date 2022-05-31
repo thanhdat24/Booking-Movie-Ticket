@@ -27,10 +27,13 @@ const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
 
 exports.uploadTheaterSystem = upload.single('logo');
 
-exports.getAllTheaterSystem = factory.getAll(TheaterSystem);
+exports.getAllTheaterSystem = factory.getAll(TheaterSystem, {
+  path: 'theatersystem',
+});
 exports.createTheaterSystem = factory.createOneTheaterSystem(TheaterSystem);
 exports.getDetailTheaterSystem = factory.getOne(TheaterSystem, {
-  path: 'theatercluster',
+  path: 'theatersystem idTheaterCluster',
 });
 exports.updateTheaterSystem = factory.updateOne(TheaterSystem);
 exports.deleteTheaterSystem = factory.deleteOne(TheaterSystem);
+

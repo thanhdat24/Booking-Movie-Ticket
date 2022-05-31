@@ -6,7 +6,14 @@ const factory = require('./handlerFactory');
 const catchAsync = require('../utils/catchAsync');
 
 exports.createShowTime = catchAsync(async (req, res, next) => {
-  const { idMovie, idTheater, dateShow, ticketPrice } = req.body;
+  const {
+    idMovie,
+    idTheater,
+    dateShow,
+    idTheaterSystem,
+    idTheaterCluster,
+    ticketPrice,
+  } = req.body;
   let seatCode = [];
   for (let types of seatType) {
     seatCode = types.seatList;
@@ -19,6 +26,8 @@ exports.createShowTime = catchAsync(async (req, res, next) => {
   const newShowtime = new ShowTime({
     idMovie,
     idTheater,
+    idTheaterSystem,
+    idTheaterCluster,
     dateShow,
     seatList,
     ticketPrice,
@@ -77,7 +86,6 @@ exports.getDetailShowTime = catchAsync(async (req, res, next) => {
       res.status(400).json({ message: err });
     });
 });
-
 
 exports.getAllShowTime = factory.getAll(ShowTime);
 // exports.createShowTime = factory.createOne(ShowTimes);

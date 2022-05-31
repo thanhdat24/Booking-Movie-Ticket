@@ -4,6 +4,14 @@ const showTimesSchema = new mongoose.Schema(
   {
     ticketPrice: { type: Number, trim: true },
     dateShow: { type: Date, trim: true },
+    idTheaterSystem: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'TheaterSystem',
+    },
+    idTheaterCluster: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'TheaterCluster',
+    },
     idTheater: {
       type: mongoose.Schema.ObjectId,
       ref: 'Theater',
@@ -27,10 +35,18 @@ showTimesSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'idTheater',
     select: 'name type',
-  }).populate({
-    path: 'idMovie',
-    select: 'name photo',
-  });
+  })
+    .populate({
+      path: 'idMovie',
+      select:
+        'name photo releaseDate duration nowShowing comingSoon _id trailer description genre',
+    })
+    .populate({
+      path: 'idTheaterSystem',
+    })
+    .populate({
+      path: 'idTheaterCluster',
+    });
   next();
 });
 

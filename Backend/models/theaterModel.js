@@ -19,7 +19,7 @@ const theaterSchema = new mongoose.Schema(
 theaterSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'idTheaterCluster',
-    select: 'name address',
+    select: 'name address photo',
   });
   next();
 });

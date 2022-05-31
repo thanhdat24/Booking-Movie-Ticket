@@ -18,6 +18,7 @@ router
 
 router
   .route('/:id')
+  .get(movieController.getMovieShowtimeInfo)
   .get(movieController.getDetailMovie)
   .patch(
     authController.protect,

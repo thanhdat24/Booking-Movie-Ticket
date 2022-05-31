@@ -17,12 +17,18 @@ const theaterSystemSchema = new mongoose.Schema(
 );
  
 
-theaterSystemSchema.virtual('theatercluster', {
-  ref: 'TheaterCluster',
+theaterSystemSchema.virtual('theatersystem', {
+  ref: 'ShowTimes',
   foreignField: 'idTheaterSystem',
   localField: '_id',
 });
 
+
+theaterSystemSchema.virtual('idTheaterCluster', {
+  ref: 'TheaterCluster',
+  foreignField: 'idTheaterSystem',
+  localField: '_id',
+});
 
 const TheaterSystem = mongoose.model('TheaterSystem', theaterSystemSchema);
 
