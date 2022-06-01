@@ -18,7 +18,7 @@ const moviesApi = {
     return axiosClient.patch(path, formData);
   },
   getDetailMovie: (_id) => {
-    const path = `/v1/movies/${_id}`;
+    const path = `/v1/movies/getMovieShowtimeInfo/${_id}`;
     return axiosClient.get(path);
   },
   addMovieUploadImg: (movie) => {

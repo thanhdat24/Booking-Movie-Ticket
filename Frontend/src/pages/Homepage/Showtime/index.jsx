@@ -44,15 +44,11 @@ export default function Showtime() {
     dailyMovieList: null,
     comingMovieList: null,
   });
-
-  console.log("movieList", movieList);
-  console.log("arrayData", arrayData);
   const classes = useStyles({
     fade: value.fade,
     value: value.value,
     notDelay: value.notDelay,
   });
-  console.log("value.notDelay", value.notDelay);
   useEffect(() => {
     return () => {
       clearTimeout(timeout.current);

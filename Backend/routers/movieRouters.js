@@ -18,7 +18,7 @@ router
 
 router
   .route('/:id')
-  .get(movieController.getMovieShowtimeInfo)
+
   .get(movieController.getDetailMovie)
   .patch(
     authController.protect,
@@ -26,4 +26,6 @@ router
     movieController.updateMovie
   )
   .delete(movieController.deleteMovie);
+
+router.route('/getMovieShowtimeInfo/:id').get(movieController.getMovieShowtimeInfo);
 module.exports = router;

@@ -98,7 +98,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     margin: "auto",
   },
-
   itemDis: {
     padding: "20px 20px 12px",
     border: "1px solid #e6e6e6",

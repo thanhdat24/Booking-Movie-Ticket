@@ -23,7 +23,7 @@ function MovieItem({ movie, comingMovie }) {
             <div
               className="film__overlay"
               onClick={() =>
-                history.push(`/movie/${movie._id}`, { comingMovie })
+                history.push(`/movie/${movie?._id}`, { comingMovie })
               }
             />
             <div className="play__trailer">
@@ -32,7 +32,7 @@ function MovieItem({ movie, comingMovie }) {
                 cssRoot={"play"}
                 width={48}
                 height={48}
-                urlYoutube={movie.trailer}
+                urlYoutube={movie?.trailer}
               />
             </div>
           </div>
@@ -43,7 +43,7 @@ function MovieItem({ movie, comingMovie }) {
             <div className="name">
               <p>
                 <span className="c18">C18</span>
-                {movie.name}
+                {movie?.name}
               </p>
             </div>
             <p className="pt-2">

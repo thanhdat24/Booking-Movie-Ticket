@@ -220,7 +220,6 @@ export default function CreateShowtimes() {
       }));
     });
   };
-  console.log("Data", data);
   const handleSelectTheaterSystem = async (e) => {
     setData((data) => ({
       ...data,
@@ -308,7 +307,6 @@ export default function CreateShowtimes() {
       ...data,
       setTicketPrice: e.target.value,
     }));
-    console.log("data", data);
   };
 
   const handleTaoLichChieu = () => {

@@ -34,13 +34,16 @@ exports.uploadMoviePhoto = upload.single('photo');
 exports.getMovieShowtimeInfo = catchAsync(async (req, res, next) => {
   try {
     let query = TheaterSystem.find().populate('theatersystem');
-
+    let movieDoc = Movie.findById(req.params.id);
+    let resultNotFound = await movieDoc;
+    let flag = false;
     const theaterSystem = await query;
     let array = [];
     let movieList = [];
     theaterSystem.map((item123) => {
       item123.theatersystem.map((item) => {
         if (item.idMovie._id == req.params.id) {
+          flag = true;
           array.push(item);
           movieList = [
             {
@@ -94,10 +97,16 @@ exports.getMovieShowtimeInfo = catchAsync(async (req, res, next) => {
       };
     });
 
-    const result = movieList.map((item) => {
+    const resultExist = movieList.map((item) => {
       return { ...item, theaterSystemList };
     });
-
+    let result;
+    if (flag) {
+      result = resultExist;
+    } else {
+      result = [];
+      result.push(resultNotFound);
+    }
     res.status(200).json({
       status: 'success',
       data: result,

@@ -11,11 +11,7 @@ import { scroller } from "react-scroll";
 import Tap from "../Tap";
 
 export default function MovieItem({ successDetailMovie: data }) {
-  console.log("data", data);
-  console.log("data.photo", data?.photo);
   const [onClickBtnMuave, setOnClickBtnMuave] = useState(0);
-  const param = useParams();
-  const headMenu = [{ nameLink: "Mua vé", id: "lichchieu" }];
   // console.log("location.pathname", location.pathname);
   const handleClickLink = (id) => {
     // setOpenDrawer(false)
@@ -62,12 +58,19 @@ export default function MovieItem({ successDetailMovie: data }) {
               <span className={classes.c18}>C18</span>
               {data?.name}
             </p>
-            {/* <p>{`${thoiLuong ?? "120"} phút - ${danhGia} Tix`} - 2D/Digital</p> */}
-            <p>
-              {`${data?.duration ?? "120"} phút - ${
-                data ? data?.idTheater[0]?.type : ""
-              }/Digital`}{" "}
-            </p>
+            {data?.idTheater ? (
+              <p>
+                {`${data?.duration ?? "120"} phút - ${
+                  data ? data?.idTheater[0]?.type : ""
+                }/Digital`}{" "}
+              </p>
+            ) : (
+              <p>
+                {`${data?.duration ?? "120"} phút -  2D/Digital
+                `}
+              </p>
+            )}
+
             <button className={classes.btnMuaVe} onClick={handleBtnMuaVe}>
               {location.state?.comingMovie ? "Thông tin phim" : "Mua vé"}
             </button>

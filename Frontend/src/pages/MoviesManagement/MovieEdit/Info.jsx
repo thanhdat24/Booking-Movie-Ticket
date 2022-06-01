@@ -71,7 +71,6 @@ export default function Info() {
       if (loadingDetailMovie) {
         return;
       }
-      console.log("movie", movie);
       dispatch(updateMovie(movie, params.idMovie));
     },
   });

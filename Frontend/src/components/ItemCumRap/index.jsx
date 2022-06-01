@@ -17,14 +17,10 @@ export default function ItemCumRap({
   theaterClusterPhoto,
   defaultExpanded,
 }) {
+  console.log("moviesShedule", moviesShedule);
   const classes = useStyles({
     color: colorTheater[theaterClusterName?.slice(0, 3).toUpperCase()],
   });
-  console.log("theaterClusterName", theaterClusterName);
-  console.log("moviesShedule", moviesShedule);
-  console.log("currentSelectedHeThongRapChieu", currentSelectedHeThongRapChieu);
-  console.log("theaterClusterAddress", theaterClusterAddress);
-  console.log("theaterClusterPhoto", theaterClusterPhoto);
   return (
     <>
       <div className={classes.cumRapItem}>
@@ -51,9 +47,9 @@ export default function ItemCumRap({
             <div style={{ clear: "both" }}></div>
           </AccordionSummary>
           <AccordionDetails>
-            {moviesShedule.map((lcp) => (
-              <Fragment key={lcp._id}>
-                <BtnGoToCheckout movieShowtimes={lcp} />
+            {moviesShedule.map((moviesShedule) => (
+              <Fragment key={moviesShedule._id}>
+                <BtnGoToCheckout movieShowtimes={moviesShedule} />
               </Fragment>
             ))}
           </AccordionDetails>

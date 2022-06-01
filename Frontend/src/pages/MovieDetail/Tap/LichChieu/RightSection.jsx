@@ -15,11 +15,6 @@ export default function RightSection({
     () => selectData(currentSelectedTheaterSystemList),
     [currentSelectedTheaterSystemList]
   );
-  console.log("dataSelect", dataSelect);
-  console.log(
-    "currentSelectedTheaterSystemList",
-    currentSelectedTheaterSystemList
-  );
   const classes = useStyles();
 
   const handleSelectDay = (i) => {

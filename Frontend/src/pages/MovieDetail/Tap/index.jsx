@@ -23,15 +23,14 @@ import { useHistory, useLocation } from "react-router-dom";
 import useStyles from "./styles";
 import PropTypes from "prop-types";
 import formatDate from "../../../utils/formatDate";
-// import LichChieu from "./LichChieu";
+import scroll from "../../../utils/scroll";
+
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import CloseIcon from "@mui/icons-material/Close";
-import { scroller } from "react-scroll";
 
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { useEffect } from "react";
-import moment from "moment";
 import LichChieu from "./LichChieu";
 // bình luận bao nhiêu giấy trước
 // import "moment/locale/vi";
@@ -51,32 +50,18 @@ TabPanel.propTypes = {
   index: PropTypes.any.isRequired,
   value: PropTypes.any.isRequired,
 };
-export default function CenteredTabs({
-  data,
-  onClickBtnMuave,
-  isMobile,
-  onIncreaseQuantityComment,
-}) {
-  const [commentListDisplay, setCommentListDisplay] = useState({
-    comment: [],
-    page: 5,
-    hideBtn: false,
-    idScrollTo: "",
-  });
-  console.log("commentListDisplay", commentListDisplay);
-  const classes = useStyles({ hideBtn: commentListDisplay.hideBtn, isMobile });
-  const dispatch = useDispatch();
+export default function CenteredTabs({ data, onClickBtnMuave }) {
+  const classes = useStyles();
   let location = useLocation();
   const history = useHistory();
   const [hover, setHover] = React.useState(-1);
   const [valueTab, setValueTab] = useState(0);
+  const [croll, setCroll] = useState(0);
   const [openComment, setOpenComment] = useState(false);
   const [warningtext, setwarningtext] = useState(false);
   const [dataComment, setdataComment] = useState({ post: "", point: 0.5 });
 
-  // console.log("data1",data1)
   const { currentUser } = useSelector((state) => state.AuthReducer);
-  console.log("currentUser", currentUser);
   const labels = {
     0.5: "0.5",
     1: "1",
@@ -89,6 +74,19 @@ export default function CenteredTabs({
     4.5: "4.5",
     5: "5",
   };
+  // phục vụ kh nhấp btn mua vé
+  useEffect(() => {
+    window.scrollTo(0, 0); // ngăn window.history.scrollRestoration = 'auto';
+    setValueTab(() => 0);
+    setCroll(() => onClickBtnMuave);
+  }, [onClickBtnMuave]); // khi click muave thì mới mở tap 0 > đổi giá trị croll để scroll tới TapMovieDetail
+
+  useEffect(() => {
+    if (onClickBtnMuave !== 0) {
+      // không scroll khi mới load topDesktopMovieDetail
+      scroll("TapMovieDetail");
+    }
+  }, [croll]); // khi nhấn muave và đã hoàn thành mở tap 0 thì scroll
 
   function getLabelText(value) {
     return `${dataComment.point} Star${value !== 1 ? "s" : ""}, ${
@@ -107,15 +105,6 @@ export default function CenteredTabs({
 
     setdataComment((data) => ({ ...data, post: event.target.value }));
   };
-  useEffect(() => {
-    if (commentListDisplay.idScrollTo) {
-      scroller.scrollTo(commentListDisplay.idScrollTo, {
-        duration: 800,
-        offset: -79,
-        smooth: "easeInOutQuart",
-      });
-    }
-  }, [commentListDisplay.idScrollTo]);
 
   const isLogin = () => {
     if (!currentUser) {
@@ -147,7 +136,7 @@ export default function CenteredTabs({
     setwarningtext(false);
   };
   return (
-    <div className={classes.root} id="lichchieu">
+    <div className={classes.root} id="TapMovieDetail">
       <AppBar
         position="static"
         color="default"
@@ -178,11 +167,16 @@ export default function CenteredTabs({
           />
         </Tabs>
       </AppBar>
-      {/* <Fade timeout={400} in={0}> */}
-      <TabPanel value={valueTab} index={0}>
+
+      <TabPanel
+        value={valueTab}
+        index={location.state?.comingMovie ? "hide" : 0}
+         className="pb-4"
+      >
         {<LichChieu data={data} />}
       </TabPanel>
-      <TabPanel value={valueTab} index={1}>
+
+      <TabPanel value={valueTab} index={location.state?.comingMovie ? 0 : 1}>
         <div className={`row text-white ${classes.detailMovie}`}>
           <div className="col-sm-6 col-xs-12">
             <div className="row mb-2">
@@ -214,9 +208,16 @@ export default function CenteredTabs({
             </div>
             <div className="row mb-2">
               <p className={`float-left ${classes.contentTitle}`}>Định dạng</p>
-              <p className={`float-left ${classes.contentInfo}`}>
-                {`${data ? data?.idTheater[0].type : ""}/Digital`}{" "}
-              </p>
+              {data?.idTheater ? (
+                <p className={`float-left ${classes.contentInfo}`}>
+                  {`${data ? data?.idTheater[0].type : ""}/Digital`}{" "}
+                </p>
+              ) : (
+                <p>
+                  {`${data?.duration ?? "120"} phút -  2D/Digital
+                `}
+                </p>
+              )}
             </div>
             <div className="row mb-2">
               <p className={`float-left ${classes.contentTitle}`}>
@@ -236,7 +237,11 @@ export default function CenteredTabs({
         </div>
       </TabPanel>
 
-      <TabPanel value={valueTab} index={2} className={classes.noname}>
+      <TabPanel
+        value={valueTab}
+        index={location.state?.comingMovie ? 1 : 2}
+        className={classes.noname}
+      >
         <div className={classes.danhGia}>
           <div className={classes.inputRoot} onClick={handleClickComment}>
             <span className={classes.avatarReviewer}>

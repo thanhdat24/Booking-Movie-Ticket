@@ -3,11 +3,10 @@ import { useHistory } from "react-router-dom";
 
 import useStyles from "./styles";
 import moment from "moment";
-import { useDispatch, useSelector } from "react-redux";
 export default function BtnGoToCheckout({ movieShowtimes }) {
-  const { currentUser } = useSelector((state) => state.AuthReducer);
   const classes = useStyles();
   const history = useHistory();
+  
   const formatDateShow = new Date(movieShowtimes.dateShow)
     .toLocaleTimeString([], { hour12: false })
     .slice(0, 5);
@@ -23,10 +22,16 @@ export default function BtnGoToCheckout({ movieShowtimes }) {
   };
 
   return (
-    <button className={classes.button}>
-      <span className={classes.inTime}>
-        {movieShowtimes.dateShow.slice(11, 16)}
-      </span>
+    <button
+      className={classes.button}
+      onClick={() =>
+        history.push(
+          `/booking-tickets/${movieShowtimes._id}`,
+          `/booking-tickets/${movieShowtimes._id}`
+        )
+      }
+    >
+      <span className={classes.inTime}>{formatDateShow}</span>
       <span className={classes.outTime}>{` ~ ${calculateTimeout(
         movieShowtimes.dateShow
       )}`}</span>

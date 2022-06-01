@@ -8,7 +8,6 @@ import { useStyles } from "./styles";
 export default function LichChieu({ data }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
-  console.log("data123", data);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -45,7 +44,7 @@ export default function LichChieu({ data }) {
         ))}
       </Tabs>
       <div className={classes.rightSection}>
-        {data?.theaterSystemList?.length === 0 && (
+        {!data?.theaterSystemList && (
           <p style={{ padding: 10 }}>
             Hiện tại chưa có lịch chiếu cho phim này
           </p>

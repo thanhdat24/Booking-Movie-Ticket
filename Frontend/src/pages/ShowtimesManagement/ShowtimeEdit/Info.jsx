@@ -73,7 +73,6 @@ export default function Info() {
       ticketPrice: false,
     },
   });
-  console.log("Data", data);
   const [isReadyCapNhatLichChieu, setIsReadyCapNhatLichChieu] = useState(false);
   useEffect(() => {
     if (
