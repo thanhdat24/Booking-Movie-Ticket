@@ -13,6 +13,12 @@ import {
   UPDATE_SHOWTIME_REQUEST,
   UPDATE_SHOWTIME_SUCCESS,
   UPDATE_SHOWTIME_FAIL,
+  GET_LISTSEAT_REQUEST,
+  GET_LISTSEAT_SUCCESS,
+  GET_LISTSEAT_FAIL,
+  BOOK_TICKET_REQUEST,
+  BOOK_TICKET_SUCCESS,
+  BOOK_TICKET_FAIL,
 } from "../constants/BookTicket";
 
 export const createShowtime = (data) => {
@@ -118,5 +124,56 @@ export const resetCreateShowtime = () => {
     dispatch({
       type: RESET_CREATE_SHOWTIME,
     });
+  };
+};
+
+export const getListSeat = (idShowtime) => {
+  return (dispatch) => {
+    dispatch({
+      type: GET_LISTSEAT_REQUEST,
+    });
+    bookingApi
+      .getDanhSachPhongVe(idShowtime)
+      .then((result) => {
+        dispatch({
+          type: GET_LISTSEAT_SUCCESS,
+          payload: { data: result.data },
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: GET_LISTSEAT_FAIL,
+          payload: {
+            error: error.response?.data ? error.response.data : error.message,
+          },
+        });
+      });
+  };
+};
+
+export const postCreateTicket = (data) => {
+  return (dispatch) => {
+    dispatch({
+      type: BOOK_TICKET_REQUEST,
+    });
+    bookingApi
+      .postCreateTicket(data)
+      .then((result) => {
+        console.log("result", result);
+        dispatch({
+          type: BOOK_TICKET_SUCCESS,
+          payload: {
+            data: result.data,
+          },
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: BOOK_TICKET_FAIL,
+          payload: {
+            error: error.response?.data ? error.response.data : error.message,
+          },
+        });
+      });
   };
 };

@@ -16,6 +16,14 @@ const bookingApi = {
     const path = `/v1/showtimes/${_id}`;
     return axiosClient.patch(path, showtime);
   },
+  getDanhSachPhongVe: (_id) => {
+    const path = `/v1/showtimes/${_id}`;
+    return axiosClient.get(path);
+  },
+  postCreateTicket: (data) => {
+    const path = `/v1/tickets`;
+    return axiosClient.post(path, data);
+  },
 };
 
 export default bookingApi;

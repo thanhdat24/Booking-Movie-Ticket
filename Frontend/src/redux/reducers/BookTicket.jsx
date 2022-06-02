@@ -1,20 +1,69 @@
 import {
+  BOOK_TICKET_FAIL,
+  BOOK_TICKET_REQUEST,
+  BOOK_TICKET_SUCCESS,
+  CHANGE_LISTSEAT,
   CREATE_SHOWTIME_FAIL,
   CREATE_SHOWTIME_REQUEST,
   CREATE_SHOWTIME_SUCCESS,
   DELETE_SHOWTIME_FAIL,
   DELETE_SHOWTIME_REQUEST,
   DELETE_SHOWTIME_SUCCESS,
+  GET_LISTSEAT_FAIL,
+  GET_LISTSEAT_REQUEST,
+  GET_LISTSEAT_SUCCESS,
   GET_SHOWTIME_FAIL,
   GET_SHOWTIME_REQUEST,
   GET_SHOWTIME_SUCCESS,
+  INIT_DATA,
+  RESET_ALERT_OVER10,
   RESET_CREATE_SHOWTIME,
+  RESET_DATA_BOOKTICKET,
+  SET_ALERT_OVER10,
+  SET_DATA_PAYMENT,
+  SET_READY_PAYMENT,
+  SET_STEP,
+  TIMEOUT,
   UPDATE_SHOWTIME_FAIL,
   UPDATE_SHOWTIME_REQUEST,
   UPDATE_SHOWTIME_SUCCESS,
 } from "../constants/BookTicket";
 
 const stateDefault = {
+  // get list seat
+  loadingGetListSeat: false,
+  danhSachPhongVe: {},
+  errorGetListSeatMessage: null,
+
+  // booking ticked
+  loadingBookingTicket: false,
+  successBookingTicket: null,
+  errorBookTicket: null,
+  ticketList: [],
+
+  // selecting seat
+  listSeat: [],
+  isSelectedSeat: false,
+  listSeatSelected: [],
+  seatCodes: [],
+  amount: 0,
+
+  timeOut: false,
+  isMobile: false,
+  refreshKey: Date.now(),
+
+  idShowtime: null,
+  userName: null,
+
+  alertOver10: false,
+
+  // payment
+  email: "",
+  phone: "",
+  paymentMethod: "",
+  isReadyPayment: false,
+  activeStep: 0,
+
   loadingCreateShowtime: false,
   successCreateShowtime: null,
   errorCreateShowtime: null,
@@ -34,6 +83,135 @@ const stateDefault = {
 
 export const BookTicketReducer = (state = stateDefault, action) => {
   switch (action.type) {
+    // initialization data
+    case GET_LISTSEAT_REQUEST: {
+      return {
+        ...state,
+        loadingGetListSeat: true,
+        errorGetListSeatMessage: null,
+      };
+    }
+    case GET_LISTSEAT_SUCCESS: {
+      return {
+        ...state,
+        danhSachPhongVe: action.payload.data,
+        loadingGetListSeat: false,
+      };
+    }
+    case GET_LISTSEAT_FAIL: {
+      return {
+        ...state,
+        errorGetListSeatMessage: action.payload.error,
+        loadingGetListSeat: false,
+      };
+    }
+    case INIT_DATA: {
+      return {
+        ...state,
+        listSeat: action.payload.listSeat,
+        idShowtime: action.payload.idShowtime,
+        userName: action.payload.userName,
+        email: action.payload.email,
+        phone: action.payload.phone,
+      };
+    }
+
+    // selecting seat
+    case CHANGE_LISTSEAT: {
+      return {
+        ...state,
+        listSeat: action.payload.listSeat,
+        isSelectedSeat: action.payload.isSelectedSeat,
+        listSeatSelected: action.payload.listSeatSelected,
+        seatCodes: action.payload.seatCodes,
+        amount: action.payload.amount,
+      };
+    }
+    case RESET_DATA_BOOKTICKET: {
+      return {
+        ...state,
+        ...state,
+        danhSachPhongVe: {},
+        paymentMethod: "",
+        isReadyPayment: false,
+        isSelectedSeat: false,
+        listSeatSelected: [],
+        timeOut: false,
+        activeStep: 0,
+        seatCodes: [],
+        successBookingTicket: null,
+        errorBookTicket: null,
+        refreshKey: Date.now(),
+        amount: 0,
+        alertOver10: false,
+      };
+    }
+    case SET_DATA_PAYMENT: {
+      return {
+        ...state,
+        email: action.payload.email,
+        phone: action.payload.phone,
+        paymentMethod: action.payload.paymentMethod,
+      };
+    }
+    case SET_READY_PAYMENT: {
+      return {
+        ...state,
+        isReadyPayment: action.payload.isReadyPayment,
+      };
+    }
+    case SET_STEP: {
+      return {
+        ...state,
+        activeStep: action.payload.activeStep,
+      };
+    }
+    case RESET_ALERT_OVER10: {
+      return {
+        ...state,
+        alertOver10: false,
+      };
+    }
+    case SET_ALERT_OVER10: {
+      return {
+        ...state,
+        alertOver10: true,
+      };
+    }
+
+    // booking ticked
+    case BOOK_TICKET_REQUEST: {
+      return {
+        ...state,
+        loadingBookingTicket: true,
+        errorBookTicketMessage: null,
+      };
+    }
+    case BOOK_TICKET_SUCCESS: {
+      return {
+        ...state,
+        successBookingTicket: action.payload.data,
+        loadingBookingTicket: false,
+        activeStep: 2,
+      };
+    }
+    case BOOK_TICKET_FAIL: {
+      return {
+        ...state,
+        errorBookTicketMessage: action.payload.error,
+        loadingBookingTicket: false,
+        activeStep: 2,
+      };
+    }
+
+    // control modal
+    case TIMEOUT: {
+      return {
+        ...state,
+        timeOut: true,
+      };
+    }
+
     case CREATE_SHOWTIME_REQUEST: {
       return {
         ...state,
@@ -137,9 +315,10 @@ export const BookTicketReducer = (state = stateDefault, action) => {
       state.successUpdateShowtime = null;
       state.loadingUpdateShowtime = false;
       state.errorUpdateShowtimee = null;
-      
+
       return state;
     }
+
     default:
       return { ...state };
   }

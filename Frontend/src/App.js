@@ -30,6 +30,8 @@ import ModalTrailer from "./components/ModalTrailer/ModalTrailer";
 import MainLayout from "./layouts/MainLayout/index";
 import Homepage from "./pages/Homepage";
 import MovieDetail from "./pages/MovieDetail";
+import CheckoutRoute from "./guards/CheckoutRoute";
+import BookTickets from "./pages/Bookticket";
 
 function App() {
   const themeOptions = useMemo(
@@ -57,6 +59,13 @@ function App() {
               <Route exact path="/movie/:idMovie" component={MovieDetail} />
             </MainLayout>
           </Route>
+
+          <CheckoutRoute
+            exact
+            path="/booking-tickets/:idShowtime"
+            component={BookTickets}
+          />
+
           <Route
             exact
             path={[

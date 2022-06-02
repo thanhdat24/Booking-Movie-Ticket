@@ -16,10 +16,10 @@ export default function Homepage() {
   const { theaterList } = useSelector((state) => state.TheaterReducer);
 
   useEffect(() => {
-    if (!movieList.result) {
+    if (!movieList?.result) {
       dispatch(getMovieList());
     }
-    if (!theaterList.result) {
+    if (!theaterList?.result) {
       dispatch(getTheaterList());
     }
   }, []);

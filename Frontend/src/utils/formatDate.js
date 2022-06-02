@@ -62,6 +62,7 @@ const formatDate = (dateIn) => {
     dateFull,
     YyMmDd: `${year}.${month}.${date}`,
     getTime,
+    dDMmYy: `${date}/${month}/${year}`,
   };
 };
 
