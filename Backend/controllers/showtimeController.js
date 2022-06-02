@@ -52,12 +52,16 @@ exports.getDetailShowTime = catchAsync(async (req, res, next) => {
         });
       const showtimeId = showtime._id;
       const theaterClusterName = showtime.idTheater.idTheaterCluster.name;
+      const theaterClusterPhoto = showtime.idTheater.idTheaterCluster.photo;
       const theaterSystemName =
         showtime.idTheater.idTheaterCluster.idTheaterSystem.name;
+      const theaterSystemLogo =
+        showtime.idTheater.idTheaterCluster.idTheaterSystem.logo;
       const theaterName = showtime.idTheater.name;
       const address = showtime.idTheater.idTheaterCluster.address;
-      const movieName = showtime.idMovie._id;
-      const photo = showtime.idMovie.photo;
+      const movieId = showtime.idMovie._id;
+      const movieName = showtime.idMovie.name;
+      const moviePhoto = showtime.idMovie.photo;
       const dateShow = showtime.dateShow;
       const ticketPrice = showtime.ticketPrice;
       const seatList = [];
@@ -69,11 +73,14 @@ exports.getDetailShowTime = catchAsync(async (req, res, next) => {
         theaterClusterName,
         theaterName,
         address,
-        movieName,
-        photo,
+        movieId,
+        moviePhoto,
         dateShow,
         ticketPrice,
         theaterSystemName,
+        theaterClusterPhoto,
+        theaterSystemLogo,
+        movieName,
       };
       res.status(200).json({
         status: 'success',

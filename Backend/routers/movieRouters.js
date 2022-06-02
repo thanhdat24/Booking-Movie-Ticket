@@ -5,21 +5,24 @@ const movieController = require('../controllers/movieController');
 const router = express.Router();
 
 //Protect all routers after this middleware
+
+router.route('/:id').get(movieController.getDetailMovie);
+router.route('/').get(movieController.getAllMovie);
+
+router
+  .route('/getMovieShowtimeInfo/:id')
+  .get(movieController.getMovieShowtimeInfo);
+
 router.use(authController.protect);
 
 // RestrictTo "admin"
 router.use(authController.restrictTo('admin'));
-
-router.route('/').get(movieController.getAllMovie);
 
 router
   .route('/')
   .post(movieController.uploadMoviePhoto, movieController.createMovie);
 
 router
-  .route('/:id')
-
-  .get(movieController.getDetailMovie)
   .patch(
     authController.protect,
     movieController.uploadMoviePhoto,
@@ -27,5 +30,4 @@ router
   )
   .delete(movieController.deleteMovie);
 
-router.route('/getMovieShowtimeInfo/:id').get(movieController.getMovieShowtimeInfo);
 module.exports = router;

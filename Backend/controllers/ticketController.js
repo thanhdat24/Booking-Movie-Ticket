@@ -4,9 +4,9 @@ const catchAsync = require('../utils/catchAsync');
 const ShowTime = require('../models/showtimeModel');
 
 exports.createTicket = catchAsync(async (req, res, next) => {
-  const { showtimeId, seatCodes } = req.body;
+  const { idShowtime, seatCodes } = req.body;
   const user = req.user;
-  ShowTime.findById(showtimeId)
+  ShowTime.findById(idShowtime)
     .populate('idMovie')
     .populate('idTheater')
     .then((showtime) => {
@@ -19,23 +19,24 @@ exports.createTicket = catchAsync(async (req, res, next) => {
         .filter((seat) => !seat.isBooked)
         .map((seat) => seat.name);
 
-      let bookedSeatCodes = [];
+      let invalidSeat = [];
       seatCodes.forEach((name) => {
-        if (availableSeatCodes.indexOf(name) === -1) bookedSeatCodes.push(name);
+        if (availableSeatCodes.indexOf(name) === -1) invalidSeat.push(name);
       });
-      if (bookedSeatCodes.length > 0)
+      if (invalidSeat.length > 0)
         return Promise.reject({
           status: 400,
-          message: 'Ghế không tồn tại!',
-          notAvaiSeat: bookedSeatCodes,
+          message: 'Ghế đã được đặt!',
+          notAvaiSeat: invalidSeat,
         });
       const newTicket = new Ticket({
-        showtimeId,
+        idShowtime,
         userId: user,
         seatList: seatCodes.map((seat) => ({
           isBooked: true,
           name: seat,
         })),
+        price: showtime.ticketPrice,
         totalPrice: showtime.ticketPrice * seatCodes.length,
       });
       showtime.seatList = showtime.seatList.map((seat) => {
@@ -55,7 +56,7 @@ exports.createTicket = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.getAllTicket = factory.getAll(Ticket);
+exports.getAllTicket = factory.getAll(Ticket, { path: 'showtimes' });
 exports.getDetailTicket = factory.getOne(Ticket);
 exports.updateTicket = factory.updateOne(Ticket);
 exports.deleteTicket = factory.deleteOne(Ticket);

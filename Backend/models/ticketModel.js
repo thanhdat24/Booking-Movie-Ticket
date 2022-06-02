@@ -10,6 +10,7 @@ const ticketSchema = new mongoose.Schema({
     ref: 'ShowTimes',
   },
   seatList: [seatSchema],
+  price: { type: Number, required: true },
   totalPrice: { type: Number, required: true },
   createdAt: {
     type: Date,
