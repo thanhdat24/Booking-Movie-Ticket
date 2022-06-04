@@ -1,26 +1,28 @@
 import React, { useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { getMovieList } from "../../redux/actions/Movie";
-import { getTheaterList } from "../../redux/actions/Theater";
 import Carousel from "./Carousel";
 import Showtime from "./Showtime";
+import Theaters from "./Theaters";
+import { getTheaterSystemList } from "../../redux/actions/TheaterSystem";
 
 export default function Homepage() {
   const dispatch = useDispatch();
   const { movieList } = useSelector((state) => state.MovieReducer);
 
-  const { theaterList } = useSelector((state) => state.TheaterReducer);
+  const { theaterSystemList } = useSelector(
+    (state) => state.TheaterSystemReducer
+  );
 
   useEffect(() => {
     if (!movieList?.result) {
       dispatch(getMovieList());
     }
-    if (!theaterList?.result) {
-      dispatch(getTheaterList());
+    if (!theaterSystemList?.result) {
+      dispatch(getTheaterSystemList());
     }
   }, []);
 
@@ -28,6 +30,7 @@ export default function Homepage() {
     <div>
       <Carousel />
       <Showtime />
+      <Theaters />
     </div>
   );
 }

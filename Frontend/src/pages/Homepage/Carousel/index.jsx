@@ -11,7 +11,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useStyles } from "./styles";
 import homeCarouselData from "../../../constants/homeCarouselData";
-
+import SearchStickets from "../Search";
 export default function Carousel() {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -66,7 +66,7 @@ export default function Carousel() {
           );
         })}
       </Slider>
-      {/* <SearchStickets /> */}
+      <SearchStickets />
     </div>
   );
 }

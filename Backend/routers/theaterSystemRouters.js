@@ -4,6 +4,10 @@ const theaterSystemController = require('../controllers/theaterSystemController'
 
 const router = express.Router();
 
+router
+  .route('/getInfoShowtimeOfTheaterSystem')
+  .get(theaterSystemController.getInfoShowtimeOfTheaterSystem);
+
 //Protect all routers after this middleware
 router.use(authController.protect);
 

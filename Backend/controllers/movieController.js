@@ -2,7 +2,6 @@ const Movie = require('../models/movieModel');
 const TheaterSystem = require('../models/theaterSystemModel');
 const factory = require('../controllers/handlerFactory');
 const multer = require('multer');
-const ShowTime = require('../models/showtimeModel');
 const _ = require('lodash');
 
 const catchAsync = require('../utils/catchAsync');

@@ -4,6 +4,11 @@ const theaterClusterController = require('../controllers/theaterClusterControlle
 
 const router = express.Router();
 
+
+router
+  .route('/getMovieInfoTheaterCluster/:id')
+  .get(theaterClusterController.getMovieInfoTheaterCluster);
+
 //Protect all routers after this middleware
 router.use(authController.protect);
 
@@ -18,8 +23,8 @@ router
   .route('/:id')
   .get(theaterClusterController.getDetailTheaterCluster)
   .patch(
-    theaterClusterController.uploadTheaterCluster
-    ,theaterClusterController.updateTheaterCluster
+    theaterClusterController.uploadTheaterCluster,
+    theaterClusterController.updateTheaterCluster
   )
   .delete(theaterClusterController.deleteTheaterCluster);
 module.exports = router;
