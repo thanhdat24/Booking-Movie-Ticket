@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { useHistory } from "react-router-dom";
 
 import CustomPopper from "./popper";
-
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Autocomplete,
   Button,
@@ -53,7 +53,7 @@ export default function SearchStickets() {
   });
   const [topPopup, setTopPopup] = useState(false);
   const classes = useStyles({
-    openPhim: data.openCtr.phim || data.setPhim?.maPhim,
+    openPhim: data.openCtr.phim || data.setPhim?._id,
   });
   const [currentPhimPopup, setcurrentPhimPopup] = useState(null);
   // popup item phim lật như thế nào(lên hay xuống) thì set các popup khác lật như thế ấy, item phim dùng popper, item còn lại dùng popover
@@ -312,7 +312,18 @@ export default function SearchStickets() {
               className={classes.textField}
             />
           )}
-          // popupIcon={<ExpandMoreIcon />}
+          renderOption={(props, option) => (
+            <div {...props}>
+              <CustomPopper
+                key={option.name}
+                phim={option}
+                setNewPhim={setNewPhim}
+                currentPhimPopup={currentPhimPopup}
+                rootElementPopup={data.rootElementPopup}
+              />
+            </div>
+          )}
+          popupIcon={<ExpandMoreIcon />}
           value={data.setPhim ? data.setPhim : null}
           onChange={(event, option) => {
             handleSelectPhim(option);
@@ -329,17 +340,6 @@ export default function SearchStickets() {
           onOpen={handleOpenPhim}
           blurOnSelect
           noOptionsText="Không tìm thấy"
-          renderOption={(props, option) => [
-            <CustomPopper
-              blurOnSelect
-              {...props}
-              key={option.name}
-              phim={option}
-              setNewPhim={setNewPhim}
-              currentPhimPopup={currentPhimPopup}
-              rootElementPopup={data.rootElementPopup}
-            />,
-          ]}
         />
       </FormControl>
 
@@ -355,7 +355,7 @@ export default function SearchStickets() {
           value={data.setRap} // tenCumRap
           renderValue={(value) => `${value ? value : "Rạp"}`} // hiển thị giá trị đã chọn
           displayEmpty
-          // IconComponent={ExpandMoreIcon}
+          IconComponent={ExpandMoreIcon}
           MenuProps={menuProps}
         >
           <MenuItem
@@ -400,7 +400,7 @@ export default function SearchStickets() {
           value={data.setNgayXem} // ngayChieu
           renderValue={(value) => `${value ? value : "Ngày xem"}`}
           displayEmpty
-          // IconComponent={ExpandMoreIcon}
+          IconComponent={ExpandMoreIcon}
           MenuProps={menuProps}
         >
           <MenuItem
@@ -417,7 +417,7 @@ export default function SearchStickets() {
               value={ngayChieu}
               key={ngayChieu}
               classes={{
-                root: classes.menu__item,
+                root: classes.menu__item__li,
                 selected: classes["menu__item--selected"],
               }}
             >
@@ -440,7 +440,7 @@ export default function SearchStickets() {
           value={data.setSuatChieu} // suatChieu
           renderValue={(value) => `${value ? value : "Suất chiếu"}`}
           displayEmpty
-          // IconComponent={ExpandMoreIcon}
+          IconComponent={ExpandMoreIcon}
           MenuProps={menuProps}
         >
           <MenuItem

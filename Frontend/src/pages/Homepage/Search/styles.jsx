@@ -61,7 +61,7 @@ const useStyle = makeStyles({
       fontSize: 14,
       top: -3,
       left: 20,
-      display: (props) => (props.openMovie ? "none" : "block"),
+      display: (props) => (props.openPhim ? "none" : "block"),
     },
     "& > label.Mui-focused": {
       display: "none !important",
@@ -143,6 +143,27 @@ const useStyle = makeStyles({
   // popup menu
   menu: { maxHeight: 300, ...customScrollbar },
   menu__item: {
+    width: "100% !important",
+    minHeight: "auto !important",
+    display: "block",
+    padding: "3px 20px !important",
+    fontSize: "14px !important",
+    color: "#333 !important",
+    backgroundColor: "transparent !important",
+    "& li ~ li": {
+      fontSize: 11,
+      color: "#aaa !important",
+    },
+    // màu nền và chữ khi hover
+    "&:hover": {
+      backgroundColor: "#fb4226 !important",
+      color: "#fff !important",
+      "& li ~ li": {
+        color: "#fff !important",
+      },
+    },
+  },
+  menu__item__li: {
     width: "100% !important",
     minHeight: "auto !important",
     display: "block !important",
