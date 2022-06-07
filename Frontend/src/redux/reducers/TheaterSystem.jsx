@@ -1,4 +1,7 @@
 import {
+  GET_INFO_SHOWTIME_OF_THEATER_SYSTEM_FAIL,
+  GET_INFO_SHOWTIME_OF_THEATER_SYSTEM_REQUEST,
+  GET_INFO_SHOWTIME_OF_THEATER_SYSTEM_SUCCES,
   GET_THEATER_SYSTEM_FAIL,
   GET_THEATER_SYSTEM_LIST_FAIL,
   GET_THEATER_SYSTEM_LIST_REQUEST,
@@ -15,6 +18,10 @@ const stateDefault = {
   successDetailTheaterSystem: "",
   loadingDetailTheaterSystem: false,
   errorDetailTheaterSystem: null,
+
+  showtimeTheaterSystemList: [],
+  loadingShowtimeTheaterSystemList: false,
+  errorShowtimeTheaterSystemList: null,
 };
 
 export const TheaterSystemReducer = (state = stateDefault, action) => {
@@ -63,6 +70,29 @@ export const TheaterSystemReducer = (state = stateDefault, action) => {
         loadingDetailTheaterSystem: false,
         errorDetailTheaterSystem: action.payload.error,
         successDetailTheaterSystem: "",
+      };
+    }
+
+    case GET_INFO_SHOWTIME_OF_THEATER_SYSTEM_REQUEST: {
+      return {
+        ...state,
+        loadingShowtimeTheaterSystemList: true,
+        errorShowtimeTheaterSystemList: null,
+        showtimeTheaterSystemList: null,
+      };
+    }
+    case GET_INFO_SHOWTIME_OF_THEATER_SYSTEM_SUCCES: {
+      return {
+        ...state,
+        showtimeTheaterSystemList: action.payload.data,
+        loadingShowtimeTheaterSystemList: false,
+      };
+    }
+    case GET_INFO_SHOWTIME_OF_THEATER_SYSTEM_FAIL: {
+      return {
+        ...state,
+        errorShowtimeTheaterSystemList: action.payload.error,
+        loadingShowtimeTheaterSystemList: false,
       };
     }
     default:

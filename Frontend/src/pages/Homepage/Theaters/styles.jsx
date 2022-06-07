@@ -17,7 +17,7 @@ const useStyles = makeStyles({
     minWidth: "calc(100% - 92px)",
   },
   tabs__indicator: {
-    backgroundColor: "transparent",
+    backgroundColor: "transparent !important",
   },
   tap: (props) => ({
     padding: 20,
@@ -26,10 +26,10 @@ const useStyles = makeStyles({
     ...props.underLine,
   }),
   textColorInherit: {
-    opacity: 0.3,
+    opacity: "0.3 !important",
     "&:hover": {
       transition: "all .2s",
-      opacity: 1,
+      opacity: "1 !important",
     },
   },
 });

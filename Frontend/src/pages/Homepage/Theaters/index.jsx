@@ -2,13 +2,11 @@ import React from "react";
 import { underLine } from "../../../styles/materialUi";
 import Seperate from "../../../components/Seperate";
 
-
 import { useSelector } from "react-redux";
 import { useStyles } from "./styles";
 import { Tab, Tabs } from "@mui/material";
 import { colorTheater } from "../../../constants/theaterData";
 import ListTheaterCluster from "./ListTheaterCluster";
-
 
 export default function Theaters() {
   const [valueTheaterSystem, setValueTheaterSystem] = React.useState(0);
@@ -17,8 +15,9 @@ export default function Theaters() {
     loadingTheaterSystemList,
     errorTheaterSystemList,
     theaterSystemList,
+    showtimeTheaterSystemList,
   } = useSelector((state) => state.TheaterSystemReducer);
-  console.log("theaterSystemList", theaterSystemList);
+  console.log("showtimeTheaterSystemList", showtimeTheaterSystemList);
   if (errorTheaterSystemList) {
     return <div>{errorTheaterSystemList}</div>;
   }
@@ -33,8 +32,9 @@ export default function Theaters() {
           value={valueTheaterSystem}
           classes={{ indicator: classes.tabs__indicator, root: classes.taps }}
         >
-          {theaterSystemList?.data?.map((theater, index) => (
+          {showtimeTheaterSystemList?.data?.map((theater, index) => (
             <Tab
+              style={{ opacity: valueTheaterSystem === index ? "1" : ".5" }}
               onClick={() => setValueTheaterSystem(index)}
               disableRipple
               classes={{
@@ -52,19 +52,17 @@ export default function Theaters() {
             />
           ))}
         </Tabs>
-        {theaterSystemList?.data?.map((theater, index2) => (
+        {showtimeTheaterSystemList?.data?.map((theater, index2) => (
           <div
             hidden={valueTheaterSystem !== index2}
             key={theater?._id}
             className={classes.cumRap}
           >
             <ListTheaterCluster
-              listTheaterCluster={theater.theatersystem}
+              listTheaterCluster={theater.theaterClusterList}
               color={
                 colorTheater[
-                  theater?.theatersystem[0]?.idTheaterCluster.name
-                    .slice(0, 3)
-                    .toUpperCase()
+                  theater?.theaterClusterList[0]?.name.slice(0, 3).toUpperCase()
                 ]
               }
               idTheaterSystem={theater._id}

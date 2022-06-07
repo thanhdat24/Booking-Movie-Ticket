@@ -19,9 +19,10 @@ const useStyles = makeStyles({
     display: "flex",
   },
   phim__img: {
-    width: 50,
-    height: 50,
+    width: 63,
+    height: 97,
     objectFit: "cover",
+    borderRadius: "0.375rem",
   },
   phim__text: {
     paddingLeft: "15px",
@@ -31,6 +32,12 @@ const useStyles = makeStyles({
   phim__text_name: {
     fontWeight: 500,
     textTransform: "capitalize",
+  },
+  phim__duration: {
+    padding: "6px 0",
+    display: "inline-block",
+    fontSize: 13,
+    color: "#9b9b9b",
   },
 });
 export { useStyles };

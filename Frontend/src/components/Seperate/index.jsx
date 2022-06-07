@@ -2,7 +2,7 @@ import React from "react";
 
 export default function index() {
   const style = {
-    height: "120px",
+    height: "90px",
     maxWidth: 940,
     margin: "auto",
     width: "100%",

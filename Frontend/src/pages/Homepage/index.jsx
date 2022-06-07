@@ -7,13 +7,16 @@ import { getMovieList } from "../../redux/actions/Movie";
 import Carousel from "./Carousel";
 import Showtime from "./Showtime";
 import Theaters from "./Theaters";
-import { getTheaterSystemList } from "../../redux/actions/TheaterSystem";
+import {
+  getInfoShowtimeOfTheaterSystem,
+  getTheaterSystemList,
+} from "../../redux/actions/TheaterSystem";
 
 export default function Homepage() {
   const dispatch = useDispatch();
   const { movieList } = useSelector((state) => state.MovieReducer);
 
-  const { theaterSystemList } = useSelector(
+  const { theaterSystemList, showtimeTheaterSystemList } = useSelector(
     (state) => state.TheaterSystemReducer
   );
 
@@ -23,6 +26,9 @@ export default function Homepage() {
     }
     if (!theaterSystemList?.result) {
       dispatch(getTheaterSystemList());
+    }
+    if (!showtimeTheaterSystemList?.result) {
+      dispatch(getInfoShowtimeOfTheaterSystem());
     }
   }, []);
 

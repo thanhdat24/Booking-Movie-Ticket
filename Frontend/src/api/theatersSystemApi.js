@@ -9,6 +9,10 @@ const theatersSystemApi = {
     const path = `/v1/theatersystem/${_id}`;
     return axiosClient.get(path);
   },
+  getInfoShowtimeOfTheaterSystem: () => {
+    const path = "/v1/theatersystem/getInfoShowtimeOfTheaterSystem";
+    return axiosClient.get(path);
+  },
 };
 
 export default theatersSystemApi;

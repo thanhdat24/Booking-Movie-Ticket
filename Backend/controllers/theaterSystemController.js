@@ -33,76 +33,43 @@ exports.uploadTheaterSystem = upload.single('logo');
 exports.getInfoShowtimeOfTheaterSystem = catchAsync(async (req, res, next) => {
   try {
     let query = TheaterSystem.find().populate('theatersystem');
-    const theaterSystem = await query;
-
-    // var result = _.map(data, function (obj) {
-    //   obj.showtimes = _.groupBy(obj.showtimes, 'idTheaterCluster.name');
-    //   return obj;
-    // });
-
     let array = [];
+    const theaterSystem = await query;
     theaterSystem.map((item123) => {
       item123.theatersystem.map((item) => {
         array.push(item);
       });
     });
 
-    let result = _(array)
-      .groupBy((x) => x.idMovie.name)
-      .map((value, key) => ({
-        movieName: key,
-        movieList: value,
-      }))
+    let groupByTheaterCluster = _(array)
+      .groupBy((x) => x.idTheaterCluster.name)
+      .map((value, key) => ({ name: key, movieSchedule: value }))
       .value();
 
-    // var result = _.map(data, function (obj) {
-    //   obj = _.groupBy(
-    //     obj.movieList,
-    //     'idTheaterCluster.name'
-    //   );
-    //   return obj;
-    // });
+    const groupByTheaterSystem = groupByTheaterCluster.map((item) => {
+      return {
+        ...item,
+        ['_id']: item.movieSchedule[0].idTheaterCluster._id,
+        ['address']: item.movieSchedule[0].idTheaterCluster.address,
+        ['photo']: item.movieSchedule[0].idTheaterCluster.photo,
+      };
+    });
 
-    // var result = _.map(movieList, function (obj) {
-    //   obj.movieList = _.groupBy(obj.movieList, 'idTheaterCluster.name');
-    //   return obj;
-    // });
-    // const result = groupByMovie.map((item) => {
-    //   return {
-    //     ...item,
-    //     ['movieId']: item.movieList[0].idMovie._id,
-    //     ['photo']: item.movieList[0].idMovie.photo,
-    //   };
-    // });
+    let theaterClusterList = _(groupByTheaterSystem)
+      .groupBy((x) => x.movieSchedule[0].idTheaterSystem.name)
+      .map((value, key) => ({ name: key, theaterClusterList: value }))
+      .value();
 
-    // let result = _(theaterMovieList.movieList[0])
-    //   .groupBy((x) => x.idTheaterCluster.name)
-    //   .map((value, key) => ({
-    //     theaterClusterName: key,
-    //     theaterClusterList: value,
-    //   }))
-    //   .value();
+    const result = theaterClusterList.map((item) => {
+      return {
+        ...item,
+        ['_id']:
+          item.theaterClusterList[0].movieSchedule[0].idTheaterSystem._id,
+        ['logo']:
+          item.theaterClusterList[0].movieSchedule[0].idTheaterSystem.logo,
+      };
+    });
 
-    // const result = groupByTheaterCluster.map((item) => {
-    //   return {
-    //     ...item,
-    //     ['_id']: item.movieList[0].idTheaterCluster._id,
-    //     ['address']: item.movieList[0].idTheaterCluster.address,
-    //   };
-    // });
-
-    // let theaterClusterList = _(groupByTheaterSystem)
-    //   .groupBy((x) => x.movieList[0].idTheaterSystem.name)
-    //   .map((value, key) => ({ name: key, theaterClusterList: value }))
-    //   .value();
-
-    // const result = theaterClusterList.map((item) => {
-    //   return {
-    //     ...item,
-    //     ['_id']: item.theaterClusterList[0].movieList[0].idTheaterSystem._id,
-    //     ['logo']: item.theaterClusterList[0].movieList[0].idTheaterSystem.logo,
-    //   };
-    // });
 
     res.status(200).json({
       status: 'success',

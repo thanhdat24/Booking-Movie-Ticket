@@ -1,12 +1,19 @@
-import React, { memo } from "react";
-
+import React, { memo, useState } from "react";
+import { useSelector } from "react-redux";
+import _ from "lodash";
 import { underLine, customScrollbar } from "../../../../styles/materialUi";
 import ListMovie from "../ListMovie";
 import { useStyles } from "./styles";
 
 function ListTheaterCluster(props) {
+  const { movieList } = useSelector((state) => state.MovieReducer);
+  console.log("movieList", movieList);
+
+
+
   const { listTheaterCluster, color } = props;
   const [valueTheaterCluster, setValueTheaterCluster] = React.useState(0);
+
   const classes = useStyles({ underLine, customScrollbar, color });
   console.log("listTheaterCluster", listTheaterCluster);
   const handleChangeTheaterCluster = (e) => {
@@ -20,38 +27,36 @@ function ListTheaterCluster(props) {
             className={classes.cumRap}
             index={index}
             onClick={(e) => handleChangeTheaterCluster(e)}
-            key={theaterCluster.idTheaterCluster._id}
+            key={theaterCluster._id}
             style={{ opacity: valueTheaterCluster === index ? "1" : ".5" }}
           >
             <img
               className={classes.cumRap__img}
-              src={theaterCluster.idTheaterCluster.photo}
+              src={theaterCluster.photo}
               alt="theater"
             />
 
             <div className={classes.cumRap__info}>
               <p className={classes.text__first}>
-                <span>
-                  {theaterCluster?.idTheaterCluster.name?.split("-")[0]}
-                </span>
+                <span>{theaterCluster?.name?.split("-")[0]}</span>
                 <span className={classes.text__second}>
-                  -{theaterCluster?.idTheaterCluster.name?.split("-")[1]}
+                  -{theaterCluster.name?.split("-")[1]}
                 </span>
               </p>
               <p className={classes.cumRap__address}>
-                {theaterCluster?.idTheaterCluster?.address}
+                {theaterCluster?.address}
               </p>
             </div>
           </div>
         ))}
       </div>
-      {/* {listTheaterCluster?.theatersystem?.map((theaterCluster, index) => (
+      {listTheaterCluster?.map((theaterCluster, index) => (
         <ListMovie
-          listMovie={theaterCluster}
-          key={theaterCluster.idTheaterCluster._id}
+          listMovie={theaterCluster.movieSchedule}
+          key={theaterCluster._id}
           hidden={valueTheaterCluster !== index}
         />
-      ))} */}
+      ))}
     </div>
   );
 }
