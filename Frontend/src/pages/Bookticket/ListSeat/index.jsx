@@ -38,13 +38,11 @@ export default function ListSeat() {
   const handleResize = () => {
     setWidthSeat(domToSeatElement?.current?.offsetWidth);
   };
-  //  console.log("listSeat35",listSeat);
   const handleSelectedSeat = (seatSelected) => {
     if (seatSelected.isBooked) {
       // click vào ghế đã có người chọn
       return;
     }
-    // console.log("líisatts", listSeat);
     // đổi lại giá trị selected của ghế đã chọn
 
     let newListSeat = listSeat?.map((seat) => {

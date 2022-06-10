@@ -19,11 +19,12 @@ import {
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import useStyles from "./styles";
 import PropTypes from "prop-types";
 import formatDate from "../../../utils/formatDate";
 import scroll from "../../../utils/scroll";
+import { scroller } from "react-scroll";
 
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
@@ -32,6 +33,13 @@ import CloseIcon from "@mui/icons-material/Close";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { useEffect } from "react";
 import LichChieu from "./LichChieu";
+import moment from "moment";
+import {
+  addReview,
+  getAllReviews,
+} from "../../../redux/actions/Review";
+import { getDetailMovie } from "../../../redux/actions/Movie";
+import { selectCommentByMaPhimAndCommentTest } from "../../../redux/selector/MovieDetail";
 // bình luận bao nhiêu giấy trước
 // import "moment/locale/vi";
 // moment.locale("vi");
@@ -50,18 +58,35 @@ TabPanel.propTypes = {
   index: PropTypes.any.isRequired,
   value: PropTypes.any.isRequired,
 };
-export default function CenteredTabs({ data, onClickBtnMuave }) {
-  const classes = useStyles();
+export default function CenteredTabs({
+  data,
+  onClickBtnMuave,
+  onIncreaseQuantityComment,
+}) {
   let location = useLocation();
+  const params = useParams();
+  const dispatch = useDispatch();
   const history = useHistory();
   const [hover, setHover] = React.useState(-1);
   const [valueTab, setValueTab] = useState(0);
   const [croll, setCroll] = useState(0);
   const [openComment, setOpenComment] = useState(false);
   const [warningtext, setwarningtext] = useState(false);
-  const [dataComment, setdataComment] = useState({ post: "", point: 0.5 });
+  const [dataComment, setdataComment] = useState({ review: "", rating: 0.5 });
+  const [commentListDisplay, setCommentListDisplay] = useState({
+    comment: [],
+    page: 5,
+    hideBtn: false,
+    idScrollTo: "",
+  });
+  const { commentList } = useSelector((state) =>
+    selectCommentByMaPhimAndCommentTest(state, params.idMovie)
+  );
 
   const { currentUser } = useSelector((state) => state.AuthReducer);
+  const { postReviewObj, loadingAddReview } = useSelector(
+    (state) => state.ReviewReducer
+  );
   const labels = {
     0.5: "0.5",
     1: "1",
@@ -74,6 +99,8 @@ export default function CenteredTabs({ data, onClickBtnMuave }) {
     4.5: "4.5",
     5: "5",
   };
+  const classes = useStyles({ hideBtn: commentListDisplay.hideBtn });
+
   // phục vụ kh nhấp btn mua vé
   useEffect(() => {
     window.scrollTo(0, 0); // ngăn window.history.scrollRestoration = 'auto';
@@ -89,7 +116,7 @@ export default function CenteredTabs({ data, onClickBtnMuave }) {
   }, [croll]); // khi nhấn muave và đã hoàn thành mở tap 0 thì scroll
 
   function getLabelText(value) {
-    return `${dataComment.point} Star${value !== 1 ? "s" : ""}, ${
+    return `${dataComment.rating} Star${value !== 1 ? "s" : ""}, ${
       labels[value]
     }`;
   }
@@ -103,8 +130,88 @@ export default function CenteredTabs({ data, onClickBtnMuave }) {
       setwarningtext(false);
     }
 
-    setdataComment((data) => ({ ...data, post: event.target.value }));
+    setdataComment((data) => ({ ...data, review: event.target.value }));
   };
+
+  const handlePostComment = () => {
+    if (loadingAddReview) {
+      return;
+    }
+    if (dataComment.review.length < 10) {
+      // nếu comment quá ngắn
+      setwarningtext(true);
+      return;
+    }
+    setwarningtext(false);
+    const currentISOString = new Date().toISOString();
+    dispatch(
+      addReview({
+        ...dataComment,
+        createdAt: currentISOString,
+        movieId: params.idMovie,
+        userId: currentUser.id,
+      })
+    );
+    setOpenComment(false);
+    setdataComment({
+      review: "",
+      rating: 0.5,
+    });
+  };
+
+  const setopenMore = () => {
+    let hideBtn = false;
+    let addComment = commentList.length % 5;
+    if (commentList.length % 5 === 0) {
+      addComment = 5;
+    }
+    if (commentListDisplay.page + addComment === commentList.length) {
+      hideBtn = true;
+    }
+    const idScrollTo = `idComment${
+      commentList[commentListDisplay.page].createdAt
+    }`;
+    const page = commentListDisplay.page + 5;
+    const comment = commentList.slice(0, page);
+    setCommentListDisplay((data) => ({
+      ...data,
+      comment,
+      page,
+      hideBtn,
+      idScrollTo,
+    }));
+  };
+
+  useEffect(() => {
+    // khi commentList lấy về thành công thì cập nhật số người bình luận
+    if (commentList?.length) {
+      onIncreaseQuantityComment(commentList?.length);
+    }
+  }, [commentList]);
+
+  useEffect(() => {
+    // mỗi khi mount component, postComment, likeComment thành công thì call api lấy comment mới
+    dispatch(getAllReviews());
+    if (postReviewObj) {
+      // reset text comment
+      setdataComment((data) => ({ ...data, review: "" }));
+    }
+  }, [postReviewObj]);
+
+  useEffect(() => {
+    const comment = commentList?.slice(0, commentListDisplay.page);
+    setCommentListDisplay((data) => ({ ...data, comment }));
+  }, [commentList]);
+
+  useEffect(() => {
+    if (commentListDisplay.idScrollTo) {
+      scroller.scrollTo(commentListDisplay.idScrollTo, {
+        duration: 800,
+        offset: -79,
+        smooth: "easeInOutQuart",
+      });
+    }
+  }, [commentListDisplay.idScrollTo]);
 
   const isLogin = () => {
     if (!currentUser) {
@@ -171,7 +278,7 @@ export default function CenteredTabs({ data, onClickBtnMuave }) {
       <TabPanel
         value={valueTab}
         index={location.state?.comingMovie ? "hide" : 0}
-         className="pb-4"
+        className="pb-4"
       >
         {<LichChieu data={data} />}
       </TabPanel>
@@ -263,6 +370,62 @@ export default function CenteredTabs({ data, onClickBtnMuave }) {
             </span>
           </div>
         </div>
+        <div className="text-center mb-2 text-white" hidden={!loadingAddReview}>
+          <CircularProgress size={20} color="inherit" />
+        </div>
+        {commentListDisplay?.comment?.map((item) => (
+          <div
+            key={`${item?.createdAt}`}
+            className={classes.itemDis}
+            id={`idComment${item?.createdAt}`}
+          >
+            <div className={classes.infoUser}>
+              <div className={classes.left}>
+                <span className={classes.avatar}>
+                  <img
+                    src={currentUser?.user.photo}
+                    alt="avatar"
+                    className={classes.avatarImg}
+                  />
+                </span>
+                <span className={classes.liveUser}>
+                  <p className={classes.userName}>{item.userId?.userName}</p>
+                  <p className={classes.timePost}>
+                    {moment(item?.createdAt).fromNow()}
+                  </p>
+                </span>
+              </div>
+              <div className={classes.right}>
+                <p className="text-success">{item.rating}</p>
+                <Rating value={item.rating} precision={0.5} readOnly />
+              </div>
+              <div className="clearfix"></div>
+            </div>
+            <div className="py-3 mb-3 border-bottom">{item.review}</div>
+            <span className="d-inline-block" style={{ cursor: "pointer" }}>
+              <span className="mr-2">
+                <ThumbUpIcon
+                  style={{
+                    color: "#73757673",
+                  }}
+                />
+              </span>
+              <span style={{ color: "#737576" }}>
+                <span>0</span> Thích
+              </span>
+            </span>
+          </div>
+        ))}
+
+        <div className={classes.moreMovie}>
+          <Button
+            onClick={() => setopenMore()}
+            variant="outlined"
+            className={classes.moreMovieButton}
+          >
+            XEM THÊM
+          </Button>
+        </div>
       </TabPanel>
 
       <Dialog
@@ -272,7 +435,7 @@ export default function CenteredTabs({ data, onClickBtnMuave }) {
         fullWidth
         className={classes.dialog} //lay tat ca comment ra
       >
-        <DialogTitle disableTypography className={classes.rootcloseButton}>
+        <DialogTitle className={classes.rootcloseButton}>
           <IconButton
             aria-label="close"
             className={classes.closeButton}
@@ -282,20 +445,20 @@ export default function CenteredTabs({ data, onClickBtnMuave }) {
           </IconButton>
         </DialogTitle>
         <Grid container direction="column" justify="center" alignItems="center">
-          {dataComment.point !== null && (
+          {dataComment.rating !== null && (
             <span className={classes.pointPopup}>
-              {labels[hover !== -1 ? hover : dataComment.point]}
+              {labels[hover !== -1 ? hover : dataComment.rating]}
             </span>
           )}
           <Rating
             name="customStar"
             size="large"
             precision={0.5}
-            value={dataComment.point}
+            value={dataComment.rating}
             className={classes.starPopup}
             emptyIcon={<StarBorderIcon fontSize="inherit" />}
             onChange={(event, newValue) => {
-              setdataComment((data) => ({ ...data, point: newValue }));
+              setdataComment((data) => ({ ...data, rating: newValue }));
             }}
             getLabelText={getLabelText}
             onChangeActive={(event, newHover) => {
@@ -308,10 +471,10 @@ export default function CenteredTabs({ data, onClickBtnMuave }) {
             className={classes.textField}
             onChange={(event) => handletyping(event)}
             fullWidth
-            value={dataComment.post}
+            value={dataComment.review}
             variant="outlined"
             label={
-              dataComment.post
+              dataComment.review
                 ? ""
                 : "Nói cho mọi người biết bạn nghĩ gì về phim này..."
             }
@@ -325,7 +488,7 @@ export default function CenteredTabs({ data, onClickBtnMuave }) {
             </DialogContentText>
           )}
           <Button
-            // onClick={handlePostComment}
+            onClick={handlePostComment}
             variant="contained"
             className={classes.btnDang}
           >

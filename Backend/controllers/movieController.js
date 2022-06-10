@@ -33,8 +33,12 @@ exports.uploadMoviePhoto = upload.single('photo');
 exports.getMovieShowtimeInfo = catchAsync(async (req, res, next) => {
   try {
     let query = TheaterSystem.find().populate('theatersystem');
-    let movieDoc = Movie.findById(req.params.id);
+    let movieDoc = Movie.findById(req.params.id).populate('reviews');
     let resultNotFound = await movieDoc;
+    let reviews = [];
+    resultNotFound.reviews.map((item) => {
+      reviews.push(item);
+    });
     let flag = false;
     const theaterSystem = await query;
     let array = [];
@@ -96,9 +100,13 @@ exports.getMovieShowtimeInfo = catchAsync(async (req, res, next) => {
       };
     });
 
-    const resultExist = movieList.map((item) => {
+    const Review = movieList.map((item) => {
       return { ...item, theaterSystemList };
     });
+    const resultExist = Review.map((item) => {
+      return { ...item, reviews };
+    });
+
     let result;
     if (flag) {
       result = resultExist;
@@ -115,6 +123,8 @@ exports.getMovieShowtimeInfo = catchAsync(async (req, res, next) => {
     res.status(400).json({ message: err });
   }
 });
+
+
 
 exports.getAllMovie = factory.getAll(Movie, { path: 'showtimes' });
 exports.createMovie = factory.createOne(Movie);

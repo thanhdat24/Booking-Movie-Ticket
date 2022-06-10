@@ -1,3 +1,6 @@
+import { createSelector } from "reselect";
+import formatDate from "../../utils/formatDate";
+
 // đây chỉ là function nhằm mục đích tạo ra data mới từ currentSelectedTheaterSystemList
 const selectData = (currentSelectedTheaterSystemList) => {
   // lọc ra tất cả movieschedule và add thêm props tenCumRap để nhận biết movieschedule này thuộc cụm rạp nào
@@ -65,8 +68,23 @@ const selectData = (currentSelectedTheaterSystemList) => {
     return arrayCumRapChieu;
   });
 
-
   return { arrayDay, allArrayCumRapChieuFilterByDay };
 };
 
-export { selectData };
+const selectCommentByMaPhimAndCommentTest = createSelector(
+  (state, movieId) =>
+    state.ReviewReducer.commentList?.filter(
+      (item) => item.movieId.id === movieId
+    ), // nếu comment là dataTest hoặc trùng mã phim thì lấy
+  (commentListFiltered) => {
+    console.log("commentListFiltered", commentListFiltered);
+
+    const commentList = commentListFiltered?.sort(
+      (a, b) =>
+        formatDate(b.createdAt).getTime - formatDate(a.createdAt).getTime
+    );
+    return { commentList };
+  }
+);
+
+export { selectData, selectCommentByMaPhimAndCommentTest };

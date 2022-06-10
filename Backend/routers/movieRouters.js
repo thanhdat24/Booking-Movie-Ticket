@@ -13,6 +13,8 @@ router
   .route('/getMovieShowtimeInfo/:id')
   .get(movieController.getMovieShowtimeInfo);
 
+
+
 router.use(authController.protect);
 
 // RestrictTo "admin"
@@ -29,5 +31,7 @@ router
     movieController.updateMovie
   )
   .delete(movieController.deleteMovie);
+
+
 
 module.exports = router;

@@ -24,7 +24,6 @@ export default function BookTickets(props) {
   const { seatList } = danhSachPhongVe;
   const { currentUser } = useSelector((state) => state.AuthReducer);
   const { user } = currentUser;
-  // console.log("danhSachPhongVe",danhSachPhongVe)
   const params = useParams();
   const dispatch = useDispatch();
   useEffect(() => {

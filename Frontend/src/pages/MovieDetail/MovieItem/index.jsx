@@ -9,22 +9,28 @@ import { useSelector } from "react-redux";
 import formatDate from "../../../utils/formatDate";
 import { scroller } from "react-scroll";
 import Tap from "../Tap";
+import { selectCommentByMaPhimAndCommentTest } from "../../../redux/selector/MovieDetail";
 
 export default function MovieItem({ successDetailMovie: data }) {
+  const params = useParams();
   const [onClickBtnMuave, setOnClickBtnMuave] = useState(0);
-  // console.log("location.pathname", location.pathname);
-  const handleClickLink = (id) => {
-    // setOpenDrawer(false)
+  const [quantityComment, setQuantityComment] = useState(0);
+  const { commentList } = useSelector((state) =>
+    selectCommentByMaPhimAndCommentTest(state, params.idMovie)
+  );
 
-    scroller.scrollTo(id, {
-      duration: 800,
-      smooth: "easeInOutQuart",
-    });
+  const onIncreaseQuantityComment = (value) => {
+    setQuantityComment(value);
   };
   const classes = useStyles({ bannerImg: data?.photo });
   const [imageNotFound, setImageNotFound] = useState(false);
   let location = useLocation();
-
+  const totalReviewer = commentList?.length;
+  // reduce tính tổng
+  const totalReview = commentList?.reduce((total, item) => {
+    return total + item.rating;
+  }, 0);
+  const ratingMovie = totalReview / totalReviewer;
   const handleBtnMuaVe = () => {
     setOnClickBtnMuave(Date.now());
   };
@@ -77,7 +83,10 @@ export default function MovieItem({ successDetailMovie: data }) {
           </div>
           <div className={classes.rate}>
             <div className={classes.circular}>
-              <span className={classes.danhGia}>{10}</span>
+              <span className={classes.danhGia}>
+                {" "}
+                {ratingMovie ? ratingMovie.toFixed(1) : 0}{" "}
+              </span>
               <CircularProgress
                 variant="determinate"
                 size="100%"
@@ -94,16 +103,16 @@ export default function MovieItem({ successDetailMovie: data }) {
               />
             </div>
             <div className={classes.rateStar}>
-              <Rating value={(10 * 5) / 10} precision={0.5} readOnly />
+              <Rating value={ratingMovie.toFixed(1)} precision={0.5} readOnly />
             </div>
-            <span>{10} người đánh giá</span>
+            <span>{quantityComment} người đánh giá</span>
           </div>
         </div>
       </div>
       <Tap
         data={data}
         onClickBtnMuave={onClickBtnMuave}
-        // onIncreaseQuantityComment={onIncreaseQuantityComment}
+        onIncreaseQuantityComment={onIncreaseQuantityComment}
       />
     </div>
   );

@@ -45,5 +45,11 @@ movieSchema.virtual('showtimes', {
   localField: '_id',
 });
 
+movieSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'movieId',
+  localField: '_id',
+});
+
 const Movie = mongoose.model('Movie', movieSchema);
 module.exports = Movie;

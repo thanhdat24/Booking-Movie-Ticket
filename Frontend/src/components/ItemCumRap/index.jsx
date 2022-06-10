@@ -17,7 +17,6 @@ export default function ItemCumRap({
   theaterClusterPhoto,
   defaultExpanded,
 }) {
-  console.log("moviesShedule", moviesShedule);
   const classes = useStyles({
     color: colorTheater[theaterClusterName?.slice(0, 3).toUpperCase()],
   });

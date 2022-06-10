@@ -10,11 +10,10 @@ export default function MovieDetail() {
   const { successDetailMovie, errorDetailMovie } = useSelector(
     (state) => state.MovieReducer
   );
-  console.log("successDetailMovie", successDetailMovie);
-  const param = useParams();
+  const params = useParams();
   const dispatch = useDispatch();
   useEffect(function () {
-    dispatch(getDetailMovie(param.idMovie));
+    dispatch(getDetailMovie(params.idMovie));
     return () => {
       dispatch({ type: RESET_MOVIE_DETAIL });
     };
