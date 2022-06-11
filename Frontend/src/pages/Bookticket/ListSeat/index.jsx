@@ -87,8 +87,6 @@ export default function ListSeat() {
       }
       return amount;
     }, 0);
-    console.log("newListSeat", newListSeat);
-    console.log("newListSeatSelected", newListSeatSelected);
     dispatch({
       type: CHANGE_LISTSEAT,
       payload: {

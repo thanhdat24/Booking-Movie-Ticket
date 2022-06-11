@@ -8,15 +8,21 @@ const router = express.Router();
 router.use(authController.protect);
 
 // RestrictTo "admin"
-router.use(authController.restrictTo('admin'));
 
 router.route('/').get(showTimeController.getAllShowTime);
 
-router.route('/').post(showTimeController.createShowTime);
+router
+  .route('/')
+  .post(authController.restrictTo('admin'), showTimeController.createShowTime);
+
+// router.use(authController.restrictTo('admin'));
 
 router
   .route('/:id')
   .get(showTimeController.getDetailShowTime)
-  .patch(showTimeController.updateShowTime)
-  .delete(showTimeController.deleteShowTime);
+  .patch(authController.restrictTo('admin'), showTimeController.updateShowTime)
+  .delete(
+    authController.restrictTo('admin'),
+    showTimeController.deleteShowTime
+  );
 module.exports = router;

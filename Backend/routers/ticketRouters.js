@@ -9,9 +9,11 @@ router.use(authController.protect);
 
 router.route('/').post(ticketController.createTicket);
 // RestrictTo "admin"
-router.use(authController.restrictTo('admin'));
+
 
 router.route('/').get(ticketController.getAllTicket);
+
+router.use(authController.restrictTo('admin'));
 
 router
   .route('/:id')

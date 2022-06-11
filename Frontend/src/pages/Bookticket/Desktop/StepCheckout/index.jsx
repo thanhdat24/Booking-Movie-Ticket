@@ -16,7 +16,6 @@ export default function StepCheckout() {
   const classes = useStyles();
   const activeStep = useSelector((state) => state.BookTicketReducer.activeStep);
   const { currentUser } = useSelector((state) => state.AuthReducer);
-console.log("currentUser", currentUser);
   const steps = ["CHỌN GHẾ", "THANH TOÁN", "KẾT QUẢ ĐẶT VÉ"];
 
   function StepIcon(props) {

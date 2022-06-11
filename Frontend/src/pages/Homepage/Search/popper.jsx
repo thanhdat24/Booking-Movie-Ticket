@@ -62,7 +62,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CustomPopper(props) {
   const { phim, setNewPhim, currentPhimPopup, rootElementPopup } = props;
-  console.log("phim", phim);
   const [anchorEl, setAnchorEl] = useState(null);
   const classes = useStyles();
   const [showPopper, setShowPopper] = useState(false);

@@ -18,7 +18,6 @@ export default function SuccessBooking() {
     errorBookTicket,
   } = useSelector((state) => state.BookTicketReducer);
   const { currentUser } = useSelector((state) => state.AuthReducer);
-  console.log("data123123", data);
   const classes = useStyles({
     data,
     color: colorTheater[data?.theaterClusterName.slice(0, 3).toUpperCase()],

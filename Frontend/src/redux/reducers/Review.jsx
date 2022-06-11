@@ -5,6 +5,9 @@ import {
   GET_REVIEW_LIST_FAIL,
   GET_REVIEW_LIST_REQUEST,
   GET_REVIEW_LIST_SUCCESS,
+  LIKE_COMMENT_FAIL,
+  LIKE_COMMENT_REQUESS,
+  LIKE_COMMENT_SUCCESS,
 } from "../constants/Review";
 
 const stateDefault = {
@@ -15,6 +18,10 @@ const stateDefault = {
   postReviewObj: "",
   loadingAddReview: false,
   errorAddReview: null,
+
+  likeCommentObj: {},
+  loadingLikeComment: false,
+  errorLikeComment: null,
 };
 
 export const ReviewReducer = (state = stateDefault, action) => {
@@ -57,6 +64,23 @@ export const ReviewReducer = (state = stateDefault, action) => {
         ...state,
         errorAddReview: action.payload.error,
         loadingAddReview: false,
+      };
+    }
+    case LIKE_COMMENT_REQUESS: {
+      return { ...state, loadingLikeComment: true, errorLikeComment: null };
+    }
+    case LIKE_COMMENT_SUCCESS: {
+      return {
+        ...state,
+        likeCommentObj: action.payload.data,
+        loadingLikeComment: false,
+      };
+    }
+    case LIKE_COMMENT_FAIL: {
+      return {
+        ...state,
+        errorLikeComment: action.payload.error,
+        loadingLikeComment: false,
       };
     }
     default:

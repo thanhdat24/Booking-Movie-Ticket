@@ -80,7 +80,6 @@ export default function PayMent() {
     // khi onchange update values và validation
     let { name, value } = e.target;
     let newValues = { ...dataSubmit.values, [name]: value };
-    console.log("newValues", newValues);
     let newErrors = makeObjError(name, value, dataSubmit);
     setdataSubmit((dataSubmit) => ({
       ...dataSubmit,

@@ -25,6 +25,7 @@ import PropTypes from "prop-types";
 import formatDate from "../../../utils/formatDate";
 import scroll from "../../../utils/scroll";
 import { scroller } from "react-scroll";
+import { UNKNOWN_USER } from "../../../constants/config";
 
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
@@ -34,10 +35,7 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { useEffect } from "react";
 import LichChieu from "./LichChieu";
 import moment from "moment";
-import {
-  addReview,
-  getAllReviews,
-} from "../../../redux/actions/Review";
+import { addReview, getAllReviews, likeComment } from "../../../redux/actions/Review";
 import { getDetailMovie } from "../../../redux/actions/Movie";
 import { selectCommentByMaPhimAndCommentTest } from "../../../redux/selector/MovieDetail";
 // bình luận bao nhiêu giấy trước
@@ -69,10 +67,17 @@ export default function CenteredTabs({
   const history = useHistory();
   const [hover, setHover] = React.useState(-1);
   const [valueTab, setValueTab] = useState(0);
+    const { currentUser } = useSelector((state) => state.AuthReducer);
+    console.log("currentUser", currentUser);
   const [croll, setCroll] = useState(0);
   const [openComment, setOpenComment] = useState(false);
   const [warningtext, setwarningtext] = useState(false);
-  const [dataComment, setdataComment] = useState({ review: "", rating: 0.5 });
+  const [dataComment, setdataComment] = useState({
+    review: "",
+    rating: 0.5,
+    likes: 0,
+    userLikeThisComment: [],
+  });
   const [commentListDisplay, setCommentListDisplay] = useState({
     comment: [],
     page: 5,
@@ -82,11 +87,14 @@ export default function CenteredTabs({
   const { commentList } = useSelector((state) =>
     selectCommentByMaPhimAndCommentTest(state, params.idMovie)
   );
+console.log("commentList", commentList);
 
-  const { currentUser } = useSelector((state) => state.AuthReducer);
-  const { postReviewObj, loadingAddReview } = useSelector(
-    (state) => state.ReviewReducer
-  );
+  const {
+    postReviewObj,
+    loadingAddReview,
+    loadingLikeComment,
+    likeCommentObj,
+  } = useSelector((state) => state.ReviewReducer);
   const labels = {
     0.5: "0.5",
     1: "1",
@@ -149,7 +157,7 @@ export default function CenteredTabs({
         ...dataComment,
         createdAt: currentISOString,
         movieId: params.idMovie,
-        userId: currentUser.id,
+        userId: currentUser?.user._id,
       })
     );
     setOpenComment(false);
@@ -182,6 +190,30 @@ export default function CenteredTabs({
     }));
   };
 
+  const handleLike = (id) => {
+    if (loadingLikeComment) {
+      return;
+    }
+    if (!currentUser) {
+      isLogin();
+      return;
+    }
+    // tăng giảm số lượng like và add/remove email đã like
+    const commentUserLiked = commentList.find((item) => item.id === id);
+    if (commentUserLiked.userLikeThisComment.includes(currentUser.user.email)) {
+      // xóa user khỏi danh sách liked comment, trừ số lượng like
+      commentUserLiked.userLikeThisComment =
+        commentUserLiked.userLikeThisComment.filter((item) => {
+          return item !== currentUser.user.email;
+        });
+      commentUserLiked.likes = commentUserLiked.likes - 1;
+    } else {
+      commentUserLiked.userLikeThisComment.push(currentUser.user.email);
+      commentUserLiked.likes = commentUserLiked.likes + 1;
+    }
+    dispatch(likeComment(id, commentUserLiked));
+  };
+
   useEffect(() => {
     // khi commentList lấy về thành công thì cập nhật số người bình luận
     if (commentList?.length) {
@@ -196,7 +228,7 @@ export default function CenteredTabs({
       // reset text comment
       setdataComment((data) => ({ ...data, review: "" }));
     }
-  }, [postReviewObj]);
+  }, [postReviewObj, likeCommentObj]);
 
   useEffect(() => {
     const comment = commentList?.slice(0, commentListDisplay.page);
@@ -353,7 +385,7 @@ export default function CenteredTabs({
           <div className={classes.inputRoot} onClick={handleClickComment}>
             <span className={classes.avatarReviewer}>
               <img
-                src={currentUser?.user.photo}
+                src={currentUser ? currentUser?.user.photo : UNKNOWN_USER}
                 alt="avatar"
                 className={classes.avatarImg}
               />
@@ -370,7 +402,10 @@ export default function CenteredTabs({
             </span>
           </div>
         </div>
-        <div className="text-center mb-2 text-white" hidden={!loadingAddReview}>
+        <div
+          className="text-center mb-2 text-white"
+          hidden={!loadingAddReview && !loadingLikeComment}
+        >
           <CircularProgress size={20} color="inherit" />
         </div>
         {commentListDisplay?.comment?.map((item) => (
@@ -383,13 +418,13 @@ export default function CenteredTabs({
               <div className={classes.left}>
                 <span className={classes.avatar}>
                   <img
-                    src={currentUser?.user.photo}
+                    src={item?.userId.photo}
                     alt="avatar"
                     className={classes.avatarImg}
                   />
                 </span>
                 <span className={classes.liveUser}>
-                  <p className={classes.userName}>{item.userId?.userName}</p>
+                  <p className={classes.userName}>{item?.userId.fullName}</p>
                   <p className={classes.timePost}>
                     {moment(item?.createdAt).fromNow()}
                   </p>
@@ -402,30 +437,43 @@ export default function CenteredTabs({
               <div className="clearfix"></div>
             </div>
             <div className="py-3 mb-3 border-bottom">{item.review}</div>
-            <span className="d-inline-block" style={{ cursor: "pointer" }}>
+            <span
+              className="d-inline-block"
+              style={{ cursor: "pointer" }}
+              onClick={() => handleLike(item.id)}
+            >
               <span className="mr-2">
-                <ThumbUpIcon
-                  style={{
-                    color: "#73757673",
-                  }}
-                />
+                {((userLikeThisComment) => {
+                  return (
+                    <ThumbUpIcon
+                      style={{
+                        color: userLikeThisComment.includes(
+                          currentUser?.user.email
+                        )
+                          ? "#fb4226"
+                          : "#73757673",
+                      }}
+                    />
+                  );
+                })(item.userLikeThisComment)}
               </span>
               <span style={{ color: "#737576" }}>
-                <span>0</span> Thích
+                <span>{item.likes}</span> Thích
               </span>
             </span>
           </div>
         ))}
-
-        <div className={classes.moreMovie}>
-          <Button
-            onClick={() => setopenMore()}
-            variant="outlined"
-            className={classes.moreMovieButton}
-          >
-            XEM THÊM
-          </Button>
-        </div>
+        {commentList?.length > 5 && (
+          <div className={classes.moreMovie}>
+            <Button
+              onClick={() => setopenMore()}
+              variant="outlined"
+              className={classes.moreMovieButton}
+            >
+              XEM THÊM
+            </Button>
+          </div>
+        )}
       </TabPanel>
 
       <Dialog

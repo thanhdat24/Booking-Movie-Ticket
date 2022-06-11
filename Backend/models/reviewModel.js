@@ -8,11 +8,16 @@ const reviewSchema = new mongoose.Schema(
       min: 1,
       max: 5,
     },
+    likes:{
+      type: Number,
+      default: 0,
+    },
     review: {
       type: String,
       required: [true, 'Review can not be empty!'],
     },
     createdAt: { type: Date, default: Date.now() },
+    userLikeThisComment: [],
   },
   {
     toJSON: { virtuals: true },

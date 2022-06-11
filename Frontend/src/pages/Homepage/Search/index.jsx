@@ -163,11 +163,9 @@ export default function SearchStickets() {
           rapRender,
           cumRapChieuData,
         }));
-        console.log("cumRapChieuData", cumRapChieuData);
       })
       .catch(function (error) {
         if (error.response) {
-          console.log("error.response.data", error.response.data);
           setData((data) => ({ ...data, errorCallApi: error.response.data }));
         } else if (error.request) {
           setData((data) => ({ ...data, errorCallApi: error.message }));
@@ -199,7 +197,6 @@ export default function SearchStickets() {
       return item.dateShow.slice(0, 10); // tạo mảng mới với item là "2020-12-17" cắt ra từ 2020-12-17T10:10:00
     });
 
-    console.log("ngayChieuRender", ngayChieuRender);
     const ngayChieuRenderRemoveDuplicates = [...new Set(ngayChieuRender)]; // xóa đi phần tử trùng lặp để hiển thị
     setData((data) => ({
       ...data,
@@ -238,7 +235,6 @@ export default function SearchStickets() {
       return dateShow;
     });
 
-    console.log("suatChieuRender", suatChieuRender);
     setData((data) => ({
       ...data,
       suatChieuRender,
@@ -261,17 +257,11 @@ export default function SearchStickets() {
           .toLocaleTimeString([], { hour12: false })
           .slice(0, 5) === e.target.value
     );
-    console.log(" e.target.value", e.target.value);
-    console.log("indexMaLichChieuSelect", indexMaLichChieuSelect);
-    console.log(
-      "data.lichChieuPhimDataSelected",
-      data.lichChieuPhimDataSelected
-    );
+
     const maLichChieu =
       data.lichChieuPhimDataSelected[indexMaLichChieuSelect].id;
     setData((data) => ({ ...data, maLichChieu }));
 
-    console.log("maLichChieu", maLichChieu);
   };
 
   const setNewPhim = (_id) => {

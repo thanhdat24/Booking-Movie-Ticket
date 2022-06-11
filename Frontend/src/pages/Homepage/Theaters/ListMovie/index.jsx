@@ -8,8 +8,6 @@ import { useStyles } from "./styles";
 
 function ListMovie(props) {
   const classes = useStyles({ customScrollbar, underLine });
-  console.log("props.listMovie", props.listMovie);
-  console.log("123");
   let groupByTheaterCluster = _(props.listMovie)
     .groupBy((x) => x.idMovie.name)
     .map((value, key) => ({ name: key, movieSchedule: value }))

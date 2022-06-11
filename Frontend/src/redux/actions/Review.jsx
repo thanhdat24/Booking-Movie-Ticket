@@ -6,6 +6,9 @@ import {
   ADD_REVIEW_REQUEST,
   ADD_REVIEW_SUCCESS,
   ADD_REVIEW_FAIL,
+  LIKE_COMMENT_REQUESS,
+  LIKE_COMMENT_SUCCESS,
+  LIKE_COMMENT_FAIL,
 } from "../constants/Review";
 
 export const getAllReviews = () => {
@@ -58,4 +61,26 @@ export const addReview = (review) => {
   };
 };
 
-
+export const likeComment = (id, commentUserLiked) => {
+  return (dispatch) => {
+    dispatch({
+      type: LIKE_COMMENT_REQUESS,
+    });
+    reviewApi
+      .likeComment(id, commentUserLiked)
+      .then((result) => {
+        dispatch({
+          type: LIKE_COMMENT_SUCCESS,
+          payload: { data: result.data },
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: LIKE_COMMENT_FAIL,
+          payload: {
+            error: error.response?.data ? error.response.data : error.message,
+          },
+        });
+      });
+  };
+};

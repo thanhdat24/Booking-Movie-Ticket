@@ -17,7 +17,6 @@ export default function Theaters() {
     theaterSystemList,
     showtimeTheaterSystemList,
   } = useSelector((state) => state.TheaterSystemReducer);
-  console.log("showtimeTheaterSystemList", showtimeTheaterSystemList);
   if (errorTheaterSystemList) {
     return <div>{errorTheaterSystemList}</div>;
   }
