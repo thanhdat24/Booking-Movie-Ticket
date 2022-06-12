@@ -268,7 +268,7 @@ export default function TheaterManagement() {
                       <TableCell align="left">
                         <img
                           className="max-w-2xl h-14 rounded"
-                          src={idTheaterCluster?.idTheaterSystem.logo}
+                          src={idTheaterCluster?.idTheaterSystem?.logo}
                           alt="logo"
                         />
                       </TableCell>

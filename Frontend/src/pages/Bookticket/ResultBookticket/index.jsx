@@ -53,7 +53,7 @@ export default function SuccessBooking() {
                 }`}</td>
               </tr>
               <tr>
-                <td valign="top">Phòng:</td>
+                <td valign="top">Phòng chiếu:</td>
                 <td>{data?.theaterName}</td>
               </tr>
               <tr>
@@ -103,9 +103,16 @@ export default function SuccessBooking() {
                 </td>
               </tr>
               <tr>
+                <td valign="top">Khuyến mãi:</td>
+                <td valign="top">
+                </td>
+              </tr>
+              <tr>
                 <td valign="top">Tổng tiền:</td>
                 <td valign="top">
-                  <span>{`${amount.toLocaleString("vi-VI")} đ`}</span>
+                  <span className="text-lg">
+                    <b>{`${amount.toLocaleString("vi-VI")} đ`}</b>
+                  </span>
                 </td>
               </tr>
             </tbody>

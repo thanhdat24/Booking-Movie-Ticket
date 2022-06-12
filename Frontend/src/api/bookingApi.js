@@ -24,6 +24,10 @@ const bookingApi = {
     const path = `/v1/tickets`;
     return axiosClient.post(path, data);
   },
+  getAllTicket: () => {
+    const path = `/v1/tickets`;
+    return axiosClient.get(path);
+  },
 };
 
 export default bookingApi;

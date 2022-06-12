@@ -19,6 +19,9 @@ import {
   BOOK_TICKET_REQUEST,
   BOOK_TICKET_SUCCESS,
   BOOK_TICKET_FAIL,
+  GET_TICKET_LIST_REQUEST,
+  GET_TICKET_LIST_SUCCESS,
+  GET_TICKET_LIST_FAIL,
 } from "../constants/BookTicket";
 
 export const createShowtime = (data) => {
@@ -159,7 +162,6 @@ export const postCreateTicket = (data) => {
     bookingApi
       .postCreateTicket(data)
       .then((result) => {
-        console.log("result", result);
         dispatch({
           type: BOOK_TICKET_SUCCESS,
           payload: {
@@ -170,6 +172,32 @@ export const postCreateTicket = (data) => {
       .catch((error) => {
         dispatch({
           type: BOOK_TICKET_FAIL,
+          payload: {
+            error: error.response?.data ? error.response.data : error.message,
+          },
+        });
+      });
+  };
+};
+
+export const getAllTicket = () => {
+  return (dispatch) => {
+    dispatch({
+      type: GET_TICKET_LIST_REQUEST,
+    });
+    bookingApi
+      .getAllTicket()
+      .then((result) => {
+        dispatch({
+          type: GET_TICKET_LIST_SUCCESS,
+          payload: {
+            data: result.data,
+          },
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: GET_TICKET_LIST_FAIL,
           payload: {
             error: error.response?.data ? error.response.data : error.message,
           },

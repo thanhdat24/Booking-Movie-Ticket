@@ -6,7 +6,7 @@ const ticketSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'User',
     },
-    showtimeId: {
+    idShowtime: {
       type: mongoose.Schema.ObjectId,
       ref: 'ShowTimes',
     },
@@ -15,9 +15,7 @@ const ticketSchema = new mongoose.Schema(
     totalPrice: { type: Number, required: true },
     createdAt: {
       type: Date,
-      default: Date.now(),
-      // loai bo thuoc tinh createdAt
-      select: false,
+      default: Date.now,
     },
   },
   {
@@ -29,10 +27,9 @@ const ticketSchema = new mongoose.Schema(
 ticketSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'userId',
-    select: 'email',
+    select: 'email fullName',
   }).populate({
-    path: 'showtimeId',
-    select: 'ticketPrice idTheater idMovie dateShow',
+    path: 'idShowtime',
   });
 
   next();

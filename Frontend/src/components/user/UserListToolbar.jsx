@@ -67,7 +67,7 @@ export default function UserListToolbar({
         <SearchStyle
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search user..."
+          placeholder="Tìm người dùng..."
           startAdornment={
             <InputAdornment position="start">
               <Box

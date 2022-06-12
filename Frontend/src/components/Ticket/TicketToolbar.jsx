@@ -39,13 +39,13 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-TheaterListToolbar.propTypes = {
+TicketListToolbar.propTypes = {
   numSelected: PropTypes.number,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
 };
 
-export default function TheaterListToolbar({
+export default function TicketListToolbar({
   numSelected,
   filterName,
   onFilterName,
@@ -67,7 +67,7 @@ export default function TheaterListToolbar({
         <SearchStyle
           value={filterName}
           onChange={onFilterName}
-          placeholder="Tìm lịch chiếu..."
+          placeholder="Tìm vé..."
           startAdornment={
             <InputAdornment position="start">
               <Box

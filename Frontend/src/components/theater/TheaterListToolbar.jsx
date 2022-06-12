@@ -67,7 +67,7 @@ export default function TheaterListToolbar({
         <SearchStyle
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search theater..."
+          placeholder="Tìm rạp..."
           startAdornment={
             <InputAdornment position="start">
               <Box

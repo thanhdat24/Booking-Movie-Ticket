@@ -67,7 +67,7 @@ export default function UserListToolbar({
         <SearchStyle
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search movie..."
+          placeholder="Tìm phim..."
           startAdornment={
             <InputAdornment position="start">
               <Box

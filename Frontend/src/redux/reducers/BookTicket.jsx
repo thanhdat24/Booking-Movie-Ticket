@@ -15,6 +15,9 @@ import {
   GET_SHOWTIME_FAIL,
   GET_SHOWTIME_REQUEST,
   GET_SHOWTIME_SUCCESS,
+  GET_TICKET_LIST_FAIL,
+  GET_TICKET_LIST_REQUEST,
+  GET_TICKET_LIST_SUCCESS,
   INIT_DATA,
   RESET_ALERT_OVER10,
   RESET_CREATE_SHOWTIME,
@@ -39,7 +42,10 @@ const stateDefault = {
   loadingBookingTicket: false,
   successBookingTicket: null,
   errorBookTicket: null,
+
   ticketList: [],
+  loadingTicketList: false,
+  errorTicketList: null,
 
   // selecting seat
   listSeat: [],
@@ -201,6 +207,29 @@ export const BookTicketReducer = (state = stateDefault, action) => {
         errorBookTicketMessage: action.payload.error,
         loadingBookingTicket: false,
         activeStep: 2,
+      };
+    }
+
+    case GET_TICKET_LIST_REQUEST: {
+      return {
+        ...state,
+        loadingTicketList: true,
+        errorTicketList: null,
+        movieDetail: null,
+      };
+    }
+    case GET_TICKET_LIST_SUCCESS: {
+      return {
+        ...state,
+        ticketList: action.payload.data,
+        loadingTicketList: false,
+      };
+    }
+    case GET_TICKET_LIST_FAIL: {
+      return {
+        ...state,
+        errorTicketList: action.payload.error,
+        loadingTicketList: false,
       };
     }
 

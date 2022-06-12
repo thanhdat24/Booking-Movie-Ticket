@@ -32,6 +32,7 @@ import Homepage from "./pages/Homepage";
 import MovieDetail from "./pages/MovieDetail";
 import CheckoutRoute from "./guards/CheckoutRoute";
 import BookTickets from "./pages/Bookticket";
+import TicketManagement from "./pages/TicketManagement";
 
 function App() {
   const themeOptions = useMemo(
@@ -167,6 +168,15 @@ function App() {
                 exact
                 path="/admin/showtimes/edit/:showtimeId"
                 component={ShowtimeEdit}
+              />
+            </AdminLayout>
+          </Route>
+          <Route exact path={["/admin/ticket/list"]}>
+            <AdminLayout>
+              <AdminRoute
+                exact
+                path="/admin/ticket/list"
+                component={TicketManagement}
               />
             </AdminLayout>
           </Route>
