@@ -9,6 +9,13 @@ import {
   LIKE_COMMENT_REQUESS,
   LIKE_COMMENT_SUCCESS,
   LIKE_COMMENT_FAIL,
+  UPDATE_ACTIVE_REVIEW_REQUEST,
+  UPDATE_ACTIVE_REVIEW_SUCCESS,
+  UPDATE_ACTIVE_REVIEW_FAIL,
+  RESET_REVIEW_MANAGEMENT,
+  DELETE_REVIEW_REQUEST,
+  DELETE_REVIEW_SUCCESS,
+  DELETE_REVIEW_FAIL,
 } from "../constants/Review";
 
 export const getAllReviews = () => {
@@ -82,5 +89,64 @@ export const likeComment = (id, commentUserLiked) => {
           },
         });
       });
+  };
+};
+
+export const updateActiveReview = (active, _id) => {
+  return (dispatch) => {
+    dispatch({
+      type: UPDATE_ACTIVE_REVIEW_REQUEST,
+    });
+    reviewApi
+      .updateActiveReview(active, _id)
+      .then((result) => {
+        dispatch({
+          type: UPDATE_ACTIVE_REVIEW_SUCCESS,
+          payload: {
+            data: result.data.data,
+          },
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: UPDATE_ACTIVE_REVIEW_FAIL,
+          payload: {
+            error: error.response?.data.message,
+          },
+        });
+      });
+  };
+};
+
+export const deleteReview = (_id) => {
+  return (dispatch) => {
+    dispatch({
+      type: DELETE_REVIEW_REQUEST,
+    });
+    reviewApi
+      .deleteReview(_id)
+      .then((result) => {
+        dispatch({
+          type: DELETE_REVIEW_SUCCESS,
+          payload: {
+            data: result.data.data,
+          },
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: DELETE_REVIEW_FAIL,
+          payload: {
+            error: error.response?.data.message,
+          },
+        });
+      });
+  };
+};
+export const resetReviewManagement = () => {
+  return (dispatch) => {
+    dispatch({
+      type: RESET_REVIEW_MANAGEMENT,
+    });
   };
 };

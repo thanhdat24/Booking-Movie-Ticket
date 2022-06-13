@@ -1,6 +1,7 @@
 import React from "react";
 
 import ScrollToTop from "react-scroll-up";
+import { SnackbarProvider } from "notistack";
 
 import { makeStyles } from "@mui/styles";
 import Footer from "./Footer";
@@ -27,7 +28,13 @@ export default function MainLayout(props) {
   const classes = useStyles();
 
   return (
-    <div>
+    <SnackbarProvider
+      maxSnack={3}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "center",
+      }}
+    >
       <Header />
       <div className={classes.top}></div>
       {props.children}
@@ -39,6 +46,6 @@ export default function MainLayout(props) {
           className={classes.styleScrollToTop}
         />
       </ScrollToTop>
-    </div>
+    </SnackbarProvider>
   );
 }

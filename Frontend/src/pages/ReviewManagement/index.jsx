@@ -1,16 +1,10 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
-import { Icon } from "@iconify/react";
-import plusFill from "@iconify/icons-eva/plus-fill";
 import {
   Card,
   Table,
   Stack,
-  Avatar,
-  Button,
-  Checkbox,
   TableRow,
   TableBody,
   TableCell,
@@ -21,26 +15,33 @@ import {
   Breadcrumbs,
   Link,
   Box,
+  Tooltip,
+  Rating,
 } from "@mui/material";
-import moment from "moment";
-import { useSnackbar } from "notistack";
-// import EditRole from "../Profile/EditRole";
-import AddIcon from "@mui/icons-material/Add";
 
 import { filter } from "lodash";
-import { getAllTicket } from "../../redux/actions/BookTicket";
 import TicketListHead from "../../components/Ticket/TicketListHead";
 import TicketListToolbar from "../../components/Ticket/TicketToolbar";
+import {
+  getAllReviews,
+  resetReviewManagement,
+} from "../../redux/actions/Review";
+import ActiveReview from "./ActiveReview";
+import ReviewMoreMenu from "../../components/Review/ReviewMoreMenu";
+import DeleteReview from "./DeleteReview";
+import { useSnackbar } from "notistack";
+import { useHistory } from "react-router-dom";
+import formatDate from "../../utils/formatDate";
 
 const TABLE_HEAD = [
-  { id: "id", label: "Mã vé", alignRight: false },
-  { id: "idMovie", label: "Tên phim", alignRight: false },
-  { id: "idTheaterCluster", label: "Rạp", alignRight: false },
-  { id: "idTheater", label: "Phòng chiếu", alignRight: false },
-  { id: "idSeat", label: "Tên ghế", alignRight: false },
-  { id: "createAt", label: "Ngày đặt", alignRight: false },
-  { id: "userID", label: "Người đặt", alignRight: false },
-  { id: "totalPrice", label: "Tổng tiền", alignRight: false },
+  { id: "movieId", label: "Tên phim", alignRight: false },
+  { id: "photo", label: "Hình ảnh", alignRight: false },
+  { id: "fullName", label: "Người đánh giá", alignRight: false },
+  { id: "review", label: "Nội dung bình luận", alignRight: false },
+  { id: "rating", label: "Số sao", alignRight: false },
+  { id: "createdAt", label: "Ngày bình luận", alignRight: false },
+  { id: "active", label: "Trạng thái", alignRight: false },
+  { id: "delete", label: "Thao tác", alignRight: false },
 ];
 
 // ----------------------------------------------------------------------
@@ -77,75 +78,58 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis?.map((el) => el[0]);
 }
 
-export default function TicketManagement() {
+export default function ReviewManagement() {
   const {
-    ticketList: { data },
-    ticketList,
-  } = useSelector((state) => state.BookTicketReducer);
-  console.log("data", data);
-  const getIdSeat = (danhSachGhe) => {
-    return danhSachGhe
-      .reduce((listSeat, seat) => {
-        return [...listSeat, seat.name];
-      }, [])
-      .join(", ");
-  };
-
-  const history = useHistory();
+    commentList,
+    successUpdateActiveReview,
+    successDeleteReview,
+    errorDeleteReview,
+    errorUpdateActiveReview,
+  } = useSelector((state) => state.ReviewReducer);
+  const { enqueueSnackbar } = useSnackbar();
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState("name");
   const [filterNameMovie, setFilterNameMovie] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const { enqueueSnackbar } = useSnackbar();
-  //   console.log("movieList", movieList);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-     // get list user lần đầu
-    if (!data) {
-      dispatch(getAllTicket());
-    }
-  }, [data]);
+  commentList?.sort(
+    (a, b) => formatDate(b.createdAt).getTime - formatDate(a.createdAt).getTime
+  );
 
   useEffect(() => {
-    if (data) {
-      dispatch(getAllTicket());
+    // get list user lần đầu
+    if (!commentList) {
+      dispatch(getAllReviews());
     }
-  }, [data]);
+    return () => dispatch(resetReviewManagement());
+  }, []);
+
+  useEffect(() => {
+    if (successDeleteReview) {
+      enqueueSnackbar("Xoá bình luận thành công!", { variant: "success" });
+      dispatch(getAllReviews());
+    }
+    if (errorDeleteReview) {
+      enqueueSnackbar(errorDeleteReview, { variant: "error" });
+    }
+  }, [successDeleteReview, errorDeleteReview]);
+
+  useEffect(() => {
+    if (successUpdateActiveReview) {
+      enqueueSnackbar("Duyệt bình luận thành công!", { variant: "success" });
+    }
+    if (errorUpdateActiveReview) {
+      enqueueSnackbar(errorUpdateActiveReview, { variant: "error" });
+    }
+  }, [successUpdateActiveReview, errorUpdateActiveReview]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
-  };
-
-  //   const handleSelectAllClick = (event) => {
-  //     if (event.target.checked) {
-  //       const newSelecteds = ticketList?.showtime.map((n) => n.fullName);
-  //       setSelected(newSelecteds);
-  //       return;
-  //     }
-  //     setSelected([]);
-  //   };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -162,16 +146,15 @@ export default function TicketManagement() {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - ticketList?.result) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - commentList?.length) : 0;
 
   const filteredMovies = applySortFilter(
-    data,
+    commentList,
     getComparator(order, orderBy),
     filterNameMovie
   );
 
-  console.log("filteredMovies", filteredMovies);
-  const isUserNotFound = ticketList?.result === 0;
+  const isUserNotFound = commentList?.length === 0;
 
   const breadcrumbs = [
     <Link
@@ -220,7 +203,7 @@ export default function TicketManagement() {
                 order={order}
                 orderBy={orderBy}
                 headLabel={TABLE_HEAD}
-                rowCount={ticketList?.result}
+                rowCount={commentList?.length}
                 numSelected={selected.length}
                 onRequestSort={handleRequestSort}
                 // onSelectAllClick={handleSelectAllClick}
@@ -231,35 +214,57 @@ export default function TicketManagement() {
                   .map((row, index) => {
                     const {
                       _id,
-                      idShowtime,
-                      totalPrice,
-                      seatList,
+                      movieId,
                       userId,
                       createdAt,
+                      review,
+                      rating,
+                      active,
                     } = row;
-                    const isItemSelected = selected.indexOf(_id) !== -1;
-
                     return (
-                      <TableRow
-                        hover
-                        key={_id}
-                        tabIndex={-1}
-                        name="checkbox"
-                        selected={isItemSelected}
-                        aria-checked={isItemSelected}
-                      >
-                        <TableCell align="left">{_id}</TableCell>
+                      <TableRow hover key={_id} tabIndex={-1} name="checkbox">
+                        <TableCell align="left">{movieId.name}</TableCell>
                         <TableCell align="left">
-                          {idShowtime.idMovie.name}
+                          <Tooltip
+                            placement="right"
+                            id="test"
+                            title={
+                              <img src={movieId.photo} width={170} alt="" />
+                            }
+                          >
+                            <Box
+                              sx={{
+                                display: "inline-block",
+                                width: 64,
+                                height: 84,
+                                objectFit: "cover",
+                                position: "relative",
+                                "&:hover > div": {
+                                  opacity: 1,
+                                },
+                                "& > div > img": {
+                                  verticalAlign: "top",
+                                },
+                              }}
+                            >
+                              <img
+                                className="w-full h-full rounded"
+                                src={movieId.photo}
+                                alt="poster movie"
+                                aria-label="test"
+                              />
+                            </Box>
+                          </Tooltip>
                         </TableCell>
+                        <TableCell align="left">{userId.fullName}</TableCell>
+                        <TableCell align="left">{review}</TableCell>
                         <TableCell align="left">
-                          {idShowtime.idTheaterCluster.name}
-                        </TableCell>
-                        <TableCell align="left">
-                          {idShowtime.idTheater.name}
-                        </TableCell>
-                        <TableCell align="left">
-                          {getIdSeat(seatList)}
+                          <Rating
+                            value={rating}
+                            precision={0.5}
+                            readOnly
+                            sx={{ fontSize: 20 }}
+                          />
                         </TableCell>
                         <TableCell align="left">
                           {new Date(createdAt).toLocaleDateString()},{" "}
@@ -268,9 +273,11 @@ export default function TicketManagement() {
                             minute: "2-digit",
                           })}
                         </TableCell>
-                        <TableCell align="left">{userId.fullName}</TableCell>
                         <TableCell align="left">
-                          {totalPrice.toLocaleString("vi-VI")} vnđ
+                          <ActiveReview active={active} id={_id} />
+                        </TableCell>
+                        <TableCell align="center">
+                          <DeleteReview id={_id} />
                         </TableCell>
                       </TableRow>
                     );
@@ -298,7 +305,7 @@ export default function TicketManagement() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={ticketList?.result}
+            count={commentList?.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

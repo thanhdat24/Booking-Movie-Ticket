@@ -26,6 +26,7 @@ import formatDate from "../../../utils/formatDate";
 import scroll from "../../../utils/scroll";
 import { scroller } from "react-scroll";
 import { UNKNOWN_USER } from "../../../constants/config";
+// import { toast } from "react-toastify";
 
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
@@ -35,9 +36,14 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { useEffect } from "react";
 import LichChieu from "./LichChieu";
 import moment from "moment";
-import { addReview, getAllReviews, likeComment } from "../../../redux/actions/Review";
+import {
+  addReview,
+  getAllReviews,
+  likeComment,
+} from "../../../redux/actions/Review";
 import { getDetailMovie } from "../../../redux/actions/Movie";
 import { selectCommentByMaPhimAndCommentTest } from "../../../redux/selector/MovieDetail";
+import { useSnackbar } from "notistack";
 // bình luận bao nhiêu giấy trước
 // import "moment/locale/vi";
 // moment.locale("vi");
@@ -62,13 +68,15 @@ export default function CenteredTabs({
   onIncreaseQuantityComment,
 }) {
   let location = useLocation();
+  const { enqueueSnackbar } = useSnackbar();
+
   const params = useParams();
   const dispatch = useDispatch();
   const history = useHistory();
   const [hover, setHover] = React.useState(-1);
   const [valueTab, setValueTab] = useState(0);
-    const { currentUser } = useSelector((state) => state.AuthReducer);
-    console.log("currentUser", currentUser);
+  const { currentUser } = useSelector((state) => state.AuthReducer);
+  console.log("currentUser", currentUser);
   const [croll, setCroll] = useState(0);
   const [openComment, setOpenComment] = useState(false);
   const [warningtext, setwarningtext] = useState(false);
@@ -87,13 +95,14 @@ export default function CenteredTabs({
   const { commentList } = useSelector((state) =>
     selectCommentByMaPhimAndCommentTest(state, params.idMovie)
   );
-console.log("commentList", commentList);
+  console.log("commentList", commentList);
 
   const {
     postReviewObj,
     loadingAddReview,
     loadingLikeComment,
     likeCommentObj,
+    errorAddReview,
   } = useSelector((state) => state.ReviewReducer);
   const labels = {
     0.5: "0.5",
@@ -152,6 +161,7 @@ console.log("commentList", commentList);
     }
     setwarningtext(false);
     const currentISOString = new Date().toISOString();
+    console.log("dat123");
     dispatch(
       addReview({
         ...dataComment,
@@ -225,6 +235,9 @@ console.log("commentList", commentList);
     // mỗi khi mount component, postComment, likeComment thành công thì call api lấy comment mới
     dispatch(getAllReviews());
     if (postReviewObj) {
+       enqueueSnackbar("Đánh giá thành công, chờ duyệt bạn nhé!", {
+         variant: "success",
+       });
       // reset text comment
       setdataComment((data) => ({ ...data, review: "" }));
     }
@@ -408,61 +421,66 @@ console.log("commentList", commentList);
         >
           <CircularProgress size={20} color="inherit" />
         </div>
-        {commentListDisplay?.comment?.map((item) => (
-          <div
-            key={`${item?.createdAt}`}
-            className={classes.itemDis}
-            id={`idComment${item?.createdAt}`}
-          >
-            <div className={classes.infoUser}>
-              <div className={classes.left}>
-                <span className={classes.avatar}>
-                  <img
-                    src={item?.userId.photo}
-                    alt="avatar"
-                    className={classes.avatarImg}
-                  />
-                </span>
-                <span className={classes.liveUser}>
-                  <p className={classes.userName}>{item?.userId.fullName}</p>
-                  <p className={classes.timePost}>
-                    {moment(item?.createdAt).fromNow()}
-                  </p>
+        {commentListDisplay?.comment?.map(
+          (item) =>
+            item.active && (
+              <div
+                key={`${item?.createdAt}`}
+                className={classes.itemDis}
+                id={`idComment${item?.createdAt}`}
+              >
+                <div className={classes.infoUser}>
+                  <div className={classes.left}>
+                    <span className={classes.avatar}>
+                      <img
+                        src={item?.userId.photo}
+                        alt="avatar"
+                        className={classes.avatarImg}
+                      />
+                    </span>
+                    <span className={classes.liveUser}>
+                      <p className={classes.userName}>
+                        {item?.userId.fullName}
+                      </p>
+                      <p className={classes.timePost}>
+                        {moment(item?.createdAt).fromNow()}
+                      </p>
+                    </span>
+                  </div>
+                  <div className={classes.right}>
+                    <p className="text-success">{item.rating}</p>
+                    <Rating value={item.rating} precision={0.5} readOnly />
+                  </div>
+                  <div className="clearfix"></div>
+                </div>
+                <div className="py-3 mb-3 border-bottom">{item.review}</div>
+                <span
+                  className="d-inline-block"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handleLike(item.id)}
+                >
+                  <span className="mr-2">
+                    {((userLikeThisComment) => {
+                      return (
+                        <ThumbUpIcon
+                          style={{
+                            color: userLikeThisComment.includes(
+                              currentUser?.user.email
+                            )
+                              ? "#fb4226"
+                              : "#73757673",
+                          }}
+                        />
+                      );
+                    })(item.userLikeThisComment)}
+                  </span>
+                  <span style={{ color: "#737576" }}>
+                    <span>{item.likes}</span> Thích
+                  </span>
                 </span>
               </div>
-              <div className={classes.right}>
-                <p className="text-success">{item.rating}</p>
-                <Rating value={item.rating} precision={0.5} readOnly />
-              </div>
-              <div className="clearfix"></div>
-            </div>
-            <div className="py-3 mb-3 border-bottom">{item.review}</div>
-            <span
-              className="d-inline-block"
-              style={{ cursor: "pointer" }}
-              onClick={() => handleLike(item.id)}
-            >
-              <span className="mr-2">
-                {((userLikeThisComment) => {
-                  return (
-                    <ThumbUpIcon
-                      style={{
-                        color: userLikeThisComment.includes(
-                          currentUser?.user.email
-                        )
-                          ? "#fb4226"
-                          : "#73757673",
-                      }}
-                    />
-                  );
-                })(item.userLikeThisComment)}
-              </span>
-              <span style={{ color: "#737576" }}>
-                <span>{item.likes}</span> Thích
-              </span>
-            </span>
-          </div>
-        ))}
+            )
+        )}
         {commentList?.length > 5 && (
           <div className={classes.moreMovie}>
             <Button

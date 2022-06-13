@@ -8,7 +8,7 @@ const reviewSchema = new mongoose.Schema(
       min: 1,
       max: 5,
     },
-    likes:{
+    likes: {
       type: Number,
       default: 0,
     },
@@ -18,6 +18,10 @@ const reviewSchema = new mongoose.Schema(
     },
     createdAt: { type: Date, default: Date.now() },
     userLikeThisComment: [],
+    active: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -31,7 +35,7 @@ reviewSchema.pre(/^find/, function (next) {
     select: 'fullName photo',
   }).populate({
     path: 'movieId',
-    select: 'name',
+    select: 'name photo',
   });
   next();
 });

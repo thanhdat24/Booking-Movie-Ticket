@@ -4,7 +4,6 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import UsersManagement from "./pages/UsersManagement";
-
 import AdminRoute from "./guards/AdminRoute";
 import AdminLayout from "./layouts/AdminLayout";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -33,6 +32,7 @@ import MovieDetail from "./pages/MovieDetail";
 import CheckoutRoute from "./guards/CheckoutRoute";
 import BookTickets from "./pages/Bookticket";
 import TicketManagement from "./pages/TicketManagement";
+import ReviewManagement from "./pages/ReviewManagement";
 
 function App() {
   const themeOptions = useMemo(
@@ -177,6 +177,15 @@ function App() {
                 exact
                 path="/admin/ticket/list"
                 component={TicketManagement}
+              />
+            </AdminLayout>
+          </Route>
+          <Route exact path={["/admin/review/list"]}>
+            <AdminLayout>
+              <AdminRoute
+                exact
+                path="/admin/review/list"
+                component={ReviewManagement}
               />
             </AdminLayout>
           </Route>

@@ -79,6 +79,11 @@ const sidebarConfig = [
     path: "/admin/ticket/list",
     icon: getIcon("map:movie-theater"),
   },
+  {
+    title: "Quản lý đánh giá",
+    path: "/admin/review/list",
+    icon: getIcon("map:movie-theater"),
+  },
 ];
 
 export default sidebarConfig;
