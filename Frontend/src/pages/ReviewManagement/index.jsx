@@ -184,7 +184,7 @@ export default function ReviewManagement() {
         >
           <Stack spacing={2}>
             <Typography variant="h4" gutterBottom>
-              Danh sách vé
+              Danh sách đánh giá
             </Typography>
             <Breadcrumbs separator="›" aria-label="breadcrumb">
               {breadcrumbs}

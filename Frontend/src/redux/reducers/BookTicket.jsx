@@ -30,6 +30,9 @@ import {
   UPDATE_SHOWTIME_FAIL,
   UPDATE_SHOWTIME_REQUEST,
   UPDATE_SHOWTIME_SUCCESS,
+  UPDATE_UNREAD_TICKET_FAIL,
+  UPDATE_UNREAD_TICKET_REQUEST,
+  UPDATE_UNREAD_TICKET_SUCCESS,
 } from "../constants/BookTicket";
 
 const stateDefault = {
@@ -85,6 +88,10 @@ const stateDefault = {
   successUpdateShowtime: "",
   loadingUpdateShowtime: false,
   errorUpdateShowtime: null,
+
+  successUpdateUnReadTicket: "",
+  loadingUpdateUnReadTicket: false,
+  errorUpdateUnReadTicket: null,
 };
 
 export const BookTicketReducer = (state = stateDefault, action) => {
@@ -329,6 +336,31 @@ export const BookTicketReducer = (state = stateDefault, action) => {
         loadingUpdateShowtime: false,
         errorUpdateShowtime: action.payload.error,
         successUpdateShowtime: "",
+      };
+    }
+
+    case UPDATE_UNREAD_TICKET_REQUEST: {
+      return {
+        ...state,
+        loadingUpdateUnReadTicket: true,
+        errorUpdateUnReadTicket: null,
+        successUpdateUnReadTicket: "",
+      };
+    }
+    case UPDATE_UNREAD_TICKET_SUCCESS: {
+      return {
+        ...state,
+        loadingUpdateUnReadTicket: false,
+        successUpdateUnReadTicket: action.payload.data,
+        errorUpdateUnReadTicket: null,
+      };
+    }
+    case UPDATE_UNREAD_TICKET_FAIL: {
+      return {
+        ...state,
+        loadingUpdateUnReadTicket: false,
+        errorUpdateUnReadTicket: action.payload.error,
+        successUpdateUnReadTicket: "",
       };
     }
 

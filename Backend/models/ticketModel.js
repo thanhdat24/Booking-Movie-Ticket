@@ -17,6 +17,10 @@ const ticketSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    isUnRead: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -27,7 +31,7 @@ const ticketSchema = new mongoose.Schema(
 ticketSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'userId',
-    select: 'email fullName',
+    select: 'email fullName photo',
   }).populate({
     path: 'idShowtime',
   });

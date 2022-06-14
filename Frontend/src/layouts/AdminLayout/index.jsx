@@ -1,6 +1,6 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { SnackbarProvider } from "notistack";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
@@ -17,10 +17,13 @@ import sidebarConfig from "../Dashboard/SidebarConfig";
 
 import { styled, useTheme } from "@mui/material/styles";
 import { Avatar, Link, Stack } from "@mui/material";
-import { useHistory, Link as RouterLink } from "react-router-dom";
+import {  Link as RouterLink } from "react-router-dom";
 import Searchbar from "./Searchbar";
 import AccountPopover from "./AccountPopover";
 import NavSection from "../../components/NavSection";
+import NotificationsPopover from "./NotificationsPopover";
+import { getAllTicket } from "../../redux/actions/BookTicket";
+
 const drawerWidth = 280;
 const APPBAR_MOBILE = 64;
 const APPBAR_DESKTOP = 92;
@@ -121,6 +124,17 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function AdminLayout(props) {
+  const {
+    ticketList: { data },
+  } = useSelector((state) => state.BookTicketReducer);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // get list user lần đầu
+    if (!data) {
+      dispatch(getAllTicket());
+    }
+  }, [data]);
   const classes = useStyles();
 
   const theme = useTheme();
@@ -150,7 +164,7 @@ export default function AdminLayout(props) {
               alignItems="center"
               spacing={{ xs: 0.5, sm: 1.5 }}
             >
-              {/* <NotificationsPopover /> */}
+              <NotificationsPopover />
               <AccountPopover />
             </Stack>
           </ToolbarStyle>

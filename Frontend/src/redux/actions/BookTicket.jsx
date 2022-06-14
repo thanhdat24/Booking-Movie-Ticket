@@ -22,6 +22,9 @@ import {
   GET_TICKET_LIST_REQUEST,
   GET_TICKET_LIST_SUCCESS,
   GET_TICKET_LIST_FAIL,
+  UPDATE_UNREAD_TICKET_REQUEST,
+  UPDATE_UNREAD_TICKET_SUCCESS,
+  UPDATE_UNREAD_TICKET_FAIL,
 } from "../constants/BookTicket";
 
 export const createShowtime = (data) => {
@@ -200,6 +203,32 @@ export const getAllTicket = () => {
           type: GET_TICKET_LIST_FAIL,
           payload: {
             error: error.response?.data ? error.response.data : error.message,
+          },
+        });
+      });
+  };
+};
+
+export const updateUnReadTicket = (ticket, _id) => {
+  return (dispatch) => {
+    dispatch({
+      type: UPDATE_UNREAD_TICKET_REQUEST,
+    });
+    bookingApi
+      .updateUnReadTicket(ticket, _id)
+      .then((result) => {
+        dispatch({
+          type: UPDATE_UNREAD_TICKET_SUCCESS,
+          payload: {
+            data: result.data.data,
+          },
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: UPDATE_UNREAD_TICKET_FAIL,
+          payload: {
+            error: error.response?.data.message,
           },
         });
       });

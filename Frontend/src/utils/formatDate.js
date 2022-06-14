@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import {formatDistanceToNow } from "date-fns";
 
 const formatDate = (dateIn) => {
   // ISODate ~ 2021-3-31
@@ -70,3 +71,9 @@ export default formatDate;
 formatDate.propTypes = {
   ISODate: PropTypes.string.isRequired,
 };
+
+export function fToNow(date) {
+  return formatDistanceToNow(new Date(date), {
+    addSuffix: true,
+  });
+}

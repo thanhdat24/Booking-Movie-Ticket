@@ -58,6 +58,7 @@ exports.createTicket = catchAsync(async (req, res, next) => {
         })),
         price: showtime.ticketPrice,
         totalPrice: showtime.ticketPrice * seatCodes.length,
+        
       });
       showtime.seatList = showtime.seatList.map((seat) => {
         if (seatCodes.indexOf(seat.name) > -1) {

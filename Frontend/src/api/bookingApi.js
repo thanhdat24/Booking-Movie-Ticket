@@ -28,6 +28,10 @@ const bookingApi = {
     const path = `/v1/tickets`;
     return axiosClient.get(path);
   },
+  updateUnReadTicket: (ticket, _id) => {
+    const path = `/v1/tickets/${_id}`;
+    return axiosClient.patch(path, ticket);
+  },
 };
 
 export default bookingApi;
