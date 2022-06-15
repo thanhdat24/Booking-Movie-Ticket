@@ -18,6 +18,7 @@ export default function SuccessBooking() {
     errorBookTicket,
   } = useSelector((state) => state.BookTicketReducer);
   const { currentUser } = useSelector((state) => state.AuthReducer);
+  console.log("data456", data);
   const classes = useStyles({
     data,
     color: colorTheater[data?.theaterClusterName.slice(0, 3).toUpperCase()],
@@ -104,8 +105,7 @@ export default function SuccessBooking() {
               </tr>
               <tr>
                 <td valign="top">Khuyến mãi:</td>
-                <td valign="top">
-                </td>
+                <td valign="top"></td>
               </tr>
               <tr>
                 <td valign="top">Tổng tiền:</td>

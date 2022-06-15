@@ -31,7 +31,7 @@ const ticketSchema = new mongoose.Schema(
 ticketSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'userId',
-    select: 'email fullName photo',
+    select: 'email fullName photo phoneNumber',
   }).populate({
     path: 'idShowtime',
   });

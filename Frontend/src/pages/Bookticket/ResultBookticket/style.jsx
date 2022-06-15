@@ -8,6 +8,21 @@ const useStyles = makeStyles({
     padding: (props) => (props.isMobile ? 23 : 40),
     width: "100%",
   },
+  resultBookticketOrder: {
+    textAlign: "left",
+    lineHeight: "30px",
+    padding: "40px 40px 20px 40px",
+    width: "100%",
+  },
+  modal: {
+    textAlign: "center !important",
+    fontSize: 17,
+    width: "500px !important",
+    borderRadius: "20px !important",
+    alignItems: "center !important",
+    overflowX: "hidden !important",
+    maxHeight: "calc(100% - 20px) !important",
+  },
   infoTicked: {
     display: "flex",
     gap: "5%",
@@ -15,6 +30,15 @@ const useStyles = makeStyles({
   infoTicked__img: (props) => ({
     flex: "30%",
     backgroundImage: `url(${props.data?.moviePhoto})`,
+    borderRadius: "8px",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+  }),
+
+  infoTickedOrder__img: (props) => ({
+    flex: "30%",
+    backgroundImage: `url(${props.notification?.idShowtime.idMovie.photo})`,
     borderRadius: "8px",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
