@@ -7,6 +7,11 @@ const getIcon = (name) => <Icon icon={name} width={22} height={22} />;
 
 const sidebarConfig = [
   {
+    title: "Trang quản lý",
+    path: "/admin/dashboard",
+    icon: getIcon("eva:pie-chart-2-fill"),
+  },
+  {
     title: "Quản lý người dùng",
     path: "/admin/users/list",
     icon: getIcon(peopleFill),
@@ -77,12 +82,12 @@ const sidebarConfig = [
   {
     title: "Quản lý vé",
     path: "/admin/ticket/list",
-    icon: getIcon("map:movie-theater"),
+    icon: getIcon("ep:ticket"),
   },
   {
     title: "Quản lý đánh giá",
     path: "/admin/review/list",
-    icon: getIcon("map:movie-theater"),
+    icon: getIcon("bi:star-fill"),
   },
 ];
 

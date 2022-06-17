@@ -33,6 +33,7 @@ import CheckoutRoute from "./guards/CheckoutRoute";
 import BookTickets from "./pages/Bookticket";
 import TicketManagement from "./pages/TicketManagement";
 import ReviewManagement from "./pages/ReviewManagement";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   const themeOptions = useMemo(
@@ -66,6 +67,12 @@ function App() {
             path="/booking-tickets/:idShowtime"
             component={BookTickets}
           />
+
+          <Route exact path={["/admin/dashboard"]}>
+            <AdminLayout>
+              <AdminRoute exact path="/admin/dashboard" component={Dashboard} />
+            </AdminLayout>
+          </Route>
 
           <Route
             exact

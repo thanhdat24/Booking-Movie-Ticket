@@ -18,6 +18,9 @@ import {
   GET_TICKET_LIST_FAIL,
   GET_TICKET_LIST_REQUEST,
   GET_TICKET_LIST_SUCCESS,
+  GET_TICKET_REVENUE_FAIL,
+  GET_TICKET_REVENUE_REQUEST,
+  GET_TICKET_REVENUE_SUCCESS,
   INIT_DATA,
   RESET_ALERT_OVER10,
   RESET_CREATE_SHOWTIME,
@@ -49,6 +52,10 @@ const stateDefault = {
   ticketList: [],
   loadingTicketList: false,
   errorTicketList: null,
+
+  ticketRevenue: [],
+  loadingTicketRevenue: false,
+  errorTicketRevenue: null,
 
   // selecting seat
   listSeat: [],
@@ -237,6 +244,29 @@ export const BookTicketReducer = (state = stateDefault, action) => {
         ...state,
         errorTicketList: action.payload.error,
         loadingTicketList: false,
+      };
+    }
+
+    case GET_TICKET_REVENUE_REQUEST: {
+      return {
+        ...state,
+        loadingTicketRevenue: true,
+        errorTicketRevenue: null,
+        movieDetail: null,
+      };
+    }
+    case GET_TICKET_REVENUE_SUCCESS: {
+      return {
+        ...state,
+        ticketRevenue: action.payload.data,
+        loadingTicketRevenue: false,
+      };
+    }
+    case GET_TICKET_REVENUE_FAIL: {
+      return {
+        ...state,
+        errorTicketRevenue: action.payload.error,
+        loadingTicketRevenue: false,
       };
     }
 

@@ -32,6 +32,10 @@ const bookingApi = {
     const path = `/v1/tickets/${_id}`;
     return axiosClient.patch(path, ticket);
   },
+  getTicketRevenue: () => {
+    const path = `/v1/tickets/getTicketRevenue`;
+    return axiosClient.get(path);
+  },
 };
 
 export default bookingApi;

@@ -25,6 +25,9 @@ import {
   UPDATE_UNREAD_TICKET_REQUEST,
   UPDATE_UNREAD_TICKET_SUCCESS,
   UPDATE_UNREAD_TICKET_FAIL,
+  GET_TICKET_REVENUE_REQUEST,
+  GET_TICKET_REVENUE_SUCCESS,
+  GET_TICKET_REVENUE_FAIL,
 } from "../constants/BookTicket";
 
 export const createShowtime = (data) => {
@@ -229,6 +232,33 @@ export const updateUnReadTicket = (ticket, _id) => {
           type: UPDATE_UNREAD_TICKET_FAIL,
           payload: {
             error: error.response?.data.message,
+          },
+        });
+      });
+  };
+};
+
+
+export const getTicketRevenue = () => {
+  return (dispatch) => {
+    dispatch({
+      type: GET_TICKET_REVENUE_REQUEST,
+    });
+    bookingApi
+      .getTicketRevenue()
+      .then((result) => {
+        dispatch({
+          type: GET_TICKET_REVENUE_SUCCESS,
+          payload: {
+            data: result.data,
+          },
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: GET_TICKET_REVENUE_FAIL,
+          payload: {
+            error: error.response?.data ? error.response.data : error.message,
           },
         });
       });

@@ -4,6 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const ShowTime = require('../models/showtimeModel');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
+const _ = require('lodash');
 
 let transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -58,7 +59,6 @@ exports.createTicket = catchAsync(async (req, res, next) => {
         })),
         price: showtime.ticketPrice,
         totalPrice: showtime.ticketPrice * seatCodes.length,
-        
       });
       showtime.seatList = showtime.seatList.map((seat) => {
         if (seatCodes.indexOf(seat.name) > -1) {
@@ -206,6 +206,28 @@ exports.createTicket = catchAsync(async (req, res, next) => {
       </div>
                       `,
   });
+});
+
+exports.getTicketRevenue = catchAsync(async (req, res, next) => {
+  let query = Ticket.find(req.query);
+  const array = await query;
+
+  
+  let result = _(array)
+    .groupBy((x) => x.idShowtime.idTheaterCluster.name)
+    .map((value, key) => ({ name: key, ticketRevenue: value }))
+    .value();
+
+    
+  try {
+    res.status(200).json({
+      status: 'success',
+      data: result,
+      result: result.length,
+    });
+  } catch (err) {
+    res.status(400).json({ message: err });
+  }
 });
 
 exports.getAllTicket = factory.getAll(Ticket, { path: 'showtimes' });
