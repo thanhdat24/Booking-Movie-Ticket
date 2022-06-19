@@ -191,7 +191,7 @@ export default function MoviesManagement() {
       underline="hover"
       key="1"
       color="text.primary"
-      href="/"
+      href="/admin/dashboard"
       onClick={handleClick}
       sx={{ "&:hover": { color: "#212B36" } }}
     >

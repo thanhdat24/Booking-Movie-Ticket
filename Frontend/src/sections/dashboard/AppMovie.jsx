@@ -32,13 +32,11 @@ ChartJS.register(
   Legend
 );
 
-export default function AppTheaterCluster() {
+export default function AppMovie() {
   const {
-    ticketRevenue: { data },
-    movieRevenue: { dataMovie },
+    movieRevenue: { data },
   } = useSelector((state) => state.BookTicketReducer);
   console.log("data", data);
-  console.log("dataMovie", dataMovie);
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -48,28 +46,28 @@ export default function AppTheaterCluster() {
     color: theme.palette.text.secondary,
   }));
 
-  const [dataTheaterCluster, setDataTheaterCluster] = useState("Tất cả");
+  const [dataMovie, setDataMovie] = useState("Tất cả");
 
   const handleChange = (e) => {
-    setDataTheaterCluster(e.target.value);
+    setDataMovie(e.target.value);
     console.log("e.target.value", e.target.value);
   };
 
   data?.sort((a, b) => a.name.localeCompare(b.name));
 
   const filter = data?.filter((item) => {
-    if (dataTheaterCluster === "Tất cả") return data;
-    return item.name === dataTheaterCluster;
+    if (dataMovie === "Tất cả") return data;
+    return item.name === dataMovie;
   });
 
   console.log("filter", filter);
 
-  const soldTicket = [];
+  const soldMovie = [];
   filter?.map((item) => {
-    soldTicket.push(item?.ticketRevenue.length);
+    soldMovie.push(item?.ticketRevenue.length);
   });
 
-  const totalSoldTicket = soldTicket?.reduce((total, ticket) => {
+  const totalSoldTicket = soldMovie?.reduce((total, ticket) => {
     return total + ticket;
   }, 0);
 
@@ -120,7 +118,7 @@ export default function AppTheaterCluster() {
     labels: filter?.map((item) => item.name),
     datasets: [
       {
-        data: soldTicket,
+        data: soldMovie,
         label: "Số vé bán được",
         fill: false,
         borderColor: "rgb(255, 99, 132)",
@@ -149,7 +147,7 @@ export default function AppTheaterCluster() {
               id="select"
               label="Chọn Cụm Rạp"
               onChange={handleChange}
-              value={dataTheaterCluster}
+              value={dataMovie}
             >
               <MenuItem
                 value="Tất cả"

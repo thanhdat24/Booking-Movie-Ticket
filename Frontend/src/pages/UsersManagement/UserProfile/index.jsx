@@ -19,7 +19,12 @@ export default function UsersManagement() {
     setValue(newValue);
   };
   const breadcrumbs = [
-    <Link underline="hover" key="1" href="/" color="text.primary">
+    <Link
+      underline="hover"
+      key="1"
+      href="/admin/dashboard"
+      color="text.primary"
+    >
       Home
     </Link>,
     <Link

@@ -160,7 +160,7 @@ export default function ReviewManagement() {
     <Link
       underline="hover"
       key="1"
-      href="/"
+      href="/admin/dashboard"
       color="text.primary"
       sx={{ "&:hover": { color: "#212B36" } }}
     >
@@ -192,11 +192,6 @@ export default function ReviewManagement() {
           </Stack>
         </Stack>
         <Card>
-          <TicketListToolbar
-            numSelected={selected.length}
-            filterNameMovie={filterNameMovie}
-            onFilterName={handleFilterByName}
-          />
           <TableContainer sx={{ minWidth: 800 }}>
             <Table>
               <TicketListHead

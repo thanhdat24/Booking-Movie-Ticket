@@ -191,7 +191,7 @@ export default function AdminLayout(props) {
               <Box sx={{ px: 2, py: 3 }}>
                 <Box
                   component={RouterLink}
-                  to="/"
+                  to="/admin/dashboard"
                   sx={{ display: "inline-flex" }}
                 >
                   <Box

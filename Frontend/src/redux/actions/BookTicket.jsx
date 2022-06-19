@@ -28,6 +28,9 @@ import {
   GET_TICKET_REVENUE_REQUEST,
   GET_TICKET_REVENUE_SUCCESS,
   GET_TICKET_REVENUE_FAIL,
+  GET_MOVIE_REVENUE_REQUEST,
+  GET_MOVIE_REVENUE_SUCCESS,
+  GET_MOVIE_REVENUE_FAIL,
 } from "../constants/BookTicket";
 
 export const createShowtime = (data) => {
@@ -257,6 +260,33 @@ export const getTicketRevenue = () => {
       .catch((error) => {
         dispatch({
           type: GET_TICKET_REVENUE_FAIL,
+          payload: {
+            error: error.response?.data ? error.response.data : error.message,
+          },
+        });
+      });
+  };
+};
+
+
+export const getMovieRevenue = () => {
+  return (dispatch) => {
+    dispatch({
+      type: GET_MOVIE_REVENUE_REQUEST,
+    });
+    bookingApi
+      .getMovieRevenue()
+      .then((result) => {
+        dispatch({
+          type: GET_MOVIE_REVENUE_SUCCESS,
+          payload: {
+            data: result.data,
+          },
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: GET_MOVIE_REVENUE_FAIL,
           payload: {
             error: error.response?.data ? error.response.data : error.message,
           },

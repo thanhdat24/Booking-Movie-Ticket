@@ -209,8 +209,8 @@ function NotificationItem({ notification, id, key }) {
     if (notification.id === id) {
       notification.isUnRead = false;
     }
-    setOpen(true);
     dispatch(updateUnReadTicket(notification, id));
+    setOpen(true);
   };
   const { avatar, title } = renderContent(notification);
   return (
@@ -374,8 +374,7 @@ function renderContent(notification) {
         sx={{ color: "text.secondary" }}
       >
         &nbsp;đã đặt {amountTicket} vé xem phim {movieName} tại rạp{" "}
-        {theaterName} vào lúc {formatDateTimeShow} -
-        {createdAt}
+        {theaterName} vào lúc {formatDateTimeShow} -{createdAt}
       </Typography>
     </Typography>
   );

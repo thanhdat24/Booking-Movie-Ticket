@@ -36,6 +36,11 @@ const bookingApi = {
     const path = `/v1/tickets/getTicketRevenue`;
     return axiosClient.get(path);
   },
+
+  getMovieRevenue: () => {
+    const path = `/v1/tickets/getMovieRevenue`;
+    return axiosClient.get(path);
+  },
 };
 
 export default bookingApi;

@@ -94,7 +94,7 @@ export default function CreateShowtimes() {
       underline="hover"
       key="1"
       color="text.primary"
-      href="/"
+      href="/admin/dashboard"
       sx={{ "&:hover": { color: "#212B36" } }}
     >
       Trang chủ

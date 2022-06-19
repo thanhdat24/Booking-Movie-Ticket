@@ -6,13 +6,18 @@ import { getMovieList } from "../../redux/actions/Movie";
 import { getTheaterList } from "../../redux/actions/Theater";
 import { AppTheaterCluster, AppWidgetSummary } from "../../sections/dashboard";
 import { getUsersList } from "../../redux/actions/Users";
-import { getAllTicket, getTicketRevenue } from "../../redux/actions/BookTicket";
+import {
+  getAllTicket,
+  getMovieRevenue,
+  getTicketRevenue,
+} from "../../redux/actions/BookTicket";
+import AppMovie from "../../sections/dashboard/AppMovie";
 
 export default function Dashboard() {
   const { movieList } = useSelector((state) => state.MovieReducer);
   const { theaterList } = useSelector((state) => state.TheaterReducer);
   const { usersList } = useSelector((state) => state.UserManagement);
-  const { ticketList, ticketRevenue } = useSelector(
+  const { ticketList, ticketRevenue, movieRevenue } = useSelector(
     (state) => state.BookTicketReducer
   );
   const dispatch = useDispatch();
@@ -22,13 +27,15 @@ export default function Dashboard() {
       !theaterList?.result ||
       !usersList?.result ||
       !ticketList?.result ||
-      !ticketRevenue?.result
+      !ticketRevenue?.result ||
+      !movieRevenue?.result
     ) {
       dispatch(getMovieList());
       dispatch(getTheaterList());
       dispatch(getUsersList());
       dispatch(getAllTicket());
       dispatch(getTicketRevenue());
+      dispatch(getMovieRevenue());
     }
   }, []);
 
@@ -78,6 +85,9 @@ export default function Dashboard() {
 
         <Grid item xs={12} md={12} lg={12} sx={{ mt: 5 }}>
           <AppTheaterCluster />
+        </Grid>
+        <Grid item xs={12} md={12} lg={12} sx={{ mt: 5 }}>
+          <AppMovie />
         </Grid>
       </Container>
     </Box>

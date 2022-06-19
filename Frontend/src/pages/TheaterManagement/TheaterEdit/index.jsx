@@ -15,7 +15,7 @@ export default function TheaterEdit() {
     <Link
       underline="hover"
       key="1"
-      href="/"
+      href="/admin/dashboard"
       color="text.primary"
       sx={{ "&:hover": { color: "#212B36" } }}
     >

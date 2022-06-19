@@ -14,7 +14,8 @@ router.route('/').post(ticketController.createTicket);
 router.route('/').get(ticketController.getAllTicket);
 
 router.route('/getTicketRevenue').get(ticketController.getTicketRevenue);
-
+router.route('/getMovieRevenue').get(ticketController.getMovieRevenue);
+;
 router.use(authController.restrictTo('admin'));
 
 router
