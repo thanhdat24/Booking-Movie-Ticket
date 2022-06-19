@@ -3,6 +3,7 @@ export const BASE_URL = "http://127.0.0.1:8080/api";
 export const TOKEN = "token";
 export const USER_LOGIN = "user_login";
 export const UNKNOWN_USER = "/img/unknownUser.png";
+export const IMG_LOADING = "/img/logoSlackLoading.gif";
 
 const currentUser = localStorage.getItem("user")
   ? JSON.parse(localStorage.getItem("user"))

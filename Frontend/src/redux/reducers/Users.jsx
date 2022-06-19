@@ -1,4 +1,3 @@
-import { TOKEN, USER_LOGIN } from "../../constants/config";
 import {
   CHANGE_PASSWORD_FAIL,
   CHANGE_PASSWORD_REQUEST,

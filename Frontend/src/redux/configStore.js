@@ -9,6 +9,7 @@ import { ModalTrailerReducer } from "./reducers/ModalTrailer";
 import { TheaterClusterReducer } from "./reducers/TheaterCluster";
 import { TheaterSystemReducer } from "./reducers/TheaterSystem";
 import { ReviewReducer } from "./reducers/Review";
+import LazyReducer from "./reducers/Lazy";
 
 const rootReducer = combineReducers({
   UserManagement,
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   TheaterClusterReducer,
   TheaterSystemReducer,
   ReviewReducer,
+  LazyReducer,
 });
 
 export const store = createStore(rootReducer, applyMiddleware(thunk));

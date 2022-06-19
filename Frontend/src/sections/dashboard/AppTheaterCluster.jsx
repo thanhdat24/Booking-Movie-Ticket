@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { Bar, Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
@@ -65,9 +65,7 @@ export default function AppTheaterCluster() {
   console.log("filter", filter);
 
   const soldTicket = [];
-  filter?.map((item) => {
-    soldTicket.push(item?.ticketRevenue.length);
-  });
+  filter?.map((item) => soldTicket.push(item?.ticketRevenue.length));
 
   const totalSoldTicket = soldTicket?.reduce((total, ticket) => {
     return total + ticket;

@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { Bar, Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
@@ -63,9 +63,7 @@ export default function AppMovie() {
   console.log("filter", filter);
 
   const soldMovie = [];
-  filter?.map((item) => {
-    soldMovie.push(item?.ticketRevenue.length);
-  });
+  filter?.map((item) => soldMovie.push(item?.ticketRevenue.length));
 
   const totalSoldTicket = soldMovie?.reduce((total, ticket) => {
     return total + ticket;
@@ -93,7 +91,7 @@ export default function AppMovie() {
       },
       title: {
         display: true,
-        text: "THỐNG KÊ DOANH THU CẢ NĂM THEO CỤM RẠP",
+        text: "THỐNG KÊ DOANH THU CẢ NĂM THEO PHIM",
         font: {
           size: 25,
         },
@@ -141,11 +139,11 @@ export default function AppMovie() {
       <Grid container spacing={2}>
         <Grid item xs={9} container direction="column">
           <FormControl sx={{ width: 250 }}>
-            <InputLabel id="select">Chọn Cụm Rạp</InputLabel>
+            <InputLabel id="select">Chọn Phim</InputLabel>
             <Select
               labelId="select"
               id="select"
-              label="Chọn Cụm Rạp"
+              label="Chọn Phim"
               onChange={handleChange}
               value={dataMovie}
             >

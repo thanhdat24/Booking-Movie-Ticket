@@ -40,6 +40,7 @@ import {
   addReview,
   getAllReviews,
   likeComment,
+  resetReviewManagement,
 } from "../../../redux/actions/Review";
 import { getDetailMovie } from "../../../redux/actions/Movie";
 import { selectCommentByMaPhimAndCommentTest } from "../../../redux/selector/MovieDetail";
@@ -95,6 +96,7 @@ export default function CenteredTabs({
   const { commentList } = useSelector((state) =>
     selectCommentByMaPhimAndCommentTest(state, params.idMovie)
   );
+  // let filterCommentList = commentList?.filter((item) => item.active);
   console.log("commentList", commentList);
 
   const {
@@ -117,7 +119,9 @@ export default function CenteredTabs({
     5: "5",
   };
   const classes = useStyles({ hideBtn: commentListDisplay.hideBtn });
-
+  // useEffect(() => {
+  //   return () => dispatch(resetReviewManagement());
+  // });
   // phục vụ kh nhấp btn mua vé
   useEffect(() => {
     window.scrollTo(0, 0); // ngăn window.history.scrollRestoration = 'auto';
@@ -161,7 +165,8 @@ export default function CenteredTabs({
     }
     setwarningtext(false);
     const currentISOString = new Date().toISOString();
-    console.log("dat123");
+    // console.log("dat123");
+
     dispatch(
       addReview({
         ...dataComment,
@@ -170,7 +175,11 @@ export default function CenteredTabs({
         userId: currentUser?.user._id,
       })
     );
+
     setOpenComment(false);
+    enqueueSnackbar("Đánh giá thành công, chờ duyệt bạn nhé!", {
+      variant: "success",
+    });
     setdataComment({
       review: "",
       rating: 0.5,
@@ -235,9 +244,6 @@ export default function CenteredTabs({
     // mỗi khi mount component, postComment, likeComment thành công thì call api lấy comment mới
     dispatch(getAllReviews());
     if (postReviewObj) {
-       enqueueSnackbar("Đánh giá thành công, chờ duyệt bạn nhé!", {
-         variant: "success",
-       });
       // reset text comment
       setdataComment((data) => ({ ...data, review: "" }));
     }
