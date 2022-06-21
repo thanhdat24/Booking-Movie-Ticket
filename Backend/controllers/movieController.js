@@ -124,8 +124,6 @@ exports.getMovieShowtimeInfo = catchAsync(async (req, res, next) => {
   }
 });
 
-
-
 exports.getAllMovie = factory.getAll(Movie, { path: 'showtimes' });
 exports.createMovie = factory.createOne(Movie);
 exports.getDetailMovie = factory.getOne(Movie, { path: 'showtimes' });

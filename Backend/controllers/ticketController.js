@@ -2,6 +2,7 @@ const Ticket = require('../models/ticketModel');
 const factory = require('./handlerFactory');
 const catchAsync = require('../utils/catchAsync');
 const ShowTime = require('../models/showtimeModel');
+const moment = require('moment');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 const _ = require('lodash');
@@ -212,13 +213,11 @@ exports.getTicketRevenue = catchAsync(async (req, res, next) => {
   let query = Ticket.find(req.query);
   const array = await query;
 
-  
   let result = _(array)
     .groupBy((x) => x.idShowtime.idTheaterCluster.name)
     .map((value, key) => ({ name: key, ticketRevenue: value }))
     .value();
 
-    
   try {
     res.status(200).json({
       status: 'success',
@@ -230,13 +229,32 @@ exports.getTicketRevenue = catchAsync(async (req, res, next) => {
   }
 });
 
-
 exports.getMovieRevenue = catchAsync(async (req, res, next) => {
   let query = Ticket.find(req.query);
   const array = await query;
 
   let result = _(array)
     .groupBy((x) => x.idShowtime.idMovie.name)
+    .map((value, key) => ({ name: key, ticketRevenue: value }))
+    .value();
+
+  try {
+    res.status(200).json({
+      status: 'success',
+      data: result,
+      result: result.length,
+    });
+  } catch (err) {
+    res.status(400).json({ message: err });
+  }
+});
+
+exports.getRevenueByDay = catchAsync(async (req, res, next) => {
+  let query = Ticket.find(req.query);
+  const array = await query;
+
+  let result = _(array)
+    .groupBy((x) => moment(x.createdAt).format('MM-DD-YYYY'))
     .map((value, key) => ({ name: key, ticketRevenue: value }))
     .value();
 

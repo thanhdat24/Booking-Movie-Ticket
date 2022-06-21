@@ -9,6 +9,9 @@ import {
   DELETE_SHOWTIME_FAIL,
   DELETE_SHOWTIME_REQUEST,
   DELETE_SHOWTIME_SUCCESS,
+  GET_DAY_REVENUE_FAIL,
+  GET_DAY_REVENUE_REQUEST,
+  GET_DAY_REVENUE_SUCCESS,
   GET_LISTSEAT_FAIL,
   GET_LISTSEAT_REQUEST,
   GET_LISTSEAT_SUCCESS,
@@ -63,6 +66,10 @@ const stateDefault = {
   movieRevenue: [],
   loadingMovieRevenue: false,
   errorMovieRevenue: null,
+
+  dayRevenue: [],
+  loadingDayRevenue: false,
+  errorDayRevenue: null,
 
   // selecting seat
   listSeat: [],
@@ -298,6 +305,27 @@ export const BookTicketReducer = (state = stateDefault, action) => {
       };
     }
 
+    case GET_DAY_REVENUE_REQUEST: {
+      return {
+        ...state,
+        loadingDayRevenue: true,
+        errorDayRevenue: null,
+      };
+    }
+    case GET_DAY_REVENUE_SUCCESS: {
+      return {
+        ...state,
+        dayRevenue: action.payload.data,
+        loadingDayRevenue: false,
+      };
+    }
+    case GET_DAY_REVENUE_FAIL: {
+      return {
+        ...state,
+        errorTicketRevenue: action.payload.error,
+        loadingTicketRevenue: false,
+      };
+    }
     // control modal
     case TIMEOUT: {
       return {

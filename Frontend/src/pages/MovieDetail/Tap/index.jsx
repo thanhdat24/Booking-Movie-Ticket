@@ -78,6 +78,7 @@ export default function CenteredTabs({
   const [valueTab, setValueTab] = useState(0);
   const { currentUser } = useSelector((state) => state.AuthReducer);
   console.log("currentUser", currentUser);
+
   const [croll, setCroll] = useState(0);
   const [openComment, setOpenComment] = useState(false);
   const [warningtext, setwarningtext] = useState(false);

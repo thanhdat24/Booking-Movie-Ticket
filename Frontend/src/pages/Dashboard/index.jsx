@@ -9,15 +9,17 @@ import { getUsersList } from "../../redux/actions/Users";
 import {
   getAllTicket,
   getMovieRevenue,
+  getRevenueByDay,
   getTicketRevenue,
 } from "../../redux/actions/BookTicket";
 import AppMovie from "../../sections/dashboard/AppMovie";
+import AppDay from "../../sections/dashboard/AppDay";
 
 export default function Dashboard() {
   const { movieList } = useSelector((state) => state.MovieReducer);
   const { theaterList } = useSelector((state) => state.TheaterReducer);
   const { usersList } = useSelector((state) => state.UserManagement);
-  const { ticketList, ticketRevenue, movieRevenue } = useSelector(
+  const { ticketList, ticketRevenue, movieRevenue, dayRevenue } = useSelector(
     (state) => state.BookTicketReducer
   );
   const dispatch = useDispatch();
@@ -28,7 +30,8 @@ export default function Dashboard() {
       !usersList?.result ||
       !ticketList?.result ||
       !ticketRevenue?.result ||
-      !movieRevenue?.result
+      !movieRevenue?.result ||
+      !dayRevenue?.result
     ) {
       dispatch(getMovieList());
       dispatch(getTheaterList());
@@ -36,6 +39,7 @@ export default function Dashboard() {
       dispatch(getAllTicket());
       dispatch(getTicketRevenue());
       dispatch(getMovieRevenue());
+      dispatch(getRevenueByDay());
     }
   }, []);
 
@@ -88,6 +92,9 @@ export default function Dashboard() {
         </Grid>
         <Grid item xs={12} md={12} lg={12} sx={{ mt: 5 }}>
           <AppMovie />
+        </Grid>
+        <Grid item xs={12} md={12} lg={12} sx={{ mt: 5 }}>
+          <AppDay />
         </Grid>
       </Container>
     </Box>
