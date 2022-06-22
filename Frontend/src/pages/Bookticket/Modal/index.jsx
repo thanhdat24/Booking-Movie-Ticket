@@ -8,6 +8,7 @@ import useStyles from "./style";
 import { Button, Dialog } from "@mui/material";
 import { getDetailShowtimes, getListSeat } from "../../../redux/actions/BookTicket";
 import { RESET_ALERT_OVER10, RESET_DATA_BOOKTICKET } from "../../../redux/constants/BookTicket";
+import { LOADING_BACKTO_HOME } from "../../../redux/constants/Lazy";
 
 export default function Modal(props) {
   const {

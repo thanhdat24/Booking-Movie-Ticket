@@ -90,8 +90,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'dateOfBirth',
     'photo'
   );
-   const path = req.file?.path.replace(/\\/g, '/').substring('public'.length);
-   const urlImage = `http://localhost:8080${path}`;
+  const path = req.file?.path.replace(/\\/g, '/').substring('public'.length);
+  const urlImage = `http://localhost:8080${path}`;
   if (req.file) filteredBody.photo = urlImage;
   const user = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
@@ -108,7 +108,9 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllUsers = factory.getAll(User);
-exports.getDetailUser = factory.getOne(User);
+exports.getDetailUser = factory.getOne(User, {
+  path: 'bookingHistory commentList',
+});
 // Do Not update password with this
 exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);

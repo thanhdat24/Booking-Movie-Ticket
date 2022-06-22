@@ -125,7 +125,6 @@ export const AuthReducer = (state = stateDefault, action) => {
         ...state,
         successUpdateUserCurrent: "",
         errorUpdateUserCurrent: null,
-
         successGetDetailUser: "",
       };
     }

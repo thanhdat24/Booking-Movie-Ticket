@@ -4,7 +4,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import UsersManagement from "./pages/UsersManagement";
-import AdminRoute from "./guards/AdminRoute";
+
 import AdminLayout from "./layouts/AdminLayout";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import shape from "./theme/shape";
@@ -19,12 +19,10 @@ import TriggerLoadingLazy from "./components/TriggerLoadingLazy/index";
 import ModalTrailer from "./components/ModalTrailer/ModalTrailer";
 import MainLayout from "./layouts/MainLayout/index";
 
-import CheckoutRoute from "./guards/CheckoutRoute";
-
 // page
 const Homepage = lazy(() => import("./pages/Homepage"));
 const MovieDetail = lazy(() => import("./pages/MovieDetail"));
-const UserProfile = lazy(() => import("./pages/UsersManagement/UserProfile"));
+const UserAccount = lazy(() => import("./pages/UsersManagement/UserAccount"));
 const BookTickets = lazy(() => import("./pages/Bookticket"));
 const TicketManagement = lazy(() => import("./pages/TicketManagement"));
 const ReviewManagement = lazy(() => import("./pages/ReviewManagement"));
@@ -45,6 +43,13 @@ const TheaterManagement = lazy(() => import("./pages/TheaterManagement"));
 const ShowtimesManagement = lazy(() => import("./pages/ShowtimesManagement"));
 const MovieEdit = lazy(() => import("./pages/MoviesManagement/MovieEdit"));
 const CreateMovie = lazy(() => import("./pages/MoviesManagement/CreateMovie"));
+const UserProfile = lazy(() => import("./pages/UserProfile"));
+
+// guards
+const AdminRoute = lazy(() => import("./guards/AdminRoute"));
+const CheckoutRoute = lazy(() => import("./guards/CheckoutRoute"));
+const UserProfileRoute = lazy(() => import("./guards/UserProfileRoute"));
+
 function App() {
   const themeOptions = useMemo(
     () => ({
@@ -67,10 +72,15 @@ function App() {
         <ModalTrailer />
         <Suspense fallback={<TriggerLoadingLazy />}>
           <Switch>
-            <Route exact path={["/", "/movie/:idMovie"]}>
+            <Route exact path={["/", "/movie/:idMovie", "/profile"]}>
               <MainLayout>
                 <Route exact path="/" component={Homepage} />
                 <Route exact path="/movie/:idMovie" component={MovieDetail} />
+                <UserProfileRoute
+                  exact
+                  path="/profile"
+                  component={UserProfile}
+                />
               </MainLayout>
             </Route>
 
@@ -107,7 +117,7 @@ function App() {
                 <AdminRoute
                   exact
                   path="/admin/users/account"
-                  component={UserProfile}
+                  component={UserAccount}
                 />
                 <AdminRoute
                   exact

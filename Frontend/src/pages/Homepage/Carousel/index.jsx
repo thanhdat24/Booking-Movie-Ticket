@@ -12,6 +12,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useStyles } from "./styles";
 import homeCarouselData from "../../../constants/homeCarouselData";
 import SearchStickets from "../Search";
+import { LOADING_BACKTO_HOME_COMPLETED } from "../../../redux/constants/Lazy";
 export default function Carousel() {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -28,6 +29,9 @@ export default function Carousel() {
     dotsClass: "slickdotsbanner",
   };
 
+  useEffect(() => {
+    dispatch({ type: LOADING_BACKTO_HOME_COMPLETED });
+  }, []);
   function NextArrow(props) {
     const { onClick } = props;
     return (

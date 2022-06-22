@@ -1,10 +1,6 @@
 import {
   Card,
-  FormControl,
   Grid,
-  InputLabel,
-  MenuItem,
-  Select,
   Typography,
 } from "@mui/material";
 import "chartjs-adapter-moment";

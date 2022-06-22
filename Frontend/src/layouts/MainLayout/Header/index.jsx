@@ -35,12 +35,12 @@ import { LOADING_BACKTO_HOME } from "../../../redux/constants/Lazy";
 const headMenu = [
   { nameLink: "Lịch chiếu", id: "lichchieu" },
   { nameLink: "Cụm rạp", id: "cumrap" },
-  { nameLink: "Tin tức", id: "tintuc" },
-  { nameLink: "Ứng dụng", id: "ungdung" },
 ];
 
 export default function Header() {
   const { currentUser } = useSelector((state) => state.AuthReducer);
+  const { isLoadingBackToHome } = useSelector((state) => state.LazyReducer);
+
   const dispatch = useDispatch();
   let location = useLocation();
   const history = useHistory();
@@ -88,6 +88,19 @@ export default function Header() {
     },
     boxShadow: "0 1px 4px 0px rgb(0 0 0 / 25%)",
   }));
+
+  useEffect(() => {
+    // clicklink > push to home > scrollTo after loading
+    if (!isLoadingBackToHome) {
+      setTimeout(() => {
+        scroller.scrollTo(location.state, {
+          duration: 800,
+          smooth: "easeInOutQuart",
+        });
+      }, 200);
+    }
+  }, [isLoadingBackToHome]);
+
   const handleClickLink = (id) => {
     setOpenDrawer(false);
     if (location.pathname === "/") {
@@ -96,7 +109,7 @@ export default function Header() {
         smooth: "easeInOutQuart",
       });
     } else {
-      // dispatch({ type: LOADING_BACKTO_HOME });
+      dispatch({ type: LOADING_BACKTO_HOME });
       setTimeout(() => {
         history.push("/", id);
       }, 50);
@@ -118,7 +131,7 @@ export default function Header() {
     if (location.pathname === "/") {
       dispatch(getMovieList());
       dispatch(getTheaterList());
-      return;
+      return
     }
     dispatch({ type: LOADING_BACKTO_HOME });
     setTimeout(() => {

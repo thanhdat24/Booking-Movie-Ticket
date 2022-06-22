@@ -31,6 +31,7 @@ import { useState } from "react";
 import AuthLayout from "../../layouts/AuthLayout";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/actions/Auth";
+import { LOADING_BACKTO_HOME } from "../../redux/constants/Lazy";
 
 const SectionStyle = styled(Card)(({ theme }) => ({
   width: "100%",
