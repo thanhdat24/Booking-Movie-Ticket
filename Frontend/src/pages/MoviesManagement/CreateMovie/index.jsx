@@ -353,7 +353,7 @@ export default function CreateMovie() {
                     <hr />
                     <div className="text-center">
                       <div className="w-full h-full border-2 border-dashed border-gray-200 inline-flex">
-                        <label className="w-full h-full outline-none overflow-hidden items-center justify-center relative cursor-pointer py-12">
+                        <label className="w-full h-full outline-none overflow-hidden items-center justify-center relative cursor-pointer py-12 ">
                           <input
                             type="file"
                             id="poster"
@@ -368,21 +368,23 @@ export default function CreateMovie() {
                               multiple
                               src={srcImage}
                               alt="avatar"
-                              className="w-48 h-auto inline-flex object-cover"
+                              className="w-48 h-auto inline-flex object-cover rounded-2xl"
                             />
                           ) : (
                             <img
                               accept="image/*"
                               multiple
-                              src="/img/browe.png"
+                              src="/img/export-23.svg"
                               alt="avatar"
-                              className="inline-flex"
+                              className="inline-flex w-64"
                             />
                           )}
                           {srcImage ? (
                             ""
                           ) : (
-                            <h5>Kéo và thả ảnh của phim vào đây</h5>
+                            <h5 className="mt-3">
+                              Kéo và thả ảnh của phim vào đây
+                            </h5>
                           )}
                           {srcImage ? "" : <p class="mb-2">or</p>}
                           {srcImage ? (

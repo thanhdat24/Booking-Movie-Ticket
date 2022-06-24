@@ -57,7 +57,7 @@ export default function CreateTheater() {
 
     validationSchema: UpdateSchema,
     onSubmit: (theater) => {
-      if (loadingCreateTheater) {
+      if (loadingCreateTheater || !setIsReadyCreateTheater) {
         return;
       }
       dispatch(createTheater(theater));
@@ -69,7 +69,13 @@ export default function CreateTheater() {
     setTheaterCluster(event.target.value);
   };
 
-  const { errors, touched, handleSubmit, getFieldProps } = formik;
+  const { errors, touched, handleSubmit, getFieldProps, values } = formik;
+  const [isReadyCreateTheater, setIsReadyCreateTheater] = useState(false);
+  useEffect(() => {
+    if (values.name && values.type && values.idTheaterCluster)
+      setIsReadyCreateTheater(true);
+    else setIsReadyCreateTheater(false);
+  }, [values.name, values.type, values.idTheaterCluster]);
   const [type, setType] = useState(10);
 
   const handleChange = (event) => {
@@ -262,6 +268,7 @@ export default function CreateTheater() {
                           type="submit"
                           variant="contained"
                           loading={loadingCreateTheater}
+                          disabled={!isReadyCreateTheater}
                           sx={{
                             padding: "6px 9px",
                             fontWeight: "700",

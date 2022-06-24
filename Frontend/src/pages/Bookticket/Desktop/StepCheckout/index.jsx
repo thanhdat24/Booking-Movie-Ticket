@@ -37,7 +37,7 @@ export default function StepCheckout() {
     );
   }
   const handleUser = () => {
-    history.push("/user");
+    history.push("/profile");
   };
 
   return (

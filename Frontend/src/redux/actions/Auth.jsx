@@ -2,6 +2,7 @@ import usersApi from "../../api/usersApi";
 import {
   GET_USER_FAIL,
   GET_USER_SUCCESS,
+  GET_USER_SUCCESS_REQUEST,
   LOGIN_FAIL,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -103,6 +104,9 @@ export const updateCurrentUser = (currentUser) => {
 
 export const getDetailUser = (_id) => {
   return (dispatch) => {
+    dispatch({
+      type: GET_USER_SUCCESS_REQUEST,
+    });
     usersApi
       .getDetailUser(_id)
       .then((result) => {

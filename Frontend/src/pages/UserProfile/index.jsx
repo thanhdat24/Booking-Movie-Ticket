@@ -1,12 +1,4 @@
-import {
-  Container,
-  Typography,
-  Breadcrumbs,
-  Link,
-  Box,
-  Tab,
-  Stack,
-} from "@mui/material";
+import { Box, Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,7 +6,7 @@ import { Icon } from "@iconify/react";
 import Info from "./AccountInfo/Info";
 import ChangePassword from "./AccountInfo/ChangePassword";
 import BookingHistory from "./BookingHistory/BookingHistory";
-import { getDetailUser } from "../../redux/actions/Auth";
+import { getDetailUser, resetUpdate } from "../../redux/actions/Auth";
 
 export default function UserProfile() {
   const {
@@ -29,6 +21,7 @@ export default function UserProfile() {
 
   useEffect(() => {
     dispatch(getDetailUser(user?._id));
+    return () => dispatch(resetUpdate());
   }, []);
   return (
     <div className="flex flex-col items-center z-10">
@@ -117,7 +110,15 @@ export default function UserProfile() {
             <TabPanel value="2">
               <ChangePassword />
             </TabPanel>
-            <TabPanel value="3" sx={{ padding: "24px 0", width: "114%" }}>
+            <TabPanel
+              value="3"
+              sx={{
+                padding: "24px 0",
+                width: "123.8%",
+                left: " -10%",
+                position: "relative",
+              }}
+            >
               <BookingHistory />
             </TabPanel>
           </TabContext>

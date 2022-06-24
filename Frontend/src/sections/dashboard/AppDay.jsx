@@ -1,8 +1,4 @@
-import {
-  Card,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Card, Grid, Typography } from "@mui/material";
 import "chartjs-adapter-moment";
 import React, { useState } from "react";
 import { Bar, Line } from "react-chartjs-2";
@@ -49,18 +45,34 @@ export default function AppDay() {
   });
   console.log("filterValueLabel", filterValueLabel);
 
+  const filterWeekLabel = [];
+  data?.map((item) => {
+    const totalTicket = item.ticketRevenue?.reduce((total, ticket) => {
+      return total + ticket.totalPrice;
+    }, 0);
+    filterWeekLabel.push({
+      x: moment(item.name).format("DD/MM"),
+      y: totalTicket,
+    });
+  });
+  console.log("filterWeekLabel", filterWeekLabel);
+
   const dayLabel = [];
-  const dayOfWeek = [];
+  const weekLabel = [];
 
   for (let i = -7; i < 1; i++) {
     dayLabel.push(
       formatDate(moment(weekStart).add(i, "days").format("MM-DD-YYYY")).dayToday
     );
-    dayOfWeek.push(moment(weekStart).add(i, "days").format("MM-DD-YYYY"));
+  }
+
+  for (let i = -30; i < 1; i++) {
+    weekLabel.push(moment(weekStart).add(i, "days").format("DD/MM"));
   }
 
   console.log("dayLabel", dayLabel);
-  console.log("dayOfWeek", dayOfWeek);
+  console.log("weekLabel", weekLabel);
+
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,
@@ -107,7 +119,7 @@ export default function AppDay() {
       },
       title: {
         display: true,
-        text: "THỐNG KÊ DOANH THU THEO TUẦN",
+        text: "THỐNG KÊ DOANH THU THEO THÁNG",
         font: {
           size: 25,
         },
@@ -124,10 +136,10 @@ export default function AppDay() {
     },
   };
 
-  const values = filterValueLabel;
+  const values = filterWeekLabel;
 
   const dataDay = {
-    labels: dayLabel,
+    labels: weekLabel,
     datasets: [
       {
         data: values,
@@ -143,7 +155,7 @@ export default function AppDay() {
     <Card sx={{ padding: 3 }}>
       <Grid container spacing={2}>
         <Grid item xs={9} container direction="column">
-          <Bar options={optionsDay} data={dataDay} />;
+          <Bar options={optionsDay} data={dataDay} />
         </Grid>
         <Grid
           container

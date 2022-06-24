@@ -9,8 +9,24 @@ import {
   Stack,
 } from "@mui/material";
 import Info from "./Info";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getDetailMovie } from "../../../redux/actions/Movie";
+import { RESET_MOVIE_DETAIL } from "../../../redux/constants/Movie";
 
 export default function MovieEdit() {
+  const { successDetailMovie } = useSelector((state) => state.MovieReducer);
+
+  const params = useParams();
+  const dispatch = useDispatch();
+  useEffect(function () {
+    dispatch(getDetailMovie(params.idMovie));
+    return () => {
+      dispatch({ type: RESET_MOVIE_DETAIL });
+    };
+  }, []);
+
+
   const breadcrumbs = [
     <Link
       underline="hover"
@@ -55,7 +71,7 @@ export default function MovieEdit() {
         </Stack>
       </Stack>
       <Box sx={{ width: "100%", typography: "body1" }}>
-        <Info />
+        <Info successDetailMovie={successDetailMovie[0]} />
       </Box>
     </Container>
   );

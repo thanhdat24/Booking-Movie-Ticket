@@ -18,7 +18,6 @@ export default function MovieItem({ successDetailMovie: data }) {
   const { commentList } = useSelector((state) =>
     selectCommentByMaPhimAndCommentTest(state, params.idMovie)
   );
-
   const onIncreaseQuantityComment = (value) => {
     setQuantityComment(value);
   };

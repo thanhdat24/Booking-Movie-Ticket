@@ -18,6 +18,7 @@ import TriggerLoadingLazy from "./components/TriggerLoadingLazy/index";
 
 import ModalTrailer from "./components/ModalTrailer/ModalTrailer";
 import MainLayout from "./layouts/MainLayout/index";
+import NotFound from "./pages/NotFound";
 
 // page
 const Homepage = lazy(() => import("./pages/Homepage"));
@@ -83,13 +84,11 @@ function App() {
                 />
               </MainLayout>
             </Route>
-
             <CheckoutRoute
               exact
               path="/booking-tickets/:idShowtime"
               component={BookTickets}
             />
-
             <Route exact path={["/admin/dashboard"]}>
               <AdminLayout>
                 <AdminRoute
@@ -99,7 +98,6 @@ function App() {
                 />
               </AdminLayout>
             </Route>
-
             <Route
               exact
               path={[
@@ -226,6 +224,7 @@ function App() {
               <Route exact path="/login" component={Login} />
               <Route exact path="/register" component={Register} />
             </Route>
+            <Route component={NotFound} />
           </Switch>
         </Suspense>
       </ThemeProvider>

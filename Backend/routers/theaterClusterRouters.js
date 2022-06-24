@@ -5,6 +5,8 @@ const theaterClusterController = require('../controllers/theaterClusterControlle
 const router = express.Router();
 
 
+router.route('/').get(theaterClusterController.getAllTheaterCluster);
+
 router
   .route('/getMovieInfoTheaterCluster/:id')
   .get(theaterClusterController.getMovieInfoTheaterCluster);
@@ -15,7 +17,7 @@ router.use(authController.protect);
 // RestrictTo "admin"
 router.use(authController.restrictTo('admin'));
 
-router.route('/').get(theaterClusterController.getAllTheaterCluster);
+
 
 router.route('/').post(theaterClusterController.createTheaterCluster);
 
@@ -23,8 +25,14 @@ router
   .route('/:id')
   .get(theaterClusterController.getDetailTheaterCluster)
   .patch(
+    authController.protect,
+    authController.restrictTo('admin'),
     theaterClusterController.uploadTheaterCluster,
     theaterClusterController.updateTheaterCluster
   )
-  .delete(theaterClusterController.deleteTheaterCluster);
+  .delete(
+    authController.protect,
+    authController.restrictTo('admin'),
+    theaterClusterController.deleteTheaterCluster
+  );
 module.exports = router;

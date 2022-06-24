@@ -124,8 +124,27 @@ exports.getMovieShowtimeInfo = catchAsync(async (req, res, next) => {
   }
 });
 
+exports.deleteMovie = catchAsync(async (req, res, next) => {
+  const queryMovie = Movie.findById(req.params.id).populate('showtimes');
+  let checkShowtimeExists = await queryMovie;
+  if (checkShowtimeExists.showtimes.length > 0) {
+    res.status(500).json({ message: 'Phim đã xếp lịch chiếu không thể xóa!' });
+  } else {
+    const doc = await Movie.findByIdAndDelete(req.params.id);
+
+    if (!doc) {
+      return next(new AppError('No document found with that ID', 404));
+    }
+
+    res.status(201).json({
+      status: 'success',
+      data: 'Xóa thành công!',
+    });
+  }
+});
+
 exports.getAllMovie = factory.getAll(Movie, { path: 'showtimes' });
 exports.createMovie = factory.createOne(Movie);
 exports.getDetailMovie = factory.getOne(Movie, { path: 'showtimes' });
 exports.updateMovie = factory.updateOne(Movie);
-exports.deleteMovie = factory.deleteOne(Movie);
+// exports.deleteMovie = factory.deleteOne(Movie);

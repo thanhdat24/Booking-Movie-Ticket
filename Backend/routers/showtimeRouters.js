@@ -5,11 +5,12 @@ const showTimeController = require('../controllers/showTimeController');
 const router = express.Router();
 
 //Protect all routers after this middleware
-router.use(authController.protect);
 
 // RestrictTo "admin"
 
 router.route('/').get(showTimeController.getAllShowTime);
+
+router.use(authController.protect);
 
 router
   .route('/')

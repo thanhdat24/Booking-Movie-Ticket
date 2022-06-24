@@ -28,13 +28,13 @@ import moment from "moment";
 import { useSnackbar } from "notistack";
 import { useHistory, useParams } from "react-router-dom";
 
-export default function Info() {
+export default function Info({ successDetailMovie }) {
+  console.log("successDetailMovie", successDetailMovie);
   const params = useParams();
   const dispatch = useDispatch();
   const history = useHistory();
   const {
     loadingDetailMovie,
-    successDetailMovie,
     successUpdateMovie,
     errorUpdateMovie,
     loadingUpdateMovie,
@@ -53,6 +53,7 @@ export default function Info() {
       }),
   });
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
       name: successDetailMovie?.name,
       trailer: successDetailMovie?.trailer,
@@ -60,7 +61,6 @@ export default function Info() {
       duration: successDetailMovie?.duration,
       genre: successDetailMovie?.genre,
       releaseDate: moment(successDetailMovie?.releaseDate).format("YYYY-MM-DD"),
-      photo: successDetailMovie?.photo,
       remember: true,
       nowShowing: successDetailMovie?.nowShowing,
       comingSoon: successDetailMovie?.comingSoon,
@@ -84,7 +84,8 @@ export default function Info() {
     setFieldValue,
   } = formik;
 
-  const [srcImage, setSrcImage] = useState(successDetailMovie?.photo);
+  const [srcImage, setSrcImage] = useState("");
+  console.log("srcImage", srcImage);
   const handleChangeFile = (e) => {
     let file = e.target.files[0];
     var reader = new FileReader();
@@ -150,6 +151,9 @@ export default function Info() {
                     type="text"
                     label="Tên phim"
                     {...getFieldProps("name")}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
                     error={Boolean(touched.name && errors.name)}
                     helperText={touched.name && errors.name}
                   />
@@ -157,6 +161,9 @@ export default function Info() {
                     fullWidth
                     label="Thể loại"
                     {...getFieldProps("genre")}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
                     error={Boolean(touched.genre && errors.genre)}
                     helperText={touched.genre && errors.genre}
                   />
@@ -177,6 +184,9 @@ export default function Info() {
                       fullWidth
                       label="Thời lượng"
                       {...getFieldProps("duration")}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                       error={Boolean(touched.duration && errors.duration)}
                       helperText={touched.duration && errors.duration}
                     />
@@ -188,6 +198,9 @@ export default function Info() {
                     multiline
                     rows={5}
                     {...getFieldProps("description")}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
                     error={Boolean(touched.description && errors.description)}
                     helperText={touched.description && errors.description}
                   />
@@ -197,6 +210,9 @@ export default function Info() {
                     type="text"
                     label="Trailer"
                     {...getFieldProps("trailer")}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
                     error={Boolean(touched.trailer && errors.trailer)}
                     helperText={touched.trailer && errors.trailer}
                   />
@@ -277,36 +293,15 @@ export default function Info() {
                         multiple
                         onChange={handleChangeFile}
                       />
-                      {srcImage ? (
-                        <img
-                          accept="image/*"
-                          multiple
-                          src={srcImage}
-                          alt="avatar"
-                          className="w-48 h-auto inline-flex object-cover"
-                        />
-                      ) : (
-                        <img
-                          accept="image/*"
-                          multiple
-                          src="/img/browe.png"
-                          alt="avatar"
-                          className="inline-flex"
-                        />
-                      )}
-                      {srcImage ? "" : <h5>Kéo và thả ảnh của phim vào đây</h5>}
-                      {srcImage ? "" : <p class="mb-2">or</p>}
-                      {srcImage ? (
-                        ""
-                      ) : (
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          component="span"
-                        >
-                          Upload
-                        </Button>
-                      )}
+                      <img
+                        accept="image/*"
+                        multiple
+                        src={
+                          srcImage === "" ? successDetailMovie?.photo : srcImage
+                        }
+                        alt="avatar"
+                        className="w-48 h-auto inline-flex object-cover rounded-2xl"
+                      />
                     </label>
                   </div>
                 </div>

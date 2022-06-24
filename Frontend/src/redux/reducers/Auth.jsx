@@ -2,6 +2,7 @@ import { TOKEN, USER_LOGIN } from "../../constants/config";
 import {
   GET_USER_FAIL,
   GET_USER_SUCCESS,
+  GET_USER_SUCCESS_REQUEST,
   LOGIN_FAIL,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -31,6 +32,7 @@ const stateDefault = {
   loadingUpdateUserCurrent: false,
   errorUpdateUserCurrent: null,
 
+  loadingGetDetailUser: false,
   successGetDetailUser: null,
   errorGetDetailUser: null,
 };
@@ -108,16 +110,21 @@ export const AuthReducer = (state = stateDefault, action) => {
         successUpdateUserCurrent: null,
       };
     }
+    case GET_USER_SUCCESS_REQUEST: {
+      return { ...state, loadingGetDetailUser: true, errorGetDetailUser: null };
+    }
     case GET_USER_SUCCESS: {
       return {
         ...state,
         successGetDetailUser: action.payload.data,
+        loadingGetDetailUser: false,
       };
     }
     case GET_USER_FAIL: {
       return {
         ...state,
         errorGetDetailUser: action.payload.error,
+        loadingGetDetailUser: false,
       };
     }
     case RESET_UPDATE: {
