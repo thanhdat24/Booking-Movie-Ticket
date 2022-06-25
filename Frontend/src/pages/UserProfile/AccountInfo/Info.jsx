@@ -26,6 +26,7 @@ export default function Info() {
     successGetDetailUser,
     currentUser: { user },
   } = useSelector((state) => state.AuthReducer);
+
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const [isReadyUpdateUserInfo, setIsReadyUpdateUserInfo] = useState(false);
@@ -45,7 +46,13 @@ export default function Info() {
     },
     0
   );
-  console.log("commentLike", commentLike);
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetUpdate());
+    };
+  }, []);
+  
   const phoneRegExp =
     /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/;
 
@@ -119,8 +126,6 @@ export default function Info() {
     }
   }, [successUpdateUserCurrent, errorUpdateUserCurrent]);
 
-
-   
   return (
     <div className="md:max-w-4xl pt-2 pb-10 mx-auto flex flex-col md:flex-row md:items-start items-center justify-between md:space-x-3">
       <div className="md:max-w-xs max-w-xl min-w-0 bg-white  w-full ">

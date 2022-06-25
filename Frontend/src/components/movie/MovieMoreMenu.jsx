@@ -25,8 +25,7 @@ import UseApiCheckIsMaPhimSetShowtime from "../../utils/useApiCheckIsIdMovieSetS
 export default function UserMoreMenu({ idMovie }) {
   const history = useHistory();
   let location = useLocation();
-  const { loadingDelete } = useSelector((state) => state.UserManagement);
-  const { successDetailMovie, loadingDeleteMovie, loadingDetailMovie } =
+  const {loadingDeleteMovie,  } =
     useSelector((state) => state.MovieReducer);
   const isMovieSetShowtime = UseApiCheckIsMaPhimSetShowtime(idMovie);
   console.log("isMovieSetShowtime", isMovieSetShowtime);
@@ -90,7 +89,7 @@ export default function UserMoreMenu({ idMovie }) {
               color: "rgb(33, 43, 54)",
               "&:hover": { color: "rgb(33, 43, 54)" },
             }}
-            onClick={(e) => handleEditDetail(idMovie)}
+            onClick={(e) => handleEditDetail()}
           >
             <ListItemIcon>
               <Icon icon={editFill} width={24} height={24} />
@@ -134,7 +133,7 @@ export default function UserMoreMenu({ idMovie }) {
               color: "rgb(33, 43, 54)",
               "&:hover": { color: "rgb(33, 43, 54)" },
             }}
-            onClick={(e) => handleEditDetail(idMovie)}
+            onClick={(e) => handleEditDetail()}
           >
             <ListItemIcon>
               <Icon icon={editFill} width={24} height={24} />

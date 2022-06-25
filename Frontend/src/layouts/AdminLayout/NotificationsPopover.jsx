@@ -173,7 +173,6 @@ function NotificationItem({ notification, id, key }) {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
   const calculateTimeout = (dateShow) => {
     const fakeThoiLuong = 120;
     const timeInObj = new Date(dateShow);
@@ -209,8 +208,8 @@ function NotificationItem({ notification, id, key }) {
     if (notification.id === id) {
       notification.isUnRead = false;
     }
-    dispatch(updateUnReadTicket(notification, id));
     setOpen(true);
+    dispatch(updateUnReadTicket(notification, id));
   };
   const { avatar, title } = renderContent(notification);
   return (

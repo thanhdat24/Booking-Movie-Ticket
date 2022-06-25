@@ -11,18 +11,13 @@ import { getDetailUser, resetUpdate } from "../../redux/actions/Auth";
 export default function UserProfile() {
   const {
     currentUser: { user },
+    successUpdateUserCurrent,
   } = useSelector((state) => state.AuthReducer);
-
+  console.log("successUpdateUserCurrent", successUpdateUserCurrent);
   const [value, setValue] = React.useState("1");
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getDetailUser(user?._id));
-    return () => dispatch(resetUpdate());
-  }, []);
   return (
     <div className="flex flex-col items-center z-10">
       <div className="relative mb-6 select-none">
@@ -119,7 +114,7 @@ export default function UserProfile() {
                 position: "relative",
               }}
             >
-              <BookingHistory />
+              <BookingHistory userId={user._id} />
             </TabPanel>
           </TabContext>
         </Box>

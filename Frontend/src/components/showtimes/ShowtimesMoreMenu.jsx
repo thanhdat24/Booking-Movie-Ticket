@@ -20,7 +20,7 @@ import {
 
 // ----------------------------------------------------------------------
 
-export default function ShowtimesMoreMenu({ _id }) {
+export default function ShowtimesMoreMenu({ showtimeId }) {
   const { loadingDeleteShowtime, successDetailShowtime } = useSelector(
     (state) => state.BookTicketReducer
   );
@@ -30,20 +30,20 @@ export default function ShowtimesMoreMenu({ _id }) {
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
 
-  const handleDeleteOne = (_id) => {
+  const handleDeleteOne = (showtimeId) => {
     if (!loadingDeleteShowtime) {
-      dispatch(deleteShowTimes(_id));
+      dispatch(deleteShowTimes(showtimeId));
     }
   };
 
-  const handleEditDetail = (_id) => {
+  const handleEditDetail = (showtimeId) => {
     if (!successDetailShowtime) {
     }
-    dispatch(getDetailShowtimes(_id));
+    dispatch(getDetailShowtimes(showtimeId));
 
     setTimeout(() => {
-      history.push(`/admin/showtimes/edit/${_id}`);
-    }, 2000);
+      history.push(`/admin/showtimes/edit/${showtimeId}`);
+    }, 1500);
   };
   return (
     <>
@@ -63,7 +63,7 @@ export default function ShowtimesMoreMenu({ _id }) {
       >
         <MenuItem
           sx={{ color: "rgb(255, 72, 66);" }}
-          onClick={(e) => handleDeleteOne(_id)}
+          onClick={(e) => handleDeleteOne(showtimeId)}
         >
           <ListItemIcon>
             <Icon icon={trash2Outline} width={24} height={24} />
@@ -81,7 +81,7 @@ export default function ShowtimesMoreMenu({ _id }) {
             color: "rgb(33, 43, 54)",
             "&:hover": { color: "rgb(33, 43, 54)" },
           }}
-          onClick={(e) => handleEditDetail(_id)}
+          onClick={(e) => handleEditDetail(showtimeId)}
         >
           <ListItemIcon>
             <Icon icon={editFill} width={24} height={24} />

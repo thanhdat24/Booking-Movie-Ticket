@@ -323,7 +323,7 @@ export default function ShowtimesManagement() {
                       <TableCell align="left">{ticketPrice}</TableCell>
 
                       <TableCell align="right">
-                        <ShowtimesMoreMenu _id={_id} />
+                        <ShowtimesMoreMenu showtimeId={_id} />
                         {/* <NavLink
                           to={`/admin/showtimes/edit/${_id}`}
                         >

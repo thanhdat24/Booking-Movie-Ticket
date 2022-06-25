@@ -465,7 +465,6 @@ export const BookTicketReducer = (state = stateDefault, action) => {
 
       return state;
     }
-
     default:
       return { ...state };
   }

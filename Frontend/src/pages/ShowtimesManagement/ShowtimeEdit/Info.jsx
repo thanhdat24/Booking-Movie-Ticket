@@ -52,7 +52,7 @@ export default function Info() {
   const [selectedDate, setSelectedDate] = useState(formatDateShow);
   const { enqueueSnackbar } = useSnackbar();
   const [data, setData] = useState({
-    setMovie: successDetailShowtime?.movieName,
+    setMovie: successDetailShowtime?.movieId,
     theaterRender: [],
     theaterSystemRender: [],
     theaterClusterRender: [],
@@ -561,7 +561,7 @@ export default function Info() {
                     disabled={!isReadyCapNhatLichChieu}
                     onClick={handleCapNhatLichChieu}
                   >
-                    Tạo lịch chiếu
+                    Cập nhật
                   </LoadingButton>
                 </Box>
               </Stack>

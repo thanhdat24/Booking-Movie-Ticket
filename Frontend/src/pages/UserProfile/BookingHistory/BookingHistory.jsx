@@ -1,12 +1,16 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getDetailUser, resetUpdate } from "../../../redux/actions/Auth";
 
 
-export default function BookingHistory() {
-      const {
-        successGetDetailUser,
-      } = useSelector((state) => state.AuthReducer);
+export default function BookingHistory({ userId }) {
+  const { successGetDetailUser } = useSelector((state) => state.AuthReducer);
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(getDetailUser(userId));
+    return () => dispatch(resetUpdate());
+  }, []);
 
   // lấy id ghế để render ra nhiều ghê
   const getIdSeat = (danhSachGhe) => {
