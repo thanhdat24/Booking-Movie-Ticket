@@ -11,6 +11,7 @@ export default function SuccessBooking() {
     amount,
     email,
     phone,
+    discount,
     paymentMethod,
     danhSachPhongVe: { data },
     listSeatSelected,
@@ -105,13 +106,13 @@ export default function SuccessBooking() {
               </tr>
               <tr>
                 <td valign="top">Khuyến mãi:</td>
-                <td valign="top"></td>
+                <td valign="top"><b>{`${(discount*1).toLocaleString("vi-VI")} đ`}</b></td>
               </tr>
               <tr>
                 <td valign="top">Tổng tiền:</td>
                 <td valign="top">
                   <span className="text-lg">
-                    <b>{`${amount.toLocaleString("vi-VI")} đ`}</b>
+                    <b>{`${(amount - discount).toLocaleString("vi-VI")} đ`}</b>
                   </span>
                 </td>
               </tr>

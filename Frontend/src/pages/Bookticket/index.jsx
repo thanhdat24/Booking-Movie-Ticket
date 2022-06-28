@@ -12,6 +12,7 @@ import {
   INIT_DATA,
   RESET_DATA_BOOKTICKET,
 } from "../../redux/constants/BookTicket";
+import { getDiscountsList } from "../../redux/actions/Discount";
 
 export default function BookTickets(props) {
   const {
@@ -27,7 +28,9 @@ export default function BookTickets(props) {
   const params = useParams();
   const dispatch = useDispatch();
   useEffect(() => {
+    dispatch(getDiscountsList());
     dispatch(getListSeat(params.idShowtime));
+
     return () => {
       // xóa dữ liệu khi đóng hủy component
       dispatch({ type: RESET_DATA_BOOKTICKET });

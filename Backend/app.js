@@ -12,6 +12,7 @@ const reviewRouters = require('./routers/reviewRouters');
 const ticketRouters = require('./routers/ticketRouters');
 const theaterSystemRouters = require('./routers/theaterSystemRouters');
 const theaterClusterRouters = require('./routers/theaterClusterRouters');
+const discountRouters = require('./routers/discountRouters');
 
 const seatRouters = require('./routers/seatRouters');
 const swaggerDocument = require('./swagger/swagger.json');
@@ -63,6 +64,7 @@ app.use('/api/v1/seats', seatRouters);
 app.use('/api/v1/tickets', ticketRouters);
 app.use('/api/v1/theatersystem', theaterSystemRouters);
 app.use('/api/v1/theatercluster', theaterClusterRouters);
+app.use('/api/v1/discounts', discountRouters);
 
 // trả về đường dẫn not found
 app.all('*', (req, res, next) => {

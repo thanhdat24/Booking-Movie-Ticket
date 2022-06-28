@@ -26,7 +26,7 @@ let calculateTimeout = (dateShow) => {
 };
 
 exports.createTicket = catchAsync(async (req, res, next) => {
-  const { idShowtime, seatCodes } = req.body;
+  const { idShowtime, seatCodes, discount } = req.body;
   const user = req.user;
   await ShowTime.findById(idShowtime)
     .populate('idMovie')
@@ -59,7 +59,7 @@ exports.createTicket = catchAsync(async (req, res, next) => {
           name: seat,
         })),
         price: showtime.ticketPrice,
-        totalPrice: showtime.ticketPrice * seatCodes.length,
+        totalPrice: (showtime.ticketPrice * seatCodes.length) - discount,
       });
       showtime.seatList = showtime.seatList.map((seat) => {
         if (seatCodes.indexOf(seat.name) > -1) {
@@ -83,7 +83,8 @@ exports.createTicket = catchAsync(async (req, res, next) => {
     });
   const amountTicket = req.body.seatCodes.length;
   const { id, totalPrice, createdAt, price } = req.ticket;
-  const { dateShow, idTheaterCluster, idTheater, idMovie } = req.showtime;
+  const { dateShow, idTheaterCluster, idTheater, idMovie } =
+    req.showtime;
   let formatDateTimeShow = new Date(dateShow)
     .toLocaleTimeString([], { hour12: false })
     .slice(0, 5);
@@ -175,6 +176,7 @@ exports.createTicket = catchAsync(async (req, res, next) => {
                            </tr>
                         <tr>
                           <td><b>KHUYẾN MÃI</b></td>
+                          <td>${(discount * 1).toLocaleString('vi-VI')} vnđ</td>
                       </tr>
                               <tr style="border-collapse:collapse;">
                             <td style="padding:0;Margin:0;padding-bottom:10px">
