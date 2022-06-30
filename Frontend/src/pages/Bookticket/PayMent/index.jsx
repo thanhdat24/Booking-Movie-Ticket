@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import { updateActiveDiscount } from "../../../redux/actions/Discount";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+import { useSnackbar } from "notistack";
 
 const makeObjError = (name, value, dataSubmit) => {
   // kiểm tra và set lỗi rỗng
@@ -69,6 +70,7 @@ export default function PayMent() {
   const {
     discountList: { data: discountList },
   } = useSelector((state) => state.DiscountReducer);
+  const { enqueueSnackbar } = useSnackbar();
   console.log("discountList", discountList);
 
   const [open, setOpen] = React.useState(false);
@@ -97,6 +99,7 @@ export default function PayMent() {
       phone: "",
     },
   });
+  const [coupon, setCoupon] = useState("");
   const classes = useStyles({
     isSelectedSeat,
     isReadyPayment,
@@ -111,7 +114,6 @@ export default function PayMent() {
   const onChange = (e) => {
     // khi onchange update values và validation
     let { name, value } = e.target;
-    console.log("e.target.name", e.target.name);
 
     let newValues = { ...dataSubmit.values, [name]: value };
     let newErrors = makeObjError(name, value, dataSubmit);
@@ -199,16 +201,22 @@ export default function PayMent() {
   };
   const handleDiscount = (item) => {
     let { id, price, miniPrice } = item;
-    console.log("item", item);
     const discountListUpdate = discountList.find((item) => item._id === id);
 
     if (discountListUpdate) {
       discountListUpdate.active = !discountListUpdate.active;
+      dispatch(updateActiveDiscount(discountListUpdate, id));
     }
-    console.log("discountListUpdate", discountListUpdate);
-    console.log("activeCoupon", activeCoupon);
-    dispatch(updateActiveDiscount(discountListUpdate, id));
-    console.log("discountListUpdate.active", discountListUpdate.active);
+    if (discountListUpdate.active) {
+      setTimeout(() => {
+        enqueueSnackbar(
+          `Mã khuyến mãi "${discountListUpdate.code}" được áp dụng thành công`,
+          { variant: "info" }
+        );
+      }, 100);
+
+      setOpen(false);
+    }
     if (discountListUpdate.active) {
       if (amount >= miniPrice) {
         let newValues = {
@@ -254,6 +262,56 @@ export default function PayMent() {
     );
 
     return timeOutObj.toLocaleTimeString([], { hour12: false }).slice(0, 5);
+  };
+
+  const handleCoupon = (event) => {
+    setCoupon(event.target.value);
+  };
+
+  const handlePostCoupon = () => {
+    console.log("coupon", coupon);
+
+    const code = discountList.find((item) => item.code === coupon);
+
+    if (code && amount >= code.miniPrice) {
+      code.active = true;
+      dispatch(updateActiveDiscount(code, code.id));
+      setTimeout(() => {
+        enqueueSnackbar(`Mã khuyến mãi "${coupon}" được áp dụng thành công`, {
+          variant: "info",
+        });
+      }, 100);
+      let newValues = {
+        ...dataSubmit.values,
+        discount: code.price,
+        miniPrice: code.miniPrice,
+        activeCoupon: code.active,
+      };
+      let newErrors = makeObjError(discount, code.price, dataSubmit);
+      setdataSubmit((dataSubmit) => ({
+        ...dataSubmit,
+        values: newValues,
+        errors: newErrors,
+      }));
+
+      setOpen(false);
+    } else {
+      if (coupon.length >= 4) {
+        setTimeout(() => {
+          enqueueSnackbar(`Mã giảm giá "${coupon}" không hợp lệ!!`, {
+            variant: "error",
+          });
+        }, 100);
+      } else {
+        setTimeout(() => {
+          enqueueSnackbar(`Mã khuyến mãi không hợp lệ.`, {
+            variant: "error",
+          });
+        }, 100);
+      }
+    }
+
+    setCoupon("");
   };
 
   const BootstrapDialogTitle = (props) => {
@@ -631,8 +689,10 @@ export default function PayMent() {
               alt=""
             />
             <input
-            className={classes.search}
+              className={classes.search}
               type="text"
+              onChange={(event) => handleCoupon(event)}
+              value={coupon}
               placeholder="Nhập mã giảm giá"
               style={{
                 borderRadius: "4px",
@@ -648,14 +708,23 @@ export default function PayMent() {
               }}
             />
           </div>
-          <ButtonDiscount
-            className="ml-auto inline-flex justify-center align-top text-xs py-0 px-2"
-            // onClick={(e) => handleDiscount(item)}
-            variant="outlined"
-            // color="primary"
-          >
-            Áp Dụng
-          </ButtonDiscount>
+          {coupon.length > 0 ? (
+            <ButtonDiscount
+              className="ml-auto inline-flex justify-center align-top text-xs py-0 px-2"
+              onClick={handlePostCoupon}
+              variant="outlined"
+            >
+              Áp Dụng
+            </ButtonDiscount>
+          ) : (
+            <ButtonDiscount
+              className="ml-auto inline-flex justify-center align-top text-xs py-0 px-2 opacity-50 pointer-events-none"
+              onClick={handlePostCoupon}
+              variant="outlined"
+            >
+              Áp Dụng
+            </ButtonDiscount>
+          )}
         </div>
         <DialogContent dividers>
           <div className="flex justify-between items-center px-2">
