@@ -8,7 +8,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { postCreateTicket } from "../../../redux/actions/BookTicket";
 import { SET_READY_PAYMENT } from "../../../redux/constants/BookTicket";
 import { blue } from "@mui/material/colors";
-
+import parse from "html-react-parser";
 import {
   Button,
   Dialog,
@@ -18,6 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import { updateActiveDiscount } from "../../../redux/actions/Discount";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 
 const makeObjError = (name, value, dataSubmit) => {
   // kiểm tra và set lỗi rỗng
@@ -61,6 +62,7 @@ export default function PayMent() {
     danhSachPhongVe: { data },
     idShowtime,
     miniPrice,
+    activeCoupon,
     isSelectedSeat,
     listSeatSelected,
   } = useSelector((state) => state.BookTicketReducer);
@@ -88,6 +90,7 @@ export default function PayMent() {
       paymentMethod: paymentMethod,
       discount: discount,
       miniPrice: miniPrice,
+      activeCoupon: activeCoupon,
     },
     errors: {
       email: "",
@@ -102,6 +105,7 @@ export default function PayMent() {
     paymentMethod,
     discount,
     miniPrice,
+    activeCoupon,
   });
 
   const onChange = (e) => {
@@ -131,6 +135,7 @@ export default function PayMent() {
           paymentMethod: dataSubmit.values.paymentMethod,
           discount: dataSubmit.values.discount,
           miniPrice: dataSubmit.values.miniPrice,
+          activeCoupon: dataSubmit.values.activeCoupon,
         },
       });
       // khi không có lỗi và đủ dữ liệu thì set data sẵn sàng đặt vé và ngược lại, set activeStep = 1 nếu đủ dữ liệu và chưa đặt vé
@@ -168,8 +173,9 @@ export default function PayMent() {
           email: email,
           phone: phone,
           paymentMethod: paymentMethod,
-          discount: 0,
-          miniPrice: 0,
+          discount: discount,
+          miniPrice: miniPrice,
+          activeCoupon: activeCoupon,
         },
         errors: { email: emailErrors.email, phone: phoneErrors.phone },
       }));
@@ -182,6 +188,7 @@ export default function PayMent() {
           paymentMethod: paymentMethod,
           discount: discount,
           miniPrice: miniPrice,
+          activeCoupon: activeCoupon,
         },
         errors: { email: emailErrors.email, phone: phoneErrors.phone },
       }));
@@ -194,18 +201,21 @@ export default function PayMent() {
     let { id, price, miniPrice } = item;
     console.log("item", item);
     const discountListUpdate = discountList.find((item) => item._id === id);
-    let dat = discountListUpdate;
+
     if (discountListUpdate) {
       discountListUpdate.active = !discountListUpdate.active;
     }
     console.log("discountListUpdate", discountListUpdate);
+    console.log("activeCoupon", activeCoupon);
     dispatch(updateActiveDiscount(discountListUpdate, id));
+    console.log("discountListUpdate.active", discountListUpdate.active);
     if (discountListUpdate.active) {
       if (amount >= miniPrice) {
         let newValues = {
           ...dataSubmit.values,
           discount: price,
           miniPrice: miniPrice,
+          activeCoupon: discountListUpdate.active,
         };
         let newErrors = makeObjError(discount, price, dataSubmit);
         setdataSubmit((dataSubmit) => ({
@@ -220,6 +230,7 @@ export default function PayMent() {
         ...dataSubmit.values,
         discount: 0,
         miniPrice: 0,
+        activeCoupon: false,
       };
       let newErrors = makeObjError(discount, price, dataSubmit);
       setdataSubmit((dataSubmit) => ({
@@ -283,12 +294,41 @@ export default function PayMent() {
       borderColor: blue[500],
     },
   }));
+
+  const DiscountInfo = styled(({ className, ...props }) => (
+    <Tooltip
+      PopperProps={{
+        sx: {
+          "& .MuiTooltip-arrow": {
+            "&::before": {
+              backgroundColor: "rgb(255, 255, 255)",
+            },
+          },
+        },
+      }}
+      arrow
+      {...props}
+      classes={{ popper: className }}
+    />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: "white",
+      color: "rgba(0, 0, 0, 0.87)",
+      maxWidth: "400px",
+      borderRadius: "8px",
+      boxShadow: "rgb(0 0 0 / 15%) 0px 1px 18px",
+      fontSize: theme.typography.pxToRem(12),
+      padding: "24px 0px",
+      pointerEvents: "auto",
+    },
+  }));
+
   return (
     <aside className={classes.payMent}>
       <div>
         {/* tổng tiền */}
         <p className={`${classes.amount} ${classes.payMentItem}`}>
-          {amount > dataSubmit.values.miniPrice
+          {amount >= dataSubmit.values.miniPrice
             ? `${(amount - dataSubmit.values.discount).toLocaleString(
                 "vi-VI"
               )} đ`
@@ -366,9 +406,58 @@ export default function PayMent() {
 
         <div className={classes.payMentItem}>
           <label className={classes.label}>Mã giảm giá</label>
-          <div id="platform_coupon"></div>
+          {dataSubmit.values.activeCoupon &&
+            amount >= dataSubmit.values.miniPrice && (
+              <div className="flex flex-wrap mt-2">
+                <div className="overflow-hidden">
+                  <div
+                    style={{
+                      border: "1px solid rgb(13, 92, 182)",
+                      borderRadius: " 4px",
+                      height: "24px",
+                      backgroundColor: "rgb(230, 238, 247)",
+                    }}
+                  >
+                    <i
+                      style={{
+                        float: "left",
+                        marginLeft: "-6px",
+                        marginTop: "6px",
+                        width: "10px",
+                        height: "10px",
+                        border: "1px solid rgb(13, 92, 182)",
+                        borderRadius: " 50%",
+                        backgroundColor: "rgb(255, 255, 255)",
+                      }}
+                    ></i>
+                    <i
+                      style={{
+                        float: "right",
+                        marginRight: "-6px",
+                        marginTop: "6px",
+                        width: "10px",
+                        height: "10px",
+                        border: "1px solid rgb(13, 92, 182)",
+                        borderRadius: " 50%",
+                        backgroundColor: "rgb(255, 255, 255)",
+                      }}
+                      // className="float-right mt-1 -ml-1"
+                    ></i>
+                    <div
+                      style={{ color: "rgb(13, 92, 182)" }}
+                      className="py-0 px-3 items-center flex h-full  text-sm leading-5 font-normal"
+                    >
+                      ĐÃ GIẢM{" "}
+                      {(dataSubmit.values.discount * 1).toLocaleString("vi-VI")}
+                      Đ
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
           <div
-            className="flex align-center cursor-pointer leading-6 mt-3"
+            className="flex align-center cursor-pointer leading-6 mt-2"
             style={{ color: "rgb(11, 116, 229)" }}
             onClick={handleClickOpen}
           >
@@ -377,7 +466,7 @@ export default function PayMent() {
               src="../img/discount/discount.svg"
               alt="logo_discount"
             />
-            <span>Chọn hoặc nhập Khuyến mãi khác</span>
+            <span>Chọn hoặc nhập Giảm giá khác</span>
           </div>
         </div>
 
@@ -404,6 +493,22 @@ export default function PayMent() {
                 alt="zalopay"
               />
               <label>Thanh toán qua ZaloPay</label>
+            </div>
+            <div className={classes.formPaymentItem}>
+              <input
+                className={classes.input}
+                type="radio"
+                name="paymentMethod"
+                value="Ví Moca"
+                onChange={onChange}
+                checked={dataSubmit.values.paymentMethod === "Ví Moca"}
+              />
+              <img
+                className={classes.img}
+                src="/img/bookticket/moca.jpg"
+                alt="cuahang"
+              />
+              <label>Thanh toán qua Ví Moca</label>
             </div>
             <div className={classes.formPaymentItem}>
               <input
@@ -439,7 +544,8 @@ export default function PayMent() {
               />
               <label>Thẻ ATM nội địa</label>
             </div>
-            <div className={classes.formPaymentItem}>
+
+            {/* <div className={classes.formPaymentItem}>
               <input
                 className={classes.input}
                 type="radio"
@@ -456,8 +562,8 @@ export default function PayMent() {
                 alt="cuahang"
               />
               <label>Thanh toán tại cửa hàng tiện ích</label>
-            </div>
-            <div className={classes.formPaymentItem}>
+            </div> */}
+            {/* <div className={classes.formPaymentItem}>
               <input
                 className={classes.input}
                 type="radio"
@@ -472,7 +578,7 @@ export default function PayMent() {
                 alt="cuahang"
               />
               <label>Thanh toán qua PayPal</label>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -506,8 +612,67 @@ export default function PayMent() {
         <BootstrapDialogTitle onClose={handleClose}>
           Khuyến Mãi
         </BootstrapDialogTitle>
+        <div
+          className="p-3 my-0 mx-8 flex mb-3 rounded"
+          style={{ background: " rgb(242, 242, 242)" }}
+        >
+          <div
+            style={{
+              width: "calc(100% - 97px)",
+              display: "inline-block",
+              verticalAlign: "top",
+              marginRight: " 8px",
+              position: "relative",
+            }}
+          >
+            <img
+              className="absolute top-3 left-3"
+              src="../img/discount/coupon-icon.svg"
+              alt=""
+            />
+            <input
+            className={classes.search}
+              type="text"
+              placeholder="Nhập mã giảm giá"
+              style={{
+                borderRadius: "4px",
+                boxShadow: "none",
+                border: "1px solid rgb(196, 196, 207)",
+                height: " 40px",
+                width: "100%",
+                color: "rgb(36, 36, 36)",
+                fontSize: "14px",
+                lineHeight: "20px",
+                padding: "14px 12px 10px 44px",
+                outline: " 0px",
+              }}
+            />
+          </div>
+          <ButtonDiscount
+            className="ml-auto inline-flex justify-center align-top text-xs py-0 px-2"
+            // onClick={(e) => handleDiscount(item)}
+            variant="outlined"
+            // color="primary"
+          >
+            Áp Dụng
+          </ButtonDiscount>
+        </div>
         <DialogContent dividers>
-          <Typography gutterBottom>Mã Giảm Giá</Typography>
+          <div className="flex justify-between items-center px-2">
+            <Typography className="mb-2" gutterBottom>
+              Mã Giảm Giá
+            </Typography>
+            <div
+              style={{
+                fontSize: "12px",
+                fontWeight: "300",
+                lineHeight: " 16px",
+                color: "rgb(128, 128, 137)",
+              }}
+            >
+              Áp dụng tối đa: 1
+            </div>
+          </div>
           {discountList?.map((item, index) =>
             amount >= item.miniPrice ? (
               <div
@@ -542,9 +707,7 @@ export default function PayMent() {
                       <div className="flex absolute top-0 left-0 w-full h-full">
                         <div className="flex flex-col items-center w-52 h-32 p-2 self-center justify-center">
                           <div className="relative w-14 h-14">
-                            <div
-                              className="w-full relative"
-                            >
+                            <div className="w-full relative">
                               <img
                                 src="../img/discount/vourcher.png"
                                 alt=""
@@ -559,16 +722,105 @@ export default function PayMent() {
                               fontSize: "13px",
                             }}
                           >
-                            <p>{item.titte}</p>
+                            <p>{item.title}</p>
                           </div>
                         </div>
                         <div className="flex flex-col p-3 w-full">
                           <button className="absolute top-3 right-3 translate-x-2 -translate-y-2 p-2 block bg-transparent">
-                            <img
-                              className="m-w-full"
-                              src="../img/discount/info_active.svg"
-                              alt=""
-                            />
+                            <DiscountInfo
+                              title={
+                                <React.Fragment>
+                                  <div
+                                    className="pr-4 flex items-center"
+                                    style={{
+                                      backgroundColor: "rgb(250, 250, 250)",
+                                    }}
+                                  >
+                                    <div
+                                      style={{
+                                        width: "50%",
+                                        minWidth: "110px",
+                                        flex: "0 0 auto",
+                                        padding: "12px 24px",
+                                        fontSize: "13px",
+                                        lineHeight: "20px",
+                                        color: "rgb(120, 120, 120)",
+                                      }}
+                                    >
+                                      Mã
+                                    </div>
+                                    <div className="pr-2 overflow-hidden">
+                                      {item.code}
+                                    </div>
+                                    <img
+                                      className="cursor-pointer"
+                                      src="../img/discount/copy-icon.svg"
+                                      alt="copy-icon"
+                                    />
+                                  </div>
+                                  <div className="pr-4 flex items-center">
+                                    <div
+                                      style={{
+                                        width: "50%%",
+                                        minWidth: "110px",
+                                        flex: "0 0 auto",
+                                        padding: "12px 24px",
+                                        fontSize: "13px",
+                                        lineHeight: "20px",
+                                        color: "rgb(120, 120, 120)",
+                                      }}
+                                    >
+                                      Hạn sử dụng
+                                    </div>
+                                    <div className="pr-2 overflow-hidden">
+                                      {item.expiryDate}
+                                    </div>
+                                  </div>
+                                  <div
+                                    className=""
+                                    style={{
+                                      backgroundColor: " rgb(250, 250, 250)",
+                                      display: "flex",
+                                      flexFlow: "row wrap",
+                                      alignItems: "center",
+                                    }}
+                                  >
+                                    <div
+                                      style={{
+                                        width: "50%",
+                                        minWidth: " 35px",
+                                        flex: "0 0 auto",
+                                        padding: "12px 24px",
+                                        fontSize: "13px",
+                                        lineHeight: "20px",
+                                        color: "rgb(120, 120, 120)",
+                                      }}
+                                    >
+                                      Điều kiện
+                                    </div>
+                                    <div
+                                      className="description"
+                                      style={{
+                                        padding: "12px 24px",
+                                        fontSize: "13px",
+                                        lineHeight: " 20px",
+                                        color: "rgb(36, 36, 36)",
+                                      }}
+                                    >
+                                      <ul className={classes.description}>
+                                        {parse(item.description)}
+                                      </ul>
+                                    </div>
+                                  </div>
+                                </React.Fragment>
+                              }
+                            >
+                              <img
+                                className="m-w-full"
+                                src="../img/discount/info_active.svg"
+                                alt=""
+                              />
+                            </DiscountInfo>
                           </button>
                           <div className="pr-7">
                             <h4 className="text-lg font-medium leading-6 m-0 p-0 text-gray-900 max-h-6">
@@ -655,11 +907,100 @@ export default function PayMent() {
                         </div>
                         <div className="flex flex-col p-3 w-full">
                           <button className="absolute top-3 right-3 translate-x-2 -translate-y-2 p-2 block bg-transparent">
-                            <img
-                              className="m-w-full"
-                              src="../img/discount/info.svg"
-                              alt=""
-                            />
+                            <DiscountInfo
+                              title={
+                                <React.Fragment>
+                                  <div
+                                    className="pr-4 flex items-center"
+                                    style={{
+                                      backgroundColor: "rgb(250, 250, 250)",
+                                    }}
+                                  >
+                                    <div
+                                      style={{
+                                        width: "33%",
+                                        minWidth: "110px",
+                                        flex: "0 0 auto",
+                                        padding: "12px 24px",
+                                        fontSize: "13px",
+                                        lineHeight: "20px",
+                                        color: "rgb(120, 120, 120)",
+                                      }}
+                                    >
+                                      Mã
+                                    </div>
+                                    <div className="pr-2 overflow-hidden">
+                                      {item.code}
+                                    </div>
+                                    <img
+                                      className="cursor-pointer"
+                                      src="../img/discount/copy-icon.svg"
+                                      alt="copy-icon"
+                                    />
+                                  </div>
+                                  <div className="pr-4 flex items-center">
+                                    <div
+                                      style={{
+                                        width: "50%%",
+                                        minWidth: "110px",
+                                        flex: "0 0 auto",
+                                        padding: "12px 24px",
+                                        fontSize: "13px",
+                                        lineHeight: "20px",
+                                        color: "rgb(120, 120, 120)",
+                                      }}
+                                    >
+                                      Hạn sử dụng
+                                    </div>
+                                    <div className="pr-2 overflow-hidden">
+                                      {item.expiryDate}
+                                    </div>
+                                  </div>
+                                  <div
+                                    className=""
+                                    style={{
+                                      backgroundColor: " rgb(250, 250, 250)",
+                                      display: "flex",
+                                      flexFlow: "row wrap",
+                                      alignItems: "center",
+                                    }}
+                                  >
+                                    <div
+                                      style={{
+                                        width: "50%",
+                                        minWidth: " 35px",
+                                        flex: "0 0 auto",
+                                        padding: "12px 24px",
+                                        fontSize: "13px",
+                                        lineHeight: "20px",
+                                        color: "rgb(120, 120, 120)",
+                                      }}
+                                    >
+                                      Điều kiện
+                                    </div>
+                                    <div
+                                      className="description"
+                                      style={{
+                                        padding: "12px 24px",
+                                        fontSize: "13px",
+                                        lineHeight: " 20px",
+                                        color: "rgb(36, 36, 36)",
+                                      }}
+                                    >
+                                      <ul className={classes.description}>
+                                        {parse(item.description)}
+                                      </ul>
+                                    </div>
+                                  </div>
+                                </React.Fragment>
+                              }
+                            >
+                              <img
+                                className="m-w-full"
+                                src="../img/discount/info.svg"
+                                alt=""
+                              />
+                            </DiscountInfo>
                           </button>
                           <div className="pr-7 ">
                             <h4 className="text-lg font-medium leading-6 m-0 p-0 text-gray-900 max-h-6">

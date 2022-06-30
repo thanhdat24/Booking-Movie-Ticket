@@ -1,7 +1,7 @@
 import { makeStyles } from "@mui/styles";
 import { underLineDashed, customScrollbar } from "../../../styles/materialUi";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   payMent: (props) => ({
     width: "100%",
     height: props.isMobile ? "calc(100vh - 130px)" : "105vh",
@@ -210,12 +210,24 @@ const useStyles = makeStyles({
     backgroundImage: props.isReadyPayment
       ? "linear-gradient(223deg,#b4ec51 0,#429321 100%)"
       : "none",
-    // backgroundImage: "linear-gradient(223deg,#b4ec51 0,#429321 100%)";
   }),
   txtDatVe: {
     margin: "auto",
     color: "#e9e9e9",
     fontSize: 25,
   },
-});
+
+  description: {
+    listStyle: "disc",
+    padding: "0px 16px",
+    margin: "-16px 0px 0px",
+  },
+  search: {
+    "&:focus": {
+      border: "1px solid rgb(26, 148, 255) !important",
+      boxShadow: "rgb(26 148 255 / 20%) 0px 0px 0px 2px !important",
+    },
+  },
+}));
+
 export default useStyles;
