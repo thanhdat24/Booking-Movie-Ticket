@@ -20,6 +20,7 @@ import {
 import { updateActiveDiscount } from "../../../redux/actions/Discount";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { useSnackbar } from "notistack";
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 const makeObjError = (name, value, dataSubmit) => {
   // kiểm tra và set lỗi rỗng
@@ -266,6 +267,7 @@ export default function PayMent() {
 
   const handleCoupon = (event) => {
     setCoupon(event.target.value);
+    console.log("event.target.value",event.target.value)
   };
 
   const handlePostCoupon = () => {
@@ -313,6 +315,14 @@ export default function PayMent() {
 
     setCoupon("");
   };
+
+const handleCopy = ()=>{
+    setTimeout(() => {
+      enqueueSnackbar("Mã giảm giá đã được sao chép thành công", {
+        variant: "success",
+      });
+    }, 100);
+}
 
   const BootstrapDialogTitle = (props) => {
     const { children, onClose, ...other } = props;
@@ -821,11 +831,16 @@ export default function PayMent() {
                                     <div className="pr-2 overflow-hidden">
                                       {item.code}
                                     </div>
-                                    <img
-                                      className="cursor-pointer"
-                                      src="../img/discount/copy-icon.svg"
-                                      alt="copy-icon"
-                                    />
+                                    <CopyToClipboard
+                                      text={item.code}
+                                      onCopy={handleCopy}
+                                    >
+                                      <img
+                                        className="cursor-pointer"
+                                        src="../img/discount/copy-icon.svg"
+                                        alt="copy-icon"
+                                      />
+                                    </CopyToClipboard>
                                   </div>
                                   <div className="pr-4 flex items-center">
                                     <div
@@ -1001,11 +1016,16 @@ export default function PayMent() {
                                     <div className="pr-2 overflow-hidden">
                                       {item.code}
                                     </div>
-                                    <img
-                                      className="cursor-pointer"
-                                      src="../img/discount/copy-icon.svg"
-                                      alt="copy-icon"
-                                    />
+                                    <CopyToClipboard
+                                      text={item.code}
+                                      onCopy={handleCopy}
+                                    >
+                                      <img
+                                        className="cursor-pointer"
+                                        src="../img/discount/copy-icon.svg"
+                                        alt="copy-icon"
+                                      />
+                                    </CopyToClipboard>
                                   </div>
                                   <div className="pr-4 flex items-center">
                                     <div

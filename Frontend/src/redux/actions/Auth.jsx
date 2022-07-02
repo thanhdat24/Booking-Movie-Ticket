@@ -10,7 +10,11 @@ import {
   REGISTER_FAIL,
   REGISTER_REQUEST,
   REGISTER_SUCCESS,
+  RESET_AUTH,
   RESET_ERROR_LOGIN_REGISTER,
+  RESET_PASSWORD_FAIL,
+  RESET_PASSWORD_REQUEST,
+  RESET_PASSWORD_SUCCESS,
   RESET_UPDATE,
   UPDATE_USER_CURRENT_FAIL,
   UPDATE_USER_CURRENT_REQUEST,
@@ -128,6 +132,33 @@ export const getDetailUser = (_id) => {
   };
 };
 
+;
+export const forgotPassword = (email) => {
+  return (dispatch) => {
+    dispatch({
+      type: RESET_PASSWORD_REQUEST,
+    });
+    usersApi
+      .forgotPassword(email)
+      .then((result) => {
+        dispatch({
+          type: RESET_PASSWORD_SUCCESS,
+          payload: {
+            data: result.data,
+          },
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: RESET_PASSWORD_FAIL,
+          payload: {
+            error: error.response?.data.message,
+          },
+        });
+      });
+  };
+};
+
 export const resetUpdate = () => {
   return (dispatch) => {
     dispatch({
@@ -143,3 +174,10 @@ export const resetErrorLoginRegister = () => {
     });
   };
 };
+export const resetAuth = () => {
+  return (dispatch) => {
+    dispatch({
+      type: RESET_AUTH,
+    });
+  };
+}

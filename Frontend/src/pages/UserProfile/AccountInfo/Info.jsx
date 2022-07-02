@@ -30,7 +30,6 @@ export default function Info() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const [isReadyUpdateUserInfo, setIsReadyUpdateUserInfo] = useState(false);
-
   const totalPaymentAmount = successGetDetailUser?.bookingHistory?.length;
   const totalComment = successGetDetailUser?.commentList?.length;
   const totalPrice = successGetDetailUser?.bookingHistory?.reduce(

@@ -7,12 +7,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { LoadingButton } from "@mui/lab";
 import * as Yup from "yup";
 import { changePassword, resetUserList } from "../../../redux/actions/Users";
+import { useHistory } from "react-router-dom";
+import { LOGOUT } from "../../../redux/constants/Auth";
 
 export default function ChangePassword() {
   const dispatch = useDispatch();
   const { successChangePassword, loadingChangePassword, errorChangePassword } =
     useSelector((state) => state.UserManagement);
   const [isReadyResetPassword, setIsReadyResetPassword] = useState(false);
+  const history = useHistory();
 
   const ChangePasswordSchema = Yup.object().shape({
     passwordCurrent: Yup.string().required("*Vui lòng nhập mật khẩu!"),
@@ -58,9 +61,14 @@ export default function ChangePassword() {
 
   useEffect(() => {
     if (successChangePassword) {
-      enqueueSnackbar("Thay đổi mật khẩu thành công!", { variant: "success" });
-      return;
+      enqueueSnackbar("Thay đổi mật khẩu thành công. Vui lòng đăng nhập lại!", {
+        variant: "success",
+      });
+      setTimeout(() => {
+        dispatch({ type: LOGOUT });
+      }, 1500);
     }
+
     if (errorChangePassword) {
       enqueueSnackbar(errorChangePassword, { variant: "error" });
     }

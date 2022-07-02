@@ -19,6 +19,7 @@ import TriggerLoadingLazy from "./components/TriggerLoadingLazy/index";
 import ModalTrailer from "./components/ModalTrailer/ModalTrailer";
 import MainLayout from "./layouts/MainLayout/index";
 import NotFound from "./pages/NotFound";
+import ResetPassword from "./pages/ResetPassword";
 
 // page
 const Homepage = lazy(() => import("./pages/Homepage"));
@@ -50,6 +51,8 @@ const UserProfile = lazy(() => import("./pages/UserProfile"));
 const AdminRoute = lazy(() => import("./guards/AdminRoute"));
 const CheckoutRoute = lazy(() => import("./guards/CheckoutRoute"));
 const UserProfileRoute = lazy(() => import("./guards/UserProfileRoute"));
+
+
 
 function App() {
   const themeOptions = useMemo(
@@ -220,9 +223,10 @@ function App() {
                 />
               </AdminLayout>
             </Route>
-            <Route exact path={["/login", "/register"]}>
+            <Route exact path={["/login", "/register", "/reset-password"]}>
               <Route exact path="/login" component={Login} />
               <Route exact path="/register" component={Register} />
+              <Route exact path="/reset-password" component={ResetPassword} />
             </Route>
             <Route component={NotFound} />
           </Switch>

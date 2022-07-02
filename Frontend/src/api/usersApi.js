@@ -9,6 +9,10 @@ const usersApi = {
     const path = "/v1/users/signup";
     return axiosClient.post(path, user);
   },
+  forgotPassword: (email) => {
+    const path = "/v1/users/forgotPassword";
+    return axiosClient.post(path, email);
+  },
   getUsersList: () => {
     const path = "/v1/users";
     return axiosClient.get(path);

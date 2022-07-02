@@ -16,9 +16,9 @@ body {
 button:focus {
   outline: none;
 }
-p {
+/* p {
   margin-bottom: 0px !important;
-}
+} */
 label {
   margin-bottom: 0px;
 }

@@ -201,7 +201,7 @@ export default function Login() {
                   label="Ghi nhớ tôi"
                 />
 
-                <Link to="/" component={RouterLink} variant="subtitle2">
+                <Link to="/reset-password" component={RouterLink} variant="subtitle2">
                   Quên mật khẩu?
                 </Link>
               </Stack>

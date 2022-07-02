@@ -5,6 +5,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const sendEmail = require('../utils/email');
 const crypto = require('crypto');
+const generator = require('generate-password');
 const gravatarUrl = require('gravatar');
 
 const signToken = (id) => {
@@ -127,33 +128,121 @@ exports.restrictTo = (...roles) => {
 };
 
 exports.forgetPassword = catchAsync(async (req, res, next) => {
+  const passwordReset = generator.generate({
+    length: 10,
+    numbers: true,
+    uppercase: false,
+  });
+
   // 1) Get user based on POSTED email
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
-    return next(new AppError('There is no user with email address.', 404));
+    return next(new AppError('Xác thực người dùng không thành công.', 404));
   }
+
+  user.password = passwordReset;
+  user.passwordConfirm = passwordReset;
 
   // 2) Generate the random reset token
   const resetToken = user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false });
 
   // 3) Send it to user's email
-  const resetURL = `${req.protocol}://${req.get(
-    'host'
-  )}/api/v1/users/resetPassword/${resetToken}`;
 
-  const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget you password, please ignore this email!`;
+  // const resetURL = `${req.protocol}://${req.get(
+  //   'host'
+  // )}/api/v1/users/resetPassword/${resetToken}`;
+
+  const message = /*html*/ `<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;width:100%!important;height:100%;line-height:1.6em;background-color:#f6f6f6;margin:0"
+        bgcolor="#f6f6f6">
+    
+        <table
+            style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;width:100%;background-color:#f6f6f6;margin:0"
+            bgcolor="#f6f6f6">
+            <tbody>
+                <tr
+                    style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;margin:0">
+                    <td style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;vertical-align:top;margin:0"
+                        valign="top"></td>
+                    <td class="m_-5009379243298609813container" width="600"
+                        style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;vertical-align:top;display:block!important;max-width:600px!important;clear:both!important;margin:0 auto"
+                        valign="top">
+                        <div class="m_-5009379243298609813content"
+                            style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;max-width:600px;display:block;margin:0 auto;padding:20px">
+                            <table width="100%" cellpadding="0" cellspacing="0"
+                                style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;border-radius:3px;background-color:#fff;margin:0;border:1px solid #e9e9e9"
+                                bgcolor="#fff">
+                                <tbody>
+                                    <tr
+                                        style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;margin:0">
+                                        <td class="m_-5009379243298609813content-wrap"
+                                            style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;vertical-align:top;margin:0;padding:20px"
+                                            valign="top">
+                                            <table width="100%" cellpadding="0" cellspacing="0"
+                                                style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;margin:0">
+                                                <tbody>
+                                                    <tr
+                                                        style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;margin:0">
+                                                        <td style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;vertical-align:top;margin:0;padding:0 0 20px"
+                                                            valign="top">
+                                                            Chào bạn.
+                                                        </td>
+                                                    </tr>
+                                                    <tr
+                                                        style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;margin:0">
+                                                        <td style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;vertical-align:top;margin:0;padding:0 0 20px"
+                                                            valign="top">
+                                                            Bạn đã yêu cầu mật khẩu <span
+                                                                style="text-transform:lowercase"></span> mới.
+                                                            Mật khẩu của bạn là
+                                                        </td>
+                                                    </tr>
+                                                    <tr
+                                                        style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;margin:0">
+                                                        <td style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;vertical-align:top;margin:0;padding:0 0 20px"
+                                                            valign="top">
+                                                            <a
+                                                                style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;color:#fff;text-decoration:none;line-height:2em;font-weight:bold;text-align:center;display:inline-block;border-radius:5px;text-transform:capitalize;background-color:#5fbeaa;margin:0;border-color:#5fbeaa;border-style:solid;border-width:10px 20px"><span
+                                                                    style="text-transform:lowercase">${passwordReset}</span></a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr
+                                                        style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;margin:0">
+                                                        <td style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;vertical-align:top;margin:0;padding:0 0 20px"
+                                                            valign="top">
+                                                            © 2022 • <a href="#" target="_blank"
+                                                                data-saferedirecturl="https://www.google.com/url?q=http://CARDVIP.VN&amp;source=gmail&amp;ust=1656782912157000&amp;usg=AOvVaw2W6rUidHZUy1Pqp-vi7QmP">MovieApp</a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                    <td style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;vertical-align:top;margin:0"
+                        valign="top"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="yj6qo"></div>
+        <div class="adL">
+        </div>
+    </div>`;
 
   try {
     await sendEmail({
       email: user.email,
-      subject: 'Your password reset token (valid for 10 min)',
+      subject: 'MovieApp - Cấp lại mật khẩu',
       message,
     });
 
     res.status(200).json({
       status: 'success',
-      message: 'Token sent to email!',
+      message:
+        'Đổi mật khẩu thành công. Vui lòng kiểm tra hộp thư hoặc spam để kích hoạt tài khoản',
     });
   } catch (err) {
     user.passwordResetToken = undefined;

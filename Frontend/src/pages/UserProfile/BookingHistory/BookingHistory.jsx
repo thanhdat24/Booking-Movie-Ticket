@@ -9,7 +9,6 @@ export default function BookingHistory({ userId }) {
 
   useEffect(() => {
     dispatch(getDetailUser(userId));
-    return () => dispatch(resetUpdate());
   }, []);
 
   // lấy id ghế để render ra nhiều ghê

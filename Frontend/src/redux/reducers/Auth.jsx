@@ -10,6 +10,10 @@ import {
   REGISTER_FAIL,
   REGISTER_REQUEST,
   REGISTER_SUCCESS,
+  RESET_AUTH,
+  RESET_PASSWORD_FAIL,
+  RESET_PASSWORD_REQUEST,
+  RESET_PASSWORD_SUCCESS,
   RESET_UPDATE,
   UPDATE_USER_CURRENT_FAIL,
   UPDATE_USER_CURRENT_REQUEST,
@@ -27,6 +31,10 @@ const stateDefault = {
   responseRegister: null,
   loadingRegister: false,
   errorRegister: null,
+
+  responseResetPassword: null,
+  loadingResetPassword: false,
+  errorResetPassword: null,
 
   successUpdateUserCurrent: null,
   loadingUpdateUserCurrent: false,
@@ -82,6 +90,24 @@ export const AuthReducer = (state = stateDefault, action) => {
       };
     }
 
+    case RESET_PASSWORD_REQUEST: {
+      return { ...state, loadingResetPassword: true, errorResetPassword: null };
+    }
+    case RESET_PASSWORD_SUCCESS: {
+      return {
+        ...state,
+        responseResetPassword: action.payload.data,
+        loadingResetPassword: false,
+      };
+    }
+    case RESET_PASSWORD_FAIL: {
+      return {
+        ...state,
+        errorResetPassword: action.payload.error,
+        loadingResetPassword: false,
+      };
+    }
+
     case UPDATE_USER_CURRENT_REQUEST: {
       return {
         ...state,
@@ -133,6 +159,23 @@ export const AuthReducer = (state = stateDefault, action) => {
         successUpdateUserCurrent: "",
         errorUpdateUserCurrent: null,
         successGetDetailUser: "",
+      };
+    }
+
+    case RESET_AUTH: {
+      return {
+        ...state,
+        loadingLogin: false,
+        errorLogin: null,
+
+        responseRegister: "",
+        loadingRegister: false,
+        errorRegister: null,
+
+        responseResetPassword: "",
+        loadingResetPassword: false,
+        errorResetPassword: null,
+
       };
     }
     default:
