@@ -10,13 +10,19 @@ import {
   CHANGE_LISTSEAT,
   SET_ALERT_OVER10,
 } from "../../../redux/constants/BookTicket";
+import { io } from "socket.io-client";
+import { HOST } from "../../../constants/config";
 
-export default function ListSeat() {
+export default function ListSeat(props) {
   const {
     danhSachPhongVe: { data },
+    danhSachGheKhachDat,
     listSeat,
+    successBookingTicket,
   } = useSelector((state) => state.BookTicketReducer);
-
+  const {
+    currentUser: { user },
+  } = useSelector((state) => state.AuthReducer);
   const domToSeatElement = useRef(null);
   const dispatch = useDispatch();
   const param = useParams();
@@ -38,8 +44,12 @@ export default function ListSeat() {
   const handleResize = () => {
     setWidthSeat(domToSeatElement?.current?.offsetWidth);
   };
+
   const handleSelectedSeat = (seatSelected) => {
-    if (seatSelected.isBooked) {
+    let index = danhSachGheKhachDat?.findIndex(
+      (gheKD) => gheKD.id === seatSelected._id
+    );
+    if (seatSelected.isBooked || index !== -1) {
       // click vào ghế đã có người chọn
       return;
     }
@@ -51,6 +61,7 @@ export default function ListSeat() {
       }
       return seat;
     });
+
     // cập nhật lại danh sách hiển thị ghế đã chọn
     const newListSeatSelected = newListSeat?.reduce(
       (newListSeatSelected, seat) => {
@@ -61,6 +72,27 @@ export default function ListSeat() {
       },
       []
     );
+
+    const listSeatSelected = newListSeat?.reduce(
+      (newListSeatSelected, seat) => {
+        if (seat.selected) {
+          return [...newListSeatSelected, { label: seat.label, id: seat._id }];
+        }
+        return newListSeatSelected;
+      },
+      []
+    );
+
+    // console.log("newListSeatSelected123", newListSeatSelected123);
+    console.log("param", param.idShowtime);
+    // let showtimeId123 = param.idShowtime;
+    props.socket.current.emit(
+      "send danhSachGheDangDat from client to server",
+      listSeatSelected,
+      param.idShowtime,
+      user.fullName
+    );
+
     // thông báo nếu chọn quá 10 ghế
     if (newListSeatSelected.length === 11) {
       dispatch({
@@ -106,6 +138,12 @@ export default function ListSeat() {
     }
     if (seat.isBooked) {
       color = "#99c5ff";
+    }
+    let index = danhSachGheKhachDat?.findIndex(
+      (gheKD) => gheKD.id === seat._id
+    );
+    if (index !== -1) {
+      color = "#a50064";
     }
     return color;
   };

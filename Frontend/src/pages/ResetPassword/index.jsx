@@ -32,11 +32,11 @@ export default function ResetPassword() {
   const dispatch = useDispatch();
   const history = useHistory();
 
-    useEffect(() => {
-      return () => {
-        dispatch(resetAuth());
-      };
-    }, []);
+  useEffect(() => {
+    return () => {
+      dispatch(resetAuth());
+    };
+  }, []);
   const ResetSchema = Yup.object().shape({
     email: Yup.string()
       .email("Email phải là một địa chỉ email hợp lệ")
@@ -59,9 +59,14 @@ export default function ResetPassword() {
       <Container maxWidth="sm">
         <ContentStyle>
           <Stack sx={{ mb: 2 }}>
-            <p className="text-4xl font-bold text-black text-center mb-8">
+            <Typography
+              variant="h3"
+              sx={{ marginBottom: "30px" }}
+              gutterBottom
+              className="font-bold text-green-600 text-center"
+            >
               Quên mật khẩu?
-            </p>
+            </Typography>
             <p
               className="font-normal text-base leading-6 mb-10 "
               style={{ color: " #637381" }}

@@ -9,9 +9,10 @@ import {
   GET_USER_LIST_REQUEST,
   GET_USER_LIST_SUCCESS,
   RESET_USER_LIST,
-  UPDATE_USER_FAIL,
+  UPDATE_USER_CURRENT_FAIL,
   UPDATE_USER_REQUEST,
   UPDATE_USER_SUCCESS,
+  USER_BOOKING,
 } from "../constants/Users";
 const stateDefault = {
   usersList: null,
@@ -29,6 +30,9 @@ const stateDefault = {
   successUpdateUser: null,
   loadingUpdateUser: false,
   errorUpdateUser: null,
+
+  // selecting seat
+  userListBooking: [],
 };
 
 export const UserManagement = (state = stateDefault, action) => {
@@ -119,7 +123,7 @@ export const UserManagement = (state = stateDefault, action) => {
       };
     }
 
-    case UPDATE_USER_FAIL: {
+    case UPDATE_USER_CURRENT_FAIL: {
       return {
         ...state,
         loadingUpdateUser: false,
@@ -127,7 +131,13 @@ export const UserManagement = (state = stateDefault, action) => {
         successUpdateUser: null,
       };
     }
-
+    // selecting seat
+    case USER_BOOKING: {
+      return {
+        ...state,
+        userListBooking: action.payload.userListBooking,
+      };
+    }
     case RESET_USER_LIST: {
       return {
         ...state,

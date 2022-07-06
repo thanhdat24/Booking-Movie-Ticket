@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { colorTheater } from "../../../constants/theaterData";
 
 import { useSelector } from "react-redux";
@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import useStyles from "./style";
 import formatDate from "../../../utils/formatDate";
 
-export default function SuccessBooking() {
+export default function SuccessBooking(props) {
   const {
     amount,
     email,
@@ -14,16 +14,19 @@ export default function SuccessBooking() {
     discount,
     paymentMethod,
     danhSachPhongVe: { data },
+    danhSachPhongVe: { seatList },
+    danhSachPhongVe,
     listSeatSelected,
     successBookingTicket,
     errorBookTicket,
+    listSeat,
   } = useSelector((state) => state.BookTicketReducer);
   const { currentUser } = useSelector((state) => state.AuthReducer);
-  console.log("data456", data);
   const classes = useStyles({
     data,
     color: colorTheater[data?.theaterClusterName.slice(0, 3).toUpperCase()],
   });
+  console.log("seatList", seatList);
   const calculateTimeout = (dateShow) => {
     const fakeThoiLuong = 120;
     const timeInObj = new Date(dateShow);
@@ -33,6 +36,7 @@ export default function SuccessBooking() {
 
     return timeOutObj.toLocaleTimeString([], { hour12: false }).slice(0, 5);
   };
+
   return (
     <div className={classes.resultBookticket}>
       <div className={classes.infoTicked}>
@@ -106,7 +110,9 @@ export default function SuccessBooking() {
               </tr>
               <tr>
                 <td valign="top">Khuyến mãi:</td>
-                <td valign="top"><b>{`${(discount*1).toLocaleString("vi-VI")} đ`}</b></td>
+                <td valign="top">
+                  <b>{`${(discount * 1).toLocaleString("vi-VI")} đ`}</b>
+                </td>
               </tr>
               <tr>
                 <td valign="top">Tổng tiền:</td>

@@ -1,5 +1,5 @@
 import "./App.css";
-import { useMemo, lazy, Suspense } from "react";
+import { useMemo, lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -51,8 +51,6 @@ const UserProfile = lazy(() => import("./pages/UserProfile"));
 const AdminRoute = lazy(() => import("./guards/AdminRoute"));
 const CheckoutRoute = lazy(() => import("./guards/CheckoutRoute"));
 const UserProfileRoute = lazy(() => import("./guards/UserProfileRoute"));
-
-
 
 function App() {
   const themeOptions = useMemo(

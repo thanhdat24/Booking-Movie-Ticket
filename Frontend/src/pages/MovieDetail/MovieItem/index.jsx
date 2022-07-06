@@ -91,14 +91,14 @@ export default function MovieItem({ successDetailMovie: data }) {
                 size="100%"
                 value={100}
                 className={classes.behined}
-                color="secondary"
+                 color="success" 
               />
               <CircularProgress
                 variant="determinate"
                 size="100%"
                 value={10 * 10}
                 className={classes.fabProgress}
-                color="secondary"
+                 color="success" 
               />
             </div>
             <div className={classes.rateStar}>

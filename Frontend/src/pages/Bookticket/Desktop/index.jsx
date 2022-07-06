@@ -11,10 +11,10 @@ export default function Index(props) {
     <div className={classes.bookTicked}>
       <section className={classes.left}>
         <StepCheckout />
-        <ListSeat />
+        <ListSeat socket={props.socket} />
       </section>
       <section className={classes.right}>
-        <PayMent />
+        <PayMent socket={props.socket} />
       </section>
     </div>
   );

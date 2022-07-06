@@ -140,9 +140,10 @@ export default function Register() {
         <ContentStyle>
           <Stack sx={{ mb: 2 }}>
             <Typography
-              variant="h4"
+              variant="h3"
+              sx={{ marginBottom: "30px" }}
               gutterBottom
-              className="text-3xl font-bold text-primary text-green-600 text-center mb-8"
+              className="font-bold text-green-600 text-center"
             >
               Đăng ký MovieApp!
             </Typography>

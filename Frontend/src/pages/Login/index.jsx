@@ -112,11 +112,12 @@ export default function Login() {
         <ContentStyle>
           <Stack sx={{ mb: 3 }}>
             <Typography
-              variant="h4"
+              variant="h3"
+              sx={{ marginBottom: "30px" }}
               gutterBottom
-              className="text-3xl font-bold text-primary text-green-600 text-center mb-8"
+              className="font-bold text-green-600 text-center"
             >
-              Đăng nhập
+              Đăng nhập MovieApp!
             </Typography>
           </Stack>
           <FormikProvider value={formik}>
@@ -159,7 +160,7 @@ export default function Login() {
                   fullWidth
                   autoComplete="username"
                   type="email"
-                  label="Email address"
+                  label="Địa chỉ email"
                   {...getFieldProps("email")}
                   error={Boolean(touched.email && errors.email)}
                   helperText={touched.email && errors.email}
@@ -169,7 +170,7 @@ export default function Login() {
                   fullWidth
                   autoComplete="current-password"
                   type={showPassword ? "text" : "password"}
-                  label="Password"
+                  label="Mật khẩu"
                   {...getFieldProps("password")}
                   InputProps={{
                     endAdornment: (
@@ -201,7 +202,11 @@ export default function Login() {
                   label="Ghi nhớ tôi"
                 />
 
-                <Link to="/reset-password" component={RouterLink} variant="subtitle2">
+                <Link
+                  to="/reset-password"
+                  component={RouterLink}
+                  variant="subtitle2"
+                >
                   Quên mật khẩu?
                 </Link>
               </Stack>

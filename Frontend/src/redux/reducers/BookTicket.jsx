@@ -48,6 +48,7 @@ const stateDefault = {
   // get list seat
   loadingGetListSeat: false,
   danhSachPhongVe: {},
+  danhSachGheKhachDat: [],
   errorGetListSeatMessage: null,
 
   // booking ticked
@@ -121,6 +122,9 @@ const stateDefault = {
 export const BookTicketReducer = (state = stateDefault, action) => {
   switch (action.type) {
     // initialization data
+    case "DAT_GHE": {
+      return { ...state, danhSachGheKhachDat: action.arrGheKhachDat };
+    }
     case GET_LISTSEAT_REQUEST: {
       return {
         ...state,

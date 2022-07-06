@@ -9,10 +9,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     padding: 10,
     height: 100,
+    alignItems: "center",
   },
   stepper: {
     padding: 0,
-    flexBasis: "80%",
+    flexBasis: "70%",
   },
   label: {
     marginTop: "7px !important",

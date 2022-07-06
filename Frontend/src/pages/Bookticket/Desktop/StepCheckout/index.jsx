@@ -1,5 +1,5 @@
 import React from "react";
-
+import { styled } from "@mui/material/styles";
 import clsx from "clsx";
 import WeekendIcon from "@mui/icons-material/Weekend";
 import PaymentIcon from "@mui/icons-material/Payment";
@@ -9,16 +9,29 @@ import { useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 
 import { useStyles, ColorlibConnector } from "./style";
-import { Step, StepLabel, Stepper } from "@mui/material";
+import {
+  Avatar,
+  AvatarGroup,
+  Box,
+  Step,
+  StepLabel,
+  Stepper,
+  Tooltip,
+  tooltipClasses,
+} from "@mui/material";
 
 export default function StepCheckout() {
   const history = useHistory();
   const classes = useStyles();
   const activeStep = useSelector((state) => state.BookTicketReducer.activeStep);
+  const userListBooking = useSelector(
+    (state) => state.UserManagement.userListBooking
+  );
   const { currentUser } = useSelector((state) => state.AuthReducer);
   const steps = ["CHỌN GHẾ", "THANH TOÁN", "KẾT QUẢ ĐẶT VÉ"];
 
   function StepIcon(props) {
+    console.log("userListBooking", userListBooking);
     const { active, completed } = props;
     const icons = {
       1: <WeekendIcon />,
@@ -40,6 +53,17 @@ export default function StepCheckout() {
     history.push("/profile");
   };
 
+  const AvatarTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} arrow classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.arrow}`]: {
+      color: theme.palette.common.black,
+    },
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: theme.palette.common.black,
+    },
+  }));
+
   return (
     <div className={classes.root}>
       <Stepper
@@ -59,6 +83,25 @@ export default function StepCheckout() {
           </Step>
         ))}
       </Stepper>
+      <Box
+        sx={{
+          cursor: "pointer",
+          textAlign: "center",
+          textTransform: "uppercase",
+          // flex: "0 0 150px",
+        }}
+      >
+        <AvatarGroup max={4} sx={{ justifyContent: "center" }}>
+          {userListBooking?.map((user) => (
+            <AvatarTooltip title="Người dùng ẩn danh">
+              <Avatar alt={user?.fullName} src={user?.avatar} />
+            </AvatarTooltip>
+          ))}
+        </AvatarGroup>
+        <p className={classes.hoTen} style={{ marginTop: "14px" }}>
+          Người dùng đặt vé
+        </p>
+      </Box>
       <div className={classes.account} onClick={handleUser}>
         <img
           src={currentUser.user.photo}

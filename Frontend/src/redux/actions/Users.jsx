@@ -1,4 +1,5 @@
 import usersApi from "../../api/usersApi";
+import { UPDATE_USER_CURRENT_FAIL } from "../constants/Auth";
 import {
   CHANGE_PASSWORD_FAIL,
   CHANGE_PASSWORD_REQUEST,
@@ -10,7 +11,6 @@ import {
   GET_USER_LIST_REQUEST,
   GET_USER_LIST_SUCCESS,
   RESET_USER_LIST,
-  UPDATE_USER_FAIL,
   UPDATE_USER_REQUEST,
   UPDATE_USER_SUCCESS,
 } from "../constants/Users";
@@ -109,7 +109,7 @@ export const updateUser = (user, _id) => {
       })
       .catch((error) => {
         dispatch({
-          type: UPDATE_USER_FAIL,
+          type: UPDATE_USER_CURRENT_FAIL,
           payload: {
             error: error?.response.data.message,
           },

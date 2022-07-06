@@ -20,7 +20,7 @@ import {
 import { updateActiveDiscount } from "../../../redux/actions/Discount";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { useSnackbar } from "notistack";
-import {CopyToClipboard} from 'react-copy-to-clipboard';
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const makeObjError = (name, value, dataSubmit) => {
   // kiểm tra và set lỗi rỗng
@@ -51,7 +51,7 @@ const makeObjError = (name, value, dataSubmit) => {
   return newErrors;
 };
 
-export default function PayMent() {
+export default function PayMent(props) {
   const {
     listSeat,
     amount,
@@ -67,6 +67,7 @@ export default function PayMent() {
     activeCoupon,
     isSelectedSeat,
     listSeatSelected,
+    successBookingTicket,
   } = useSelector((state) => state.BookTicketReducer);
   const {
     discountList: { data: discountList },
@@ -267,7 +268,7 @@ export default function PayMent() {
 
   const handleCoupon = (event) => {
     setCoupon(event.target.value);
-    console.log("event.target.value",event.target.value)
+    console.log("event.target.value", event.target.value);
   };
 
   const handlePostCoupon = () => {
@@ -316,13 +317,13 @@ export default function PayMent() {
     setCoupon("");
   };
 
-const handleCopy = ()=>{
+  const handleCopy = () => {
     setTimeout(() => {
       enqueueSnackbar("Mã giảm giá đã được sao chép thành công", {
         variant: "success",
       });
     }, 100);
-}
+  };
 
   const BootstrapDialogTitle = (props) => {
     const { children, onClose, ...other } = props;

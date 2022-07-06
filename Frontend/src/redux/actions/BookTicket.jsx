@@ -180,6 +180,7 @@ export const postCreateTicket = (data) => {
             data: result.data,
           },
         });
+        
       })
       .catch((error) => {
         dispatch({

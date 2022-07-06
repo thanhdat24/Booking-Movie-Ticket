@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-
+const socket = require('socket.io');
 process.on('uncaughtException', (err) => {
   console.log('UNCAUGHT EXCEPTION! 🧨 Shutting down...');
   console.log(err.name, err.message);
@@ -9,6 +9,20 @@ process.on('uncaughtException', (err) => {
 
 dotenv.config({ path: './config.env' });
 const app = require('./app');
+const { getUserList, addUser, removeUser } = require('./utils/users');
+const {
+  addSeat,
+  getDanhSachGheDangDat,
+  removeSeat,
+} = require('./utils/listSeatsBooked');
+
+const http = require('http').createServer(app);
+// const socket = require('socket.io')(http, {
+//   cors: {
+//     origin: 'http://localhost:3000',
+//     Credential: true,
+//   },
+// });
 
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
@@ -24,7 +38,7 @@ mongoose
 
 // lắng nghe event kết nối
 const port = process.env.PORT || 8080;
-const server = app.listen(port, () => {
+const server = http.listen(port, () => {
   console.log(`App listening on port ${port}...`);
 });
 
@@ -33,5 +47,108 @@ process.on('unhandledRejection', (err) => {
   console.log(err.name, err.message);
   server.close(() => {
     process.exit(1);
+  });
+});
+
+const io = socket(server, {
+  cors: {
+    origin: 'http://localhost:3000',
+    Credential: true,
+  },
+});
+
+let count = 1;
+
+// io = socket(server);
+
+io.on('connection', (socket) => {
+  console.log('USER CONNECTED');
+  // nhan lai event tu client
+
+  socket.on('user join booking from client to server', (showtimeId, user) => {
+    socket.join(showtimeId);
+    io.to(showtimeId).emit(
+      'send danhSachGheDangDat from server to client',
+      getDanhSachGheDangDat(showtimeId)
+    );
+    // chào
+    // gửi cho client kêt nối vào
+    socket.emit(
+      'send message from server to client',
+      `Chào Mừng Bạn Đến Với Lịch Chiếu ${showtimeId}`
+    );
+
+    // gửi cho các client còn lại
+    socket.broadcast
+      .to(showtimeId)
+      .emit(
+        'send message from server to client',
+        `${user.fullName} vừa mới tham gia`
+      );
+
+    // xử lí userList
+    const newUser = {
+      id: socket.id,
+      fullName: user.fullName,
+      showtimeId,
+      avatar: user.photo,
+    };
+
+    addUser(newUser);
+    io.to(showtimeId).emit(
+      'send userList from server to client',
+      getUserList(showtimeId)
+    );
+
+    socket.on(
+      'send danhSachGheDangDat from client to server',
+      (listSeatSelected, idShowtime, fullName) => {
+        const newSeat = {
+          fullName,
+          idShowtime,
+          danhSachGheDangDat: listSeatSelected,
+          id: socket.id,
+        };
+
+        // xử lí ghế
+        addSeat(newSeat);
+        console.log('newSeat', newSeat);
+        io.to(showtimeId).emit(
+          'send danhSachGheDangDat from server to client',
+          getDanhSachGheDangDat(showtimeId)
+        );
+
+        console.log('idShowtime', idShowtime);
+        console.log('fullName', fullName);
+      }
+    );
+
+    // nhận sự kiện đặt vé thành công của client gửi về
+    socket.on(
+      'send successBookingTicket client to server',
+      (seatList, successBookingTicket, danhSachPhongVe) => {
+        io.to(showtimeId).emit(
+          'send listSeat from server to client',
+          seatList,
+          successBookingTicket,
+          danhSachPhongVe
+        );
+      }
+    );
+
+    // Disconnect
+    socket.on('disconnect', () => {
+      removeSeat(socket.id);
+      removeUser(socket.id);
+      io.to(showtimeId).emit(
+        'send userList from server to client',
+        getUserList(showtimeId)
+      );
+      io.to(showtimeId).emit(
+        'send danhSachGheDangDat from server to client',
+        getDanhSachGheDangDat(showtimeId)
+      );
+      console.log('USER DISCONNECTED');
+    });
   });
 });
