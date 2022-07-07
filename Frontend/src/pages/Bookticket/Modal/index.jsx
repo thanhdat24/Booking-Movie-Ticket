@@ -36,7 +36,6 @@ export default function Modal(props) {
     }
     dispatch({ type: RESET_DATA_BOOKTICKET });
   };
-
   const handleTimeOut = () => {
     dispatch({ type: RESET_DATA_BOOKTICKET });
     dispatch(getListSeat(params.idShowtime));

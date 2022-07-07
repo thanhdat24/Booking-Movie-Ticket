@@ -17,21 +17,17 @@ import io from "socket.io-client";
 import { HOST } from "../../constants/config";
 import { USER_BOOKING } from "../../redux/constants/Users";
 import _ from "lodash";
+import { socket } from "../../utils/helper";
 
 export default function BookTickets(props) {
-  let socket = useRef();
-
   const {
     danhSachPhongVe: { data },
     danhSachPhongVe: { seatList },
-    danhSachPhongVe,
     timeOut,
     refreshKey,
     errorGetListSeatMessage,
     successBookingTicket,
   } = useSelector((state) => state.BookTicketReducer);
-  console.log("danhSachPhongVe123", danhSachPhongVe);
-  console.log("successBookingTicket", successBookingTicket);
   const { currentUser } = useSelector((state) => state.AuthReducer);
   const { user } = currentUser;
   const params = useParams();
@@ -52,14 +48,13 @@ export default function BookTickets(props) {
     );
 
     // Có 1 client nào thực hiệN việc đặt vé thành công
-    socket.current.on(
-      "send listSeat from server to client",
-      (seatList, successBookingTicket, danhSachPhongVe) => {
-        console.log("successBookingTicket", successBookingTicket);
-        console.log("seatList", seatList);
-        console.log("danhSachPhongVe", danhSachPhongVe);
-      }
-    );
+    // socket.current.on(
+    //   "send listSeat from server to client",
+    //   (idShowtime, danhSachGheDangDat) => {
+    //     dispatch(getListSeat(idShowtime));
+
+    //   }
+    // );
 
     // xử lý user list
     socket.current.on(
@@ -115,9 +110,7 @@ export default function BookTickets(props) {
     if (successBookingTicket) {
       socket.current.emit(
         "send successBookingTicket client to server",
-        seatList,
-        successBookingTicket,
-        danhSachPhongVe
+        successBookingTicket
       );
     }
   }, [successBookingTicket]);

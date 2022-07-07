@@ -6,15 +6,14 @@ import SquareRoundedIcon from "@mui/icons-material/SquareRounded";
 import { useParams } from "react-router-dom";
 import formatDate from "../../../utils/formatDate";
 import { colorTheater } from "../../../constants/theaterData";
+
 import {
   CHANGE_LISTSEAT,
   SET_ALERT_OVER10,
 } from "../../../redux/constants/BookTicket";
-import { io } from "socket.io-client";
-import { HOST } from "../../../constants/config";
 
 export default function ListSeat(props) {
-  const {
+  let {
     danhSachPhongVe: { data },
     danhSachGheKhachDat,
     listSeat,

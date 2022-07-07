@@ -1,4 +1,5 @@
 import bookingApi from "../../api/bookingApi";
+import { socket } from "../../utils/helper";
 import {
   CREATE_SHOWTIME_FAIL,
   CREATE_SHOWTIME_REQUEST,
@@ -167,7 +168,9 @@ export const getListSeat = (idShowtime) => {
 };
 
 export const postCreateTicket = (data) => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    let currentUser = getState().AuthReducer.currentUser;
+
     dispatch({
       type: BOOK_TICKET_REQUEST,
     });
@@ -180,7 +183,11 @@ export const postCreateTicket = (data) => {
             data: result.data,
           },
         });
-        
+        // socket.current.emit(
+        //   "send successBookingTicket client to server",
+        //   // currentUser.user.email,
+        //   data.idShowtime
+        // );
       })
       .catch((error) => {
         dispatch({
@@ -245,7 +252,6 @@ export const updateUnReadTicket = (ticket, _id) => {
   };
 };
 
-
 export const getTicketRevenue = () => {
   return (dispatch) => {
     dispatch({
@@ -271,7 +277,6 @@ export const getTicketRevenue = () => {
       });
   };
 };
-
 
 export const getMovieRevenue = () => {
   return (dispatch) => {

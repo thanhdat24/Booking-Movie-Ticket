@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const socket = require('socket.io');
+const ShowTime = require('./models/showtimeModel');
+
 process.on('uncaughtException', (err) => {
   console.log('UNCAUGHT EXCEPTION! 🧨 Shutting down...');
   console.log(err.name, err.message);
@@ -124,15 +126,35 @@ io.on('connection', (socket) => {
     );
 
     // nhận sự kiện đặt vé thành công của client gửi về
+    // socket.on('send successBookingTicket client to server', (idShowtime) => {
+    //   removeSeat(socket.id);
+    //   io.to(showtimeId).emit(
+    //     'send danhSachGheDangDat from server to client',
+    //     getDanhSachGheDangDat(showtimeId)
+    //   );
+    //   io.to(showtimeId).emit(
+    //     'send listSeat from server to client',
+    //     idShowtime,
+    //     io
+    //       .to(showtimeId)
+    //       .emit(
+    //         'send danhSachGheDangDat from server to client',
+    //         getDanhSachGheDangDat(showtimeId)
+    //       )
+    //   );
+    // });
+
+    // Chưa xử lí đc xử kiện successBookingTicket reset lại listSeat
     socket.on(
       'send successBookingTicket client to server',
-      (seatList, successBookingTicket, danhSachPhongVe) => {
-        io.to(showtimeId).emit(
-          'send listSeat from server to client',
-          seatList,
-          successBookingTicket,
-          danhSachPhongVe
-        );
+      (idShowtime, successBookingTicket) => {
+        if (successBookingTicket) {
+          removeSeat(socket.id);
+          io.to(showtimeId).emit(
+            'send danhSachGheDangDat from server to client',
+            getDanhSachGheDangDat(showtimeId)
+          );
+        }
       }
     );
 
