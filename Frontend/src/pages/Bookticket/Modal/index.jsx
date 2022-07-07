@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -7,23 +7,19 @@ import ResultBookticket from "../ResultBookticket";
 import useStyles from "./style";
 import { Button, Dialog } from "@mui/material";
 import {
-  getDetailShowtimes,
   getListSeat,
 } from "../../../redux/actions/BookTicket";
 import {
   RESET_ALERT_OVER10,
   RESET_DATA_BOOKTICKET,
 } from "../../../redux/constants/BookTicket";
-import { LOADING_BACKTO_HOME } from "../../../redux/constants/Lazy";
 
 export default function Modal(props) {
   const {
     successBookingTicket,
     errorBookTicket,
     timeOut,
-    alertOver10,
-    danhSachPhongVe: { seatList },
-    danhSachPhongVe,
+    alertOver10
   } = useSelector((state) => state.BookTicketReducer);
   const dispatch = useDispatch();
   const history = useHistory();

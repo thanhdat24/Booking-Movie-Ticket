@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
 
 import clsx from "clsx";
-import { Icon } from "@iconify/react";
 import { useSelector, useDispatch } from "react-redux";
 import SearchIcon from "@mui/icons-material/Search";
 import { useHistory, useLocation } from "react-router-dom";
 import { scroller } from "react-scroll";
-import { FAKE_AVATAR } from "../../../constants/config";
 import { useTheme } from "@mui/styles";
-import MenuIcon from "@mui/icons-material/Menu";
-import DirectionsIcon from "@mui/icons-material/Directions";
 import { styled, alpha } from "@mui/material/styles";
 import {
   Avatar,

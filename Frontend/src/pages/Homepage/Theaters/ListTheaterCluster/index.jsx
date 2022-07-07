@@ -1,21 +1,13 @@
-import React, { memo, useState } from "react";
-import { useSelector } from "react-redux";
-import _ from "lodash";
+import React, { memo } from "react";
 import { underLine, customScrollbar } from "../../../../styles/materialUi";
 import ListMovie from "../ListMovie";
 import { useStyles } from "./styles";
 
 function ListTheaterCluster(props) {
-  const { movieList } = useSelector((state) => state.MovieReducer);
-  console.log("movieList", movieList);
-
-
-
   const { listTheaterCluster, color } = props;
   const [valueTheaterCluster, setValueTheaterCluster] = React.useState(0);
 
   const classes = useStyles({ underLine, customScrollbar, color });
-  console.log("listTheaterCluster", listTheaterCluster);
   const handleChangeTheaterCluster = (e) => {
     setValueTheaterCluster(Number(e.currentTarget.getAttribute("index")));
   };

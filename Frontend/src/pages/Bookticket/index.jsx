@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Desktop from "./Desktop/";
@@ -37,9 +37,9 @@ export default function BookTickets(props) {
     dispatch(getDiscountsList());
     dispatch(getListSeat(params.idShowtime));
     socket.current = io(HOST);
-    socket.current.on("send message from server to client", (mess) => {
-      console.log("mess", mess);
-    });
+    // socket.current.on("send message from server to client", (mess) => {
+    //   console.log("mess", mess);
+    // });
 
     socket.current.emit(
       "user join booking from client to server",

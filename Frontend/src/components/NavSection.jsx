@@ -84,11 +84,6 @@ function NavItem({ item, active }) {
     "&:before": { display: "block" },
   };
 
-  const activeSubStyle = {
-    color: "text.primary",
-    fontWeight: "fontWeightMedium",
-  };
-
   if (children) {
     return (
       <>
@@ -132,8 +127,6 @@ function NavItem({ item, active }) {
           >
             {children.map((item, i) => {
               const { title, path } = item;
-              const isActiveSub = active(path);
-
               return (
                 <ListItemStyle
                   key={title}

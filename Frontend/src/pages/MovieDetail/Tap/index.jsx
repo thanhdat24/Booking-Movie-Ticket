@@ -8,7 +8,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Fade,
   Grid,
   IconButton,
   Rating,
@@ -40,9 +39,7 @@ import {
   addReview,
   getAllReviews,
   likeComment,
-  resetReviewManagement,
 } from "../../../redux/actions/Review";
-import { getDetailMovie } from "../../../redux/actions/Movie";
 import { selectCommentByMaPhimAndCommentTest } from "../../../redux/selector/MovieDetail";
 import { useSnackbar } from "notistack";
 // bình luận bao nhiêu giấy trước
@@ -77,7 +74,6 @@ export default function CenteredTabs({
   const [hover, setHover] = React.useState(-1);
   const [valueTab, setValueTab] = useState(0);
   const { currentUser } = useSelector((state) => state.AuthReducer);
-  console.log("currentUser", currentUser);
 
   const [croll, setCroll] = useState(0);
   const [openComment, setOpenComment] = useState(false);
@@ -97,15 +93,12 @@ export default function CenteredTabs({
   const { commentList } = useSelector((state) =>
     selectCommentByMaPhimAndCommentTest(state, params.idMovie)
   );
-  // let filterCommentList = commentList?.filter((item) => item.active);
-  console.log("commentList", commentList);
 
   const {
     postReviewObj,
     loadingAddReview,
     loadingLikeComment,
     likeCommentObj,
-    errorAddReview,
   } = useSelector((state) => state.ReviewReducer);
   const labels = {
     0.5: "0.5",
@@ -166,7 +159,6 @@ export default function CenteredTabs({
     }
     setwarningtext(false);
     const currentISOString = new Date().toISOString();
-    // console.log("dat123");
 
     dispatch(
       addReview({

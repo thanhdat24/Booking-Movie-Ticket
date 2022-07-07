@@ -17,7 +17,6 @@ export default function ListSeat(props) {
     danhSachPhongVe: { data },
     danhSachGheKhachDat,
     listSeat,
-    successBookingTicket,
   } = useSelector((state) => state.BookTicketReducer);
   const {
     currentUser: { user },
@@ -82,9 +81,6 @@ export default function ListSeat(props) {
       []
     );
 
-    // console.log("newListSeatSelected123", newListSeatSelected123);
-    console.log("param", param.idShowtime);
-    // let showtimeId123 = param.idShowtime;
     props.socket.current.emit(
       "send danhSachGheDangDat from client to server",
       listSeatSelected,

@@ -5,9 +5,6 @@ import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import eyeFill from "@iconify/icons-eva/eye-fill";
 import eyeOffFill from "@iconify/icons-eva/eye-off-fill";
-import googleFill from "@iconify/icons-eva/google-fill";
-import twitterFill from "@iconify/icons-eva/twitter-fill";
-import facebookFill from "@iconify/icons-eva/facebook-fill";
 import { styled } from "@mui/material/styles";
 
 import {
@@ -21,17 +18,14 @@ import {
   TextField,
   IconButton,
   FormControlLabel,
-  Divider,
   Alert,
 } from "@mui/material";
 
-import Button from "@mui/material/Button";
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
 import AuthLayout from "../../layouts/AuthLayout";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/actions/Auth";
-import { LOADING_BACKTO_HOME } from "../../redux/constants/Lazy";
 
 const SectionStyle = styled(Card)(({ theme }) => ({
   width: "100%",
@@ -92,7 +86,7 @@ export default function Login() {
       dispatch(login(user));
     },
   });
-  const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } =
+  const { errors, touched, values, handleSubmit, getFieldProps } =
     formik;
 
   const handleShowPassword = () => {

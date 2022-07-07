@@ -67,13 +67,11 @@ export default function PayMent(props) {
     activeCoupon,
     isSelectedSeat,
     listSeatSelected,
-    successBookingTicket,
   } = useSelector((state) => state.BookTicketReducer);
   const {
     discountList: { data: discountList },
   } = useSelector((state) => state.DiscountReducer);
   const { enqueueSnackbar } = useSnackbar();
-  console.log("discountList", discountList);
 
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
@@ -124,7 +122,6 @@ export default function PayMent(props) {
       values: newValues,
       errors: newErrors,
     }));
-    console.log("dataSubmit", dataSubmit);
   };
 
   useEffect(() => {
@@ -233,7 +230,6 @@ export default function PayMent(props) {
           values: newValues,
           errors: newErrors,
         }));
-        console.log("dataSubmit", dataSubmit);
       }
     } else {
       let newValues = {
@@ -268,11 +264,9 @@ export default function PayMent(props) {
 
   const handleCoupon = (event) => {
     setCoupon(event.target.value);
-    console.log("event.target.value", event.target.value);
   };
 
   const handlePostCoupon = () => {
-    console.log("coupon", coupon);
 
     const code = discountList.find((item) => item.code === coupon);
 

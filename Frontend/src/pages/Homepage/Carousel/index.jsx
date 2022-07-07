@@ -6,7 +6,6 @@ import { useDispatch } from "react-redux";
 
 import BtnPlay from "../../../components/BtnPlay";
 import "./carousel.css";
-import { useTheme } from "@mui/styles";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useStyles } from "./styles";
@@ -15,7 +14,6 @@ import SearchStickets from "../Search";
 import { LOADING_BACKTO_HOME_COMPLETED } from "../../../redux/constants/Lazy";
 export default function Carousel() {
   const dispatch = useDispatch();
-  const history = useHistory();
   const classes = useStyles();
   const settings = {
     dots: true,

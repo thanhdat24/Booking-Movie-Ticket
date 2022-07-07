@@ -15,7 +15,6 @@ import {
   ListItemAvatar,
   ListItemButton,
   Dialog,
-  useMediaQuery,
 } from "@mui/material";
 // utils
 import MenuPopover from "./MenuPopover";
@@ -29,7 +28,6 @@ import {
 } from "../../redux/actions/BookTicket";
 import useStyles from "../../pages/Bookticket/ResultBookticket/style";
 import { colorTheater } from "../../constants/theaterData";
-import { useTheme } from "@mui/material/styles";
 // components
 
 // ----------------------------------------------------------------------
@@ -172,7 +170,6 @@ export default function NotificationsPopover() {
 function NotificationItem({ notification, id, key }) {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-  const theme = useTheme();
   const calculateTimeout = (dateShow) => {
     const fakeThoiLuong = 120;
     const timeInObj = new Date(dateShow);

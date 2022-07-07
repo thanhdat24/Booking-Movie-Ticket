@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
-import { useEffect, useRef, useState } from "react";
+import {useRef, useState } from "react";
 import editFill from "@iconify/icons-eva/edit-fill";
-import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import trash2Outline from "@iconify/icons-eva/trash-2-outline";
 import moreVerticalFill from "@iconify/icons-eva/more-vertical-fill";
 // material
@@ -15,8 +15,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteMovie,
-  getDetailMovie,
-  resetMoviesManagement,
 } from "../../redux/actions/Movie";
 import UseApiCheckIsMaPhimSetShowtime from "../../utils/useApiCheckIsIdMovieSetShowtime";
 
@@ -24,11 +22,9 @@ import UseApiCheckIsMaPhimSetShowtime from "../../utils/useApiCheckIsIdMovieSetS
 
 export default function UserMoreMenu({ idMovie }) {
   const history = useHistory();
-  let location = useLocation();
   const {loadingDeleteMovie,  } =
     useSelector((state) => state.MovieReducer);
   const isMovieSetShowtime = UseApiCheckIsMaPhimSetShowtime(idMovie);
-  console.log("isMovieSetShowtime", isMovieSetShowtime);
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();

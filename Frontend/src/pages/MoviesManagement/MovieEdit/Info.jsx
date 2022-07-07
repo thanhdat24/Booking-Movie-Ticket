@@ -29,7 +29,6 @@ import { useSnackbar } from "notistack";
 import { useHistory, useParams } from "react-router-dom";
 
 export default function Info({ successDetailMovie }) {
-  console.log("successDetailMovie", successDetailMovie);
   const params = useParams();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -85,7 +84,6 @@ export default function Info({ successDetailMovie }) {
   } = formik;
 
   const [srcImage, setSrcImage] = useState("");
-  console.log("srcImage", srcImage);
   const handleChangeFile = (e) => {
     let file = e.target.files[0];
     var reader = new FileReader();

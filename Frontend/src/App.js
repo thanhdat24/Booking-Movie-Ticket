@@ -1,5 +1,5 @@
 import "./App.css";
-import { useMemo, lazy, Suspense, useEffect } from "react";
+import { useMemo, lazy, Suspense } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";

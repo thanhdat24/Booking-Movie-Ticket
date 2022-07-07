@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { visuallyHidden } from "@mui/utils";
 import {
   Box,
-  Checkbox,
   TableRow,
   TableCell,
   TableHead,

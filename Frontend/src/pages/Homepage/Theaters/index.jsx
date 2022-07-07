@@ -12,9 +12,7 @@ export default function Theaters() {
   const [valueTheaterSystem, setValueTheaterSystem] = React.useState(0);
   const classes = useStyles({ underLine });
   const {
-    loadingTheaterSystemList,
     errorTheaterSystemList,
-    theaterSystemList,
     showtimeTheaterSystemList,
   } = useSelector((state) => state.TheaterSystemReducer);
   if (errorTheaterSystemList) {
@@ -26,7 +24,6 @@ export default function Theaters() {
       <div className={classes.theater}>
         <Tabs
           variant={"standard"}
-          scrollButtons="on"
           orientation={"vertical"}
           value={valueTheaterSystem}
           classes={{ indicator: classes.tabs__indicator, root: classes.taps }}

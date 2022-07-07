@@ -2,11 +2,8 @@ import React from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import Dialog from "@mui/material/Dialog";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
 import { makeStyles } from "@mui/styles";
 
-// import { CLOSE_MODAL } from "../../reducers/constants/ModalTrailer";
 import { CLOSE_MODAL } from "../../redux/constants/ModalTrailer";
 import getVideoId from "../../utils/getVideoIdFromUrlYoutube";
 

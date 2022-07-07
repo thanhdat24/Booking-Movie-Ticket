@@ -6,7 +6,6 @@ import useStyles from "./style";
 
 export default function ListShowtime({ ListShowtimeByMovie }) {
   const classes = useStyles();
-  console.log("ListShowtimeByMovie", ListShowtimeByMovie);
   const mangChiChuaNgay = ListShowtimeByMovie.map((item) => {
     // tạo mảng mới chỉ chứa ngày
     return item.dateShow.slice(0, 10); // item là "2020-12-17" cắt ra từ 2020-12-17T10:10:00

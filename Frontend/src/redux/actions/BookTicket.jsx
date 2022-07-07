@@ -1,5 +1,4 @@
 import bookingApi from "../../api/bookingApi";
-import { socket } from "../../utils/helper";
 import {
   CREATE_SHOWTIME_FAIL,
   CREATE_SHOWTIME_REQUEST,

@@ -7,7 +7,6 @@ import { useStyles } from "./styles";
 import BtnPlay from "../../../components/BtnPlay";
 import { useSelector } from "react-redux";
 import formatDate from "../../../utils/formatDate";
-import { scroller } from "react-scroll";
 import Tap from "../Tap";
 import { selectCommentByMaPhimAndCommentTest } from "../../../redux/selector/MovieDetail";
 

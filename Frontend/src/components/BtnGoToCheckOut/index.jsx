@@ -2,7 +2,6 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 
 import useStyles from "./styles";
-import moment from "moment";
 export default function BtnGoToCheckout({ movieShowtimes }) {
   const classes = useStyles();
   const history = useHistory();

@@ -18,11 +18,10 @@
 */
 import React, { useEffect, useRef, useState, useCallback } from "react";
 
-import { makeStyles, useTheme } from "@mui/styles";
+import { makeStyles } from "@mui/styles";
 import clsx from "clsx";
 import { useSelector } from "react-redux";
 import useHandleVibrateLazy from "../../utils/useHandleVibrateLazy";
-import { useMediaQuery } from "@mui/material";
 import { IMG_LOADING } from "../../constants/config";
 
 const useStyles = makeStyles({

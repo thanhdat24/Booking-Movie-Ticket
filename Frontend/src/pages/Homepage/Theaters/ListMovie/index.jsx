@@ -16,14 +16,13 @@ function ListMovie(props) {
   const movieList = groupByTheaterCluster.map((item) => {
     return {
       ...item,
-      ["_id"]: item.movieSchedule[0].idMovie._id,
-      ["photo"]: item.movieSchedule[0].idMovie.photo,
-      ["name"]: item.movieSchedule[0].idMovie.name,
-      ["duration"]: item.movieSchedule[0].idMovie.duration,
-      ["trailer"]: item.movieSchedule[0].idMovie.trailer,
+      _id: item.movieSchedule[0].idMovie._id,
+      photo: item.movieSchedule[0].idMovie.photo,
+      name: item.movieSchedule[0].idMovie.name,
+      duration: item.movieSchedule[0].idMovie.duration,
+      trailer: item.movieSchedule[0].idMovie.trailer,
     };
   });
-  console.log("movieList", movieList);
   return (
     <div className={classes.lstPhim} hidden={props.hidden}>
       {/* div root danh sách phim */}

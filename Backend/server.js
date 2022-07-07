@@ -75,18 +75,18 @@ io.on('connection', (socket) => {
     );
     // chào
     // gửi cho client kêt nối vào
-    socket.emit(
-      'send message from server to client',
-      `Chào Mừng Bạn Đến Với Lịch Chiếu ${showtimeId}`
-    );
+    // socket.emit(
+    //   'send message from server to client',
+    //   `Chào Mừng Bạn Đến Với Lịch Chiếu ${showtimeId}`
+    // );
 
     // gửi cho các client còn lại
-    socket.broadcast
-      .to(showtimeId)
-      .emit(
-        'send message from server to client',
-        `${user.fullName} vừa mới tham gia`
-      );
+    // socket.broadcast
+    //   .to(showtimeId)
+    //   .emit(
+    //     'send message from server to client',
+    //     `${user.fullName} vừa mới tham gia`
+    //   );
 
     // xử lí userList
     const newUser = {

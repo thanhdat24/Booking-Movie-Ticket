@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { colorTheater } from "../../../constants/theaterData";
 
 import { useSelector } from "react-redux";
@@ -14,19 +14,15 @@ export default function SuccessBooking(props) {
     discount,
     paymentMethod,
     danhSachPhongVe: { data },
-    danhSachPhongVe: { seatList },
-    danhSachPhongVe,
     listSeatSelected,
     successBookingTicket,
     errorBookTicket,
-    listSeat,
   } = useSelector((state) => state.BookTicketReducer);
   const { currentUser } = useSelector((state) => state.AuthReducer);
   const classes = useStyles({
     data,
     color: colorTheater[data?.theaterClusterName.slice(0, 3).toUpperCase()],
   });
-  console.log("seatList", seatList);
   const calculateTimeout = (dateShow) => {
     const fakeThoiLuong = 120;
     const timeInObj = new Date(dateShow);

@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import editFill from "@iconify/icons-eva/edit-fill";
-import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import trash2Outline from "@iconify/icons-eva/trash-2-outline";
 import moreVerticalFill from "@iconify/icons-eva/more-vertical-fill";
 // material
@@ -14,13 +14,12 @@ import {
 } from "@mui/material";
 import { deleteUser } from "../../redux/actions/Users";
 import { useDispatch, useSelector } from "react-redux";
-import { getDetailUser, resetUpdate } from "../../redux/actions/Auth";
+import { getDetailUser } from "../../redux/actions/Auth";
 
 // ----------------------------------------------------------------------
 
 export default function UserMoreMenu({ userId }) {
   const history = useHistory();
-  let location = useLocation();
   const { loadingDelete } = useSelector((state) => state.UserManagement);
   const { successGetDetailUser } = useSelector((state) => state.AuthReducer);
   const ref = useRef(null);

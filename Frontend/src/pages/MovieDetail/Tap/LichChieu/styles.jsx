@@ -1,6 +1,6 @@
 import { makeStyles } from "@mui/styles";
 
-import { customScrollbar, underLine } from "../../../../styles/materialUi";
+import { customScrollbar } from "../../../../styles/materialUi";
 
 const useStyles = makeStyles((theme) => ({
   root: {
