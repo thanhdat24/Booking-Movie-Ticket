@@ -1,5 +1,5 @@
 import "./App.css";
-import { useMemo, lazy, Suspense } from "react";
+import { useMemo, lazy, Suspense, useEffect, useState } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -20,6 +20,11 @@ import ModalTrailer from "./components/ModalTrailer/ModalTrailer";
 import MainLayout from "./layouts/MainLayout/index";
 import NotFound from "./pages/NotFound";
 import ResetPassword from "./pages/ResetPassword";
+
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import { TOKEN } from "./constants/config";
+import { useDispatch } from "react-redux";
 
 // page
 const Homepage = lazy(() => import("./pages/Homepage"));
@@ -52,7 +57,55 @@ const AdminRoute = lazy(() => import("./guards/AdminRoute"));
 const CheckoutRoute = lazy(() => import("./guards/CheckoutRoute"));
 const UserProfileRoute = lazy(() => import("./guards/UserProfileRoute"));
 
+// Configure Firebase.
+const config = {
+  apiKey: process.env.REACT_APP_FIREBASE_API,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+};
+firebase.initializeApp(config);
+
 function App() {
+  // const [isSignedIn, setIsSignedIn] = useState(false);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const unregisterAuthObserver = firebase
+      .auth()
+      .onAuthStateChanged(async (user) => {
+        if (!user) {
+          console.log("User is not logged in");
+          return;
+        }
+        const token = await user.getIdToken();
+        const data = {
+          user: {
+            _id: user.uid,
+            fullName: user.displayName,
+            email: user.email,
+            photo: user.photoURL,
+            providerId: user.providerId,
+            active: true,
+            dateOfBirth: "",
+            gender: "",
+            phoneNumber: user.phoneNumber,
+            role: "user",
+          },
+          token,
+          status: "success",
+        };
+        if (user) {
+          dispatch({
+            type: "LOGIN_FIREBASE",
+            payload: {
+              data,
+              token,
+            },
+          });
+          localStorage.setItem(TOKEN, token);
+        }
+      });
+    return () => unregisterAuthObserver();
+  }, []);
+
   const themeOptions = useMemo(
     () => ({
       palette,

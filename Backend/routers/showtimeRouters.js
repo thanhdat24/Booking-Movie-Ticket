@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.route('/').get(showTimeController.getAllShowTime);
 
-router.use(authController.protect);
+// router.use(authController.protect);
 
 router
   .route('/')

@@ -5,13 +5,15 @@ const discountController = require('../controllers/discountController');
 const router = express.Router();
 
 //Protect all routers after this middleware
-router.use(authController.protect);
+
+// router.use(authController.protect);
 
 // RestrictTo "admin"
-router.use(authController.restrictTo('admin'));
+
 
 router.route('/').get(discountController.getAllDiscount);
 
+// router.use(authController.restrictTo('admin'));
 router.route('/').post(discountController.createDiscount);
 
 router

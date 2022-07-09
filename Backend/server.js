@@ -114,7 +114,6 @@ io.on('connection', (socket) => {
 
         // xử lí ghế
         addSeat(newSeat);
-        console.log('newSeat', newSeat);
         io.to(showtimeId).emit(
           'send danhSachGheDangDat from server to client',
           getDanhSachGheDangDat(showtimeId)

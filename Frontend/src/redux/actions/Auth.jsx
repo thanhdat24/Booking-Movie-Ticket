@@ -43,7 +43,28 @@ export const login = (user) => {
     }
   };
 };
-
+export const loginFirebase = (user) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: LOGIN_REQUEST,
+      });
+      const result = await usersApi.postLogin(user);
+      dispatch({
+        type: LOGIN_SUCCESS,
+        data: result.data,
+        token: result.data.token,
+      });
+    } catch (error) {
+      dispatch({
+        type: LOGIN_FAIL,
+        payload: {
+          error: error.response?.data.message,
+        },
+      });
+    }
+  };
+};
 export const register = (user) => {
   return (dispatch) => {
     dispatch({

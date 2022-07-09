@@ -1,4 +1,5 @@
 import { TOKEN, USER_LOGIN } from "../../constants/config";
+import { getAuth, signOut } from "firebase/auth";
 import {
   GET_USER_FAIL,
   GET_USER_SUCCESS,
@@ -56,6 +57,14 @@ export const AuthReducer = (state = stateDefault, action) => {
       localStorage.setItem(TOKEN, token);
       return { ...state, currentUser: data, loadingLogin: false };
     }
+
+    case "LOGIN_FIREBASE": {
+      const { data, token } = action.payload;
+      localStorage.setItem(USER_LOGIN, JSON.stringify(data, token));
+      localStorage.setItem(TOKEN, token);
+      return { ...state, currentUser: data, loadingLogin: false };
+    }
+
     case LOGIN_FAIL: {
       return {
         ...state,
@@ -66,6 +75,8 @@ export const AuthReducer = (state = stateDefault, action) => {
     case LOGOUT: {
       localStorage.removeItem(USER_LOGIN);
       localStorage.removeItem(TOKEN);
+      const auth = getAuth();
+      signOut(auth);
       return {
         ...state,
         currentUser: null,
@@ -175,7 +186,6 @@ export const AuthReducer = (state = stateDefault, action) => {
         responseResetPassword: "",
         loadingResetPassword: false,
         errorResetPassword: null,
-
       };
     }
     default:

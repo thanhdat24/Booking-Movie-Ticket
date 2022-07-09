@@ -36,7 +36,7 @@ const headMenu = [
 export default function Header() {
   const { currentUser } = useSelector((state) => state.AuthReducer);
   const { isLoadingBackToHome } = useSelector((state) => state.LazyReducer);
-
+  console.log("currentUser", currentUser);
   const dispatch = useDispatch();
   let location = useLocation();
   const history = useHistory();
@@ -127,7 +127,7 @@ export default function Header() {
     if (location.pathname === "/") {
       dispatch(getMovieList());
       dispatch(getTheaterList());
-      return
+      return;
     }
     dispatch({ type: LOADING_BACKTO_HOME });
     setTimeout(() => {

@@ -6,7 +6,6 @@ import { Icon } from "@iconify/react";
 import eyeFill from "@iconify/icons-eva/eye-fill";
 import eyeOffFill from "@iconify/icons-eva/eye-off-fill";
 import { styled } from "@mui/material/styles";
-
 import {
   Card,
   Stack,
@@ -26,6 +25,7 @@ import { useState } from "react";
 import AuthLayout from "../../layouts/AuthLayout";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/actions/Auth";
+import AuthSocial from "./AuthSocial";
 
 const SectionStyle = styled(Card)(({ theme }) => ({
   width: "100%",
@@ -86,12 +86,13 @@ export default function Login() {
       dispatch(login(user));
     },
   });
-  const { errors, touched, values, handleSubmit, getFieldProps } =
-    formik;
+  const { errors, touched, values, handleSubmit, getFieldProps } = formik;
 
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
+
+
   return (
     <div className="flex">
       <AuthLayout></AuthLayout>
@@ -114,6 +115,9 @@ export default function Login() {
               Đăng nhập MovieApp!
             </Typography>
           </Stack>
+
+          <AuthSocial />
+
           <FormikProvider value={formik}>
             <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
               <Stack spacing={3}>
