@@ -8,6 +8,7 @@ const crypto = require('crypto');
 const generator = require('generate-password');
 const gravatarUrl = require('gravatar');
 
+
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,

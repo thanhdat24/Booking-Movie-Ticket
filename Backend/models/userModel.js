@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 var validator = require('validator');
 const bcrypt = require('bcryptjs');
+var findOrCreate = require('mongoose-findorcreate');
+
 const crypto = require('crypto');
 const userSchema = new mongoose.Schema(
   {
@@ -11,8 +13,8 @@ const userSchema = new mongoose.Schema(
     },
     phoneNumber: {
       type: String,
-      required: [true, 'Please provide your phoneNumber'],
       unique: true,
+      required: [true, 'Please provide your phoneNumber'],
       validate: {
         validator: function (number) {
           return /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/.test(
@@ -21,12 +23,13 @@ const userSchema = new mongoose.Schema(
         },
         message: (props) => `${props.value} is not a valid phone number!`,
       },
-      required: [true, 'User phone number required'],
+      // allowNull: true,
     },
     gender: {
       type: String,
       required: [true, 'Please tell us your gender'],
       enum: ['Nam', 'Nữ'],
+      // allowNull: true,
     },
     email: {
       type: String,
@@ -40,6 +43,7 @@ const userSchema = new mongoose.Schema(
     dateOfBirth: {
       type: Date,
       required: [true, 'Please provide your date of birth'],
+      // allowNull: true,
     },
     photo: {
       type: String,
@@ -55,9 +59,11 @@ const userSchema = new mongoose.Schema(
       minlength: 8,
       // Không tự hiện thị
       select: false,
+      // allowNull: true,
     },
     passwordConfirm: {
       type: String,
+      // allowNull: true,
       required: [true, 'Please provide a passwordConfirm'],
       // validate check 2 password equal
       // this only works on CREATE and SAVE!!! ( NOT UPDATE )
@@ -68,6 +74,11 @@ const userSchema = new mongoose.Schema(
         messages: 'Password and Confirmation Password must match',
       },
     },
+    // googleId: {
+    //   type: String,
+    //   allowNull: true,
+    // },
+
     passwordChangeAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,
@@ -79,6 +90,8 @@ const userSchema = new mongoose.Schema(
   },
   { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
+
+// userSchema.plugin(findOrCreate)
 
 // DOCUMENT MIDDLEWARE: runs before .save() and .create()
 userSchema.pre('save', async function (next) {

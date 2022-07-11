@@ -72,7 +72,6 @@ function App() {
       .auth()
       .onAuthStateChanged(async (user) => {
         if (!user) {
-          console.log("User is not logged in");
           return;
         }
         const token = await user.getIdToken();

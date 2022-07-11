@@ -12,6 +12,12 @@ export default function AuthSocial() {
       useSignInWithGoogle(auth);
 
     const signIn = () => {
+      //  const googleLoginURL = "http://127.0.0.1:8080/api/v1/users/login/google";
+      //  const newWindow = window.open(
+      //    googleLoginURL,
+      //    "_self",
+      //    "width=500,height=600"
+      //  );
       signInWithGoogle();
     };
   return (

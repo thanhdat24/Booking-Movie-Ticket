@@ -19,6 +19,10 @@ const swaggerDocument = require('./swagger/swagger.json');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const app = express();
+// const session = require('cookie-session');
+// const passport = require('passport');
+
+require('./controllers/passportGoogle');
 
 // const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
@@ -41,7 +45,19 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
+app.use(cors());
 app.use(express.json());
+// app.use(
+//   session({
+//     secret: 's123456789',
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: { secure: true },
+//   })
+// );
+
+// app.use(passport.initialize());
+// app.use(passport.session()); // persistent login sessions
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
@@ -52,8 +68,6 @@ app.use((req, res, next) => {
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // 3) Router
-
-app.use(cors());
 
 app.use('/api/v1/tours', tourRoutes);
 app.use('/api/v1/users', userRoutes);

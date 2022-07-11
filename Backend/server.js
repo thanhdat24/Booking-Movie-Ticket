@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const socket = require('socket.io');
-const ShowTime = require('./models/showtimeModel');
+// const session = require('express-session');
+// const express = require('express');
+// const passport = require('passport');
 
 process.on('uncaughtException', (err) => {
   console.log('UNCAUGHT EXCEPTION! 🧨 Shutting down...');
@@ -11,6 +13,7 @@ process.on('uncaughtException', (err) => {
 
 dotenv.config({ path: './config.env' });
 const app = require('./app');
+
 const { getUserList, addUser, removeUser } = require('./utils/users');
 const {
   addSeat,
@@ -25,6 +28,8 @@ const http = require('http').createServer(app);
 //     Credential: true,
 //   },
 // });
+// app.use(passport.initialize());
+// app.use(passport.session()); // persistent login sessions
 
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
@@ -44,6 +49,8 @@ const server = http.listen(port, () => {
   console.log(`App listening on port ${port}...`);
 });
 
+// After you declare "app"
+
 process.on('unhandledRejection', (err) => {
   console.log('UNHANDLED REJECTION! 🧨 Shutting down...');
   console.log(err.name, err.message);
@@ -58,10 +65,6 @@ const io = socket(server, {
     Credential: true,
   },
 });
-
-let count = 1;
-
-// io = socket(server);
 
 io.on('connection', (socket) => {
   console.log('USER CONNECTED');

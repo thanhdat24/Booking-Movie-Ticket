@@ -300,15 +300,15 @@ function NotificationItem({ notification, id, key }) {
                 <tbody>
                   <tr>
                     <td valign="top">Họ tên:</td>
-                    <td>{notification?.userId.fullName}</td>
+                    <td>{notification?.userId?.fullName}</td>
                   </tr>
                   <tr>
                     <td valign="top">Điện thoại:</td>
-                    <td valign="top">{notification?.userId.phoneNumber}</td>
+                    <td valign="top">{notification?.userId?.phoneNumber}</td>
                   </tr>
                   <tr>
                     <td valign="top">Email:</td>
-                    <td>{notification?.userId.email}</td>
+                    <td>{notification?.userId?.email}</td>
                   </tr>
                   <tr>
                     <td valign="top">Trạng thái:</td>
@@ -363,7 +363,7 @@ function renderContent(notification) {
     .slice(0, 5);
   const title = (
     <Typography variant="subtitle2">
-      {notification?.userId.fullName}
+      {notification?.userId?.fullName}
       <Typography
         component="span"
         variant="body2"
