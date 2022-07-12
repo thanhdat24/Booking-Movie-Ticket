@@ -15,8 +15,7 @@ import sidebarConfig from "../Dashboard/SidebarConfig";
 
 import { styled, useTheme } from "@mui/material/styles";
 import { Avatar, Link, Stack } from "@mui/material";
-import {  Link as RouterLink } from "react-router-dom";
-import Searchbar from "./Searchbar";
+import { Link as RouterLink } from "react-router-dom";
 import AccountPopover from "./AccountPopover";
 import NavSection from "../../components/NavSection";
 import NotificationsPopover from "./NotificationsPopover";
@@ -30,10 +29,14 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "rgba(255, 255, 255, 0.72) !important",
     boxShadow: "none !important",
     marginLeft: "0px !important",
+    position: "absolute !important",
   },
   toolBar: {
     color: "#00ab55 !important",
     backdropFilter: " blur(6px) !important",
+  },
+  paper: {
+    width: "150px !important",
   },
 }));
 const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
@@ -153,9 +156,8 @@ export default function AdminLayout(props) {
     <SnackbarProvider maxSnack={3}>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
-        <AppBar position="fixed" open={openDrawer} className={classes.root}>
-          <ToolbarStyle>
-            <Searchbar />
+        <AppBar open={openDrawer} className={classes.root}>
+          <ToolbarStyle sx={{ minHeight: "64px !important", mt: 1 }}>
             <Box sx={{ flexGrow: 1 }} />
             <Stack
               direction="row"
@@ -168,7 +170,19 @@ export default function AdminLayout(props) {
           </ToolbarStyle>
         </AppBar>
 
-        <Drawer variant="permanent" open={openDrawer}>
+        <Drawer
+          variant="permanent"
+          open={openDrawer}
+          sx={{
+            width: "226px",
+            "& .MuiPaper-root": {
+              width: "250px",
+              flex: " 0 0 250px",
+              maxWidth: "250px",
+              minWidth: "250px",
+            },
+          }}
+        >
           <Box
             sx={{
               display: "flex",

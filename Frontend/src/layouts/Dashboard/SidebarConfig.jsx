@@ -13,7 +13,7 @@ const sidebarConfig = [
   },
   {
     title: "Quản lý người dùng",
-    path: "/admin/users/list",
+    path: ["/admin/users/list", "/admin/users/account"],
     icon: getIcon(peopleFill),
     children: [
       {
@@ -30,7 +30,7 @@ const sidebarConfig = [
   },
   {
     title: "Quản lý phim",
-    path: "/admin/movies/list",
+    path: ["/admin/movies/list", "/admin/movies/create"],
     children: [
       {
         title: "List",
@@ -47,7 +47,7 @@ const sidebarConfig = [
   },
   {
     title: "Quản lý rạp",
-    path: "/admin/theater/list",
+    path: ["/admin/theater/list", "/admin/theater/create"],
     children: [
       {
         title: "List",
@@ -64,7 +64,7 @@ const sidebarConfig = [
   },
   {
     title: "Quản lý lịch chiếu phim",
-    path: "/admin/showtimes/list",
+    path: ["/admin/showtimes/list", "/admin/showtimes/create"],
     children: [
       {
         title: "List",

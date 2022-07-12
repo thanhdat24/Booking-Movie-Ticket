@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import { useRef, useState } from "react";
 import homeFill from "@iconify/icons-eva/home-fill";
+import personOutline from "@iconify/icons-eva/person-outline";
 import personFill from "@iconify/icons-eva/person-fill";
 import settings2Fill from "@iconify/icons-eva/settings-2-fill";
 import { Link as RouterLink } from "react-router-dom";
@@ -26,19 +27,9 @@ import { LOGOUT } from "../../redux/constants/Auth";
 
 const MENU_OPTIONS = [
   {
-    label: "Home",
-    icon: homeFill,
-    linkTo: "/",
-  },
-  {
-    label: "Profile",
-    icon: personFill,
-    linkTo: "#",
-  },
-  {
-    label: "Settings",
-    icon: settings2Fill,
-    linkTo: "#",
+    label: "Hồ sơ cá nhân",
+    icon: personOutline,
+    linkTo: "/admin/users/account",
   },
 ];
 
@@ -106,7 +97,12 @@ export default function AccountPopover() {
             to={option.linkTo}
             component={RouterLink}
             onClick={handleClose}
-            sx={{ typography: "body2", py: 1, px: 2.5 }}
+            sx={{
+              typography: "body2",
+              py: 1,
+              px: 2.5,
+              "&:hover": { color: "#212529" },
+            }}
           >
             <Box
               component={Icon}

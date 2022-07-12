@@ -31,18 +31,18 @@ const ListItemStyle = styled((props) => (
   paddingLeft: theme.spacing(5),
   paddingRight: theme.spacing(2.5),
   color: theme.palette.text.secondary,
-  "&:before": {
-    top: 0,
-    right: 0,
-    width: 3,
-    bottom: 0,
-    content: "''",
-    display: "none",
-    position: "absolute",
-    borderTopLeftRadius: 4,
-    borderBottomLeftRadius: 4,
-    backgroundColor: theme.palette.primary.main,
-  },
+  // "&:before": {
+  //   top: 0,
+  //   right: 0,
+  //   width: 3,
+  //   bottom: 0,
+  //   content: "''",
+  //   display: "none",
+  //   position: "absolute",
+  //   borderTopLeftRadius: 4,
+  //   borderBottomLeftRadius: 4,
+  //   backgroundColor: theme.palette.primary.main,
+  // },
 }));
 
 const ListItemIconStyle = styled(ListItemIcon)({
@@ -63,8 +63,11 @@ NavItem.propTypes = {
 function NavItem({ item, active }) {
   const theme = useTheme();
   const isActiveRoot = active(item.path);
+  console.log("isActiveRoot", isActiveRoot);
   const { title, path, icon, info, children } = item;
   const [open, setOpen] = useState(isActiveRoot);
+  console.log("path", path);
+
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const handleListItemClick = (event, index) => {
@@ -73,7 +76,10 @@ function NavItem({ item, active }) {
   const handleOpen = () => {
     setOpen((prev) => !prev);
   };
-
+  const activeSubStyle = {
+    color: "text.primary",
+    fontWeight: "fontWeightMedium",
+  };
   const activeRootStyle = {
     color: "primary.main",
     fontWeight: "fontWeightMedium",
@@ -90,10 +96,14 @@ function NavItem({ item, active }) {
         <ListItemStyle
           onClick={handleOpen}
           sx={{
+            paddingLeft: "15px",
+            fontSize: "13.5px",
             ...(isActiveRoot && activeRootStyle),
           }}
         >
-          <ListItemIconStyle>{icon && icon}</ListItemIconStyle>
+          <ListItemIconStyle sx={{ width: 20, height: 20 }}>
+            {icon && icon}
+          </ListItemIconStyle>
           <ListItemText disableTypography primary={title} />
           {info && info}
           <Box
@@ -110,23 +120,18 @@ function NavItem({ item, active }) {
             sx={{
               "& .Mui-selected": {
                 backgroundColor: "transparent !important",
-                "& .MuiListItemText-root": {
+                ...(isActiveRoot && {
                   color: "primary.main",
                   fontWeight: "fontWeightMedium",
-                },
-                "& .MuiListItemIcon-root": {
-                  span: {
-                    transition: (theme) =>
-                      theme.transitions.create("transform"),
-                    transform: "scale(2)",
-                    bgcolor: "primary.main",
-                  },
-                },
+                }),
               },
             }}
           >
             {children.map((item, i) => {
               const { title, path } = item;
+              const isActiveSub = active(path);
+              console.log("isActiveSub", isActiveSub);
+              console.log("path", path);
               return (
                 <ListItemStyle
                   key={title}
@@ -134,6 +139,13 @@ function NavItem({ item, active }) {
                   to={path}
                   selected={selectedIndex === i}
                   onClick={(event) => handleListItemClick(event, i)}
+                  sx={{
+                    ...(!isActiveSub && {
+                      "&:hover": { color: "#637381" },
+                    }),
+
+                    ...(isActiveSub && activeSubStyle),
+                  }}
                 >
                   <ListItemIconStyle>
                     <Box
@@ -146,6 +158,12 @@ function NavItem({ item, active }) {
                         alignItems: "center",
                         justifyContent: "center",
                         bgcolor: "text.disabled",
+                        transition: (theme) =>
+                          theme.transitions.create("transform"),
+                        ...(isActiveSub && {
+                          transform: "scale(2)",
+                          bgcolor: "primary.main",
+                        }),
                       }}
                     />
                   </ListItemIconStyle>
@@ -164,10 +182,18 @@ function NavItem({ item, active }) {
       component={RouterLink}
       to={path}
       sx={{
+        paddingLeft: "15px",
+        fontSize: "13.5px",
+        "&:hover": { color: "#637381" },
+        ...(isActiveRoot && {
+          "&:hover": { color: "primary.main" },
+        }),
         ...(isActiveRoot && activeRootStyle),
       }}
     >
-      <ListItemIconStyle>{icon && icon}</ListItemIconStyle>
+      <ListItemIconStyle x={{ width: 20, height: 20 }}>
+        {icon && icon}
+      </ListItemIconStyle>
       <ListItemText disableTypography primary={title} />
       {info && info}
     </ListItemStyle>
@@ -187,7 +213,8 @@ export default function NavSection({ navConfig, openDrawer, ...other }) {
 
   const { pathname } = useLocation();
   const match = (path) =>
-    path ? !!matchPath({ path, end: false }, pathname) : false;
+    path ? !!matchPath(pathname, { path, end: false }) : false;
+  console.log("match", match);
   return (
     <Box {...other}>
       <List disablePadding>

@@ -197,8 +197,7 @@ export default function UserEdit() {
       color="text.primary"
       sx={{ "&:hover": { color: "#212B36" } }}
     >
-      Người dùng
-    </Link>,
+      Ng  ười dùng    </Link>,
     <Typography key="3" color="inherit">
       Danh sách
     </Typography>,
@@ -212,7 +211,7 @@ export default function UserEdit() {
         alignItems="center"
         justifyContent="space-between"
         mb={5}
-        mt={12}
+        mt={7.5}
       >
         <Stack spacing={2}>
           <Typography variant="h4" gutterBottom>

@@ -59,7 +59,7 @@ export default function MovieEdit() {
         alignItems="center"
         justifyContent="space-between"
         mb={5}
-        mt={12}
+        mt={7.5}
       >
         <Stack spacing={2}>
           <Typography variant="h4" gutterBottom>

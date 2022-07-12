@@ -14,8 +14,7 @@ import { updateActiveReview } from "../../redux/actions/Review";
 export default function ActiveReview({ active, id }) {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-  const { commentList } =
-    useSelector((state) => state.ReviewReducer);
+  const { commentList } = useSelector((state) => state.ReviewReducer);
 
   const handleClickActive = () => {
     setOpen(true);
@@ -24,7 +23,7 @@ export default function ActiveReview({ active, id }) {
   const handleActive = () => {
     const commentUserLiked = commentList.find((item) => item._id === id);
     if (commentUserLiked) {
-        commentUserLiked.active = true;
+      commentUserLiked.active = true;
     }
     dispatch(updateActiveReview(commentUserLiked, id));
     setOpen(false);
@@ -33,13 +32,10 @@ export default function ActiveReview({ active, id }) {
   const handleClose = () => {
     setOpen(false);
   };
-
   return (
     <div>
       {active ? (
-        <Button variant="outlined">
-          Đã duyệt
-        </Button>
+        <Button variant="outlined">Đã duyệt</Button>
       ) : (
         <Button variant="outlined" color="error" onClick={handleClickActive}>
           Chưa duyệt
@@ -58,13 +54,18 @@ export default function ActiveReview({ active, id }) {
         </DialogContent>
         <DialogActions>
           <Button
+            sx={{
+              color: "gray",
+              borderColor: "gray ",
+              "&:hover": { color: "primary.main" },
+            }}
+            size="medium"
+            variant="outlined"
             onClick={handleClose}
           >
             Quay lại
           </Button>
-          <Button
-            onClick={handleActive}
-          >
+          <Button size="medium" variant="contained" onClick={handleActive}>
             Xác nhận duyệt
           </Button>
         </DialogActions>

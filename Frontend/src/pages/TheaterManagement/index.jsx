@@ -191,13 +191,15 @@ export default function TheaterManagement() {
     </Typography>,
   ];
   return (
-    <Container  sx={{ paddingRight: "0px !important", paddingLeft: "0px !important" }}>
+    <Container
+      sx={{ paddingRight: "0px !important", paddingLeft: "0px !important" }}
+    >
       <Stack
         direction="row"
         alignItems="center"
         justifyContent="space-between"
         mb={5}
-        mt={12}
+        mt={7.5}
       >
         <Stack spacing={2}>
           <Typography variant="h4" gutterBottom>
@@ -240,13 +242,7 @@ export default function TheaterManagement() {
               {filteredTheater
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
-                  const {
-                    _id,
-                    name,
-                    type,
-                    seatsTotal,
-                    idTheaterCluster
-                  } = row;
+                  const { _id, name, type, seatsTotal, idTheaterCluster } = row;
                   const isItemSelected = selected.indexOf(name) !== -1;
 
                   return (
