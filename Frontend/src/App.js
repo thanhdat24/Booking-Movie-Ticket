@@ -4,7 +4,8 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import UsersManagement from "./pages/UsersManagement";
-
+import { LocalizationProvider } from "@mui/lab";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import AdminLayout from "./layouts/AdminLayout";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import shape from "./theme/shape";
@@ -33,6 +34,7 @@ const UserAccount = lazy(() => import("./pages/UsersManagement/UserAccount"));
 const BookTickets = lazy(() => import("./pages/Bookticket"));
 const TicketManagement = lazy(() => import("./pages/TicketManagement"));
 const ReviewManagement = lazy(() => import("./pages/ReviewManagement"));
+const DiscountManagement = lazy(() => import("./pages/DiscountManagement"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const UserEdit = lazy(() => import("./pages/UsersManagement/UserEdit"));
 const CreateTheater = lazy(() =>
@@ -45,11 +47,13 @@ const CreateShowtimes = lazy(() =>
 const ShowtimeEdit = lazy(() =>
   import("./pages/ShowtimesManagement/ShowtimeEdit")
 );
+
 const MoviesManagement = lazy(() => import("./pages/MoviesManagement"));
 const TheaterManagement = lazy(() => import("./pages/TheaterManagement"));
 const ShowtimesManagement = lazy(() => import("./pages/ShowtimesManagement"));
 const MovieEdit = lazy(() => import("./pages/MoviesManagement/MovieEdit"));
 const CreateMovie = lazy(() => import("./pages/MoviesManagement/CreateMovie"));
+const CreateDiscount = lazy(() => import("./pages/DiscountManagement/CreateDiscount"));
 const UserProfile = lazy(() => import("./pages/UserProfile"));
 
 // guards
@@ -122,165 +126,184 @@ function App() {
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <Loading />
-        <ModalTrailer />
-        <Suspense fallback={<TriggerLoadingLazy />}>
-          <Switch>
-            <Route exact path={["/", "/movie/:idMovie", "/profile"]}>
-              <MainLayout>
-                <Route exact path="/" component={Homepage} />
-                <Route exact path="/movie/:idMovie" component={MovieDetail} />
-                <UserProfileRoute
-                  exact
-                  path="/profile"
-                  component={UserProfile}
-                />
-              </MainLayout>
-            </Route>
-            <CheckoutRoute
-              exact
-              path="/booking-tickets/:idShowtime"
-              component={BookTickets}
-            />
-            <Route exact path={["/admin/dashboard"]}>
-              <AdminLayout>
-                <AdminRoute
-                  exact
-                  path="/admin/dashboard"
-                  component={Dashboard}
-                />
-              </AdminLayout>
-            </Route>
-            <Route
-              exact
-              path={[
-                "/admin/users/list",
-                "/admin/users/account",
-                "/admin/users/edit/:userId",
-              ]}
-            >
-              <AdminLayout>
-                <AdminRoute
-                  exact
-                  path="/admin/users/list"
-                  component={UsersManagement}
-                />
-                <AdminRoute
-                  exact
-                  path="/admin/users/account"
-                  component={UserAccount}
-                />
-                <AdminRoute
-                  exact
-                  path="/admin/users/edit/:userId"
-                  component={UserEdit}
-                />
-              </AdminLayout>
-            </Route>
-            <Route
-              exact
-              path={[
-                "/admin/movies/list",
-                "/admin/movies/create",
-                "/admin/movies/edit/:idMovie",
-              ]}
-            >
-              <AdminLayout>
-                <AdminRoute
-                  exact
-                  path="/admin/movies/list"
-                  component={MoviesManagement}
-                />
-                <AdminRoute
-                  exact
-                  path="/admin/movies/create"
-                  component={CreateMovie}
-                />{" "}
-                <AdminRoute
-                  exact
-                  path="/admin/movies/edit/:idMovie"
-                  component={MovieEdit}
-                />
-              </AdminLayout>
-            </Route>
-            <Route
-              exact
-              path={[
-                "/admin/theater/list",
-                "/admin/theater/create",
-                "/admin/theater/edit/:theaterId",
-              ]}
-            >
-              <AdminLayout>
-                <AdminRoute
-                  exact
-                  path="/admin/theater/list"
-                  component={TheaterManagement}
-                />
-                <AdminRoute
-                  exact
-                  path="/admin/theater/create"
-                  component={CreateTheater}
-                />
-                <AdminRoute
-                  exact
-                  path="/admin/theater/edit/:theaterId"
-                  component={TheaterEdit}
-                />
-              </AdminLayout>
-            </Route>
-            <Route
-              exact
-              path={[
-                "/admin/showtimes/list",
-                "/admin/showtimes/create",
-                "/admin/showtimes/edit/:showtimeId",
-              ]}
-            >
-              <AdminLayout>
-                <AdminRoute
-                  exact
-                  path="/admin/showtimes/list"
-                  component={ShowtimesManagement}
-                />
-                <AdminRoute
-                  exact
-                  path="/admin/showtimes/create"
-                  component={CreateShowtimes}
-                />
-                <AdminRoute
-                  exact
-                  path="/admin/showtimes/edit/:showtimeId"
-                  component={ShowtimeEdit}
-                />
-              </AdminLayout>
-            </Route>
-            <Route exact path={["/admin/ticket/list"]}>
-              <AdminLayout>
-                <AdminRoute
-                  exact
-                  path="/admin/ticket/list"
-                  component={TicketManagement}
-                />
-              </AdminLayout>
-            </Route>
-            <Route exact path={["/admin/review/list"]}>
-              <AdminLayout>
-                <AdminRoute
-                  exact
-                  path="/admin/review/list"
-                  component={ReviewManagement}
-                />
-              </AdminLayout>
-            </Route>
-            <Route exact path={["/login", "/register", "/reset-password"]}>
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/register" component={Register} />
-              <Route exact path="/reset-password" component={ResetPassword} />
-            </Route>
-            <Route component={NotFound} />
-          </Switch>
-        </Suspense>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <Loading />
+          <ModalTrailer />
+          <Suspense fallback={<TriggerLoadingLazy />}>
+            <Switch>
+              <Route exact path={["/", "/movie/:idMovie", "/profile"]}>
+                <MainLayout>
+                  <Route exact path="/" component={Homepage} />
+                  <Route exact path="/movie/:idMovie" component={MovieDetail} />
+                  <UserProfileRoute
+                    exact
+                    path="/profile"
+                    component={UserProfile}
+                  />
+                </MainLayout>
+              </Route>
+              <CheckoutRoute
+                exact
+                path="/booking-tickets/:idShowtime"
+                component={BookTickets}
+              />
+              <Route exact path={["/admin/dashboard"]}>
+                <AdminLayout>
+                  <AdminRoute
+                    exact
+                    path="/admin/dashboard"
+                    component={Dashboard}
+                  />
+                </AdminLayout>
+              </Route>
+              <Route
+                exact
+                path={[
+                  "/admin/users/list",
+                  "/admin/users/account",
+                  "/admin/users/edit/:userId",
+                ]}
+              >
+                <AdminLayout>
+                  <AdminRoute
+                    exact
+                    path="/admin/users/list"
+                    component={UsersManagement}
+                  />
+                  <AdminRoute
+                    exact
+                    path="/admin/users/account"
+                    component={UserAccount}
+                  />
+                  <AdminRoute
+                    exact
+                    path="/admin/users/edit/:userId"
+                    component={UserEdit}
+                  />
+                </AdminLayout>
+              </Route>
+              <Route
+                exact
+                path={[
+                  "/admin/movies/list",
+                  "/admin/movies/create",
+                  "/admin/movies/edit/:idMovie",
+                ]}
+              >
+                <AdminLayout>
+                  <AdminRoute
+                    exact
+                    path="/admin/movies/list"
+                    component={MoviesManagement}
+                  />
+                  <AdminRoute
+                    exact
+                    path="/admin/movies/create"
+                    component={CreateMovie}
+                  />{" "}
+                  <AdminRoute
+                    exact
+                    path="/admin/movies/edit/:idMovie"
+                    component={MovieEdit}
+                  />
+                </AdminLayout>
+              </Route>
+              <Route
+                exact
+                path={[
+                  "/admin/theater/list",
+                  "/admin/theater/create",
+                  "/admin/theater/edit/:theaterId",
+                ]}
+              >
+                <AdminLayout>
+                  <AdminRoute
+                    exact
+                    path="/admin/theater/list"
+                    component={TheaterManagement}
+                  />
+                  <AdminRoute
+                    exact
+                    path="/admin/theater/create"
+                    component={CreateTheater}
+                  />
+                  <AdminRoute
+                    exact
+                    path="/admin/theater/edit/:theaterId"
+                    component={TheaterEdit}
+                  />
+                </AdminLayout>
+              </Route>
+              <Route
+                exact
+                path={[
+                  "/admin/showtimes/list",
+                  "/admin/showtimes/create",
+                  "/admin/showtimes/edit/:showtimeId",
+                ]}
+              >
+                <AdminLayout>
+                  <AdminRoute
+                    exact
+                    path="/admin/showtimes/list"
+                    component={ShowtimesManagement}
+                  />
+                  <AdminRoute
+                    exact
+                    path="/admin/showtimes/create"
+                    component={CreateShowtimes}
+                  />
+                  <AdminRoute
+                    exact
+                    path="/admin/showtimes/edit/:showtimeId"
+                    component={ShowtimeEdit}
+                  />
+                </AdminLayout>
+              </Route>
+              <Route exact path={["/admin/ticket/list"]}>
+                <AdminLayout>
+                  <AdminRoute
+                    exact
+                    path="/admin/ticket/list"
+                    component={TicketManagement}
+                  />
+                </AdminLayout>
+              </Route>
+              <Route exact path={["/admin/review/list"]}>
+                <AdminLayout>
+                  <AdminRoute
+                    exact
+                    path="/admin/review/list"
+                    component={ReviewManagement}
+                  />
+                </AdminLayout>
+              </Route>
+              <Route
+                exact
+                path={["/admin/discount/list", "/admin/discount/create"]}
+              >
+                <AdminLayout>
+                  <AdminRoute
+                    exact
+                    path="/admin/discount/list"
+                    component={DiscountManagement}
+                  />
+                  <AdminRoute
+                    exact
+                    path="/admin/discount/create"
+                    component={CreateDiscount}
+                  />
+                </AdminLayout>
+              </Route>
+              <Route exact path={["/login", "/register", "/reset-password"]}>
+                <Route exact path="/login" component={Login} />
+                <Route exact path="/register" component={Register} />
+                <Route exact path="/reset-password" component={ResetPassword} />
+              </Route>
+              <Route component={NotFound} />
+            </Switch>
+          </Suspense>
+        </LocalizationProvider>
       </ThemeProvider>
     </BrowserRouter>
   );

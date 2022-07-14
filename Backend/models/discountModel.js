@@ -23,14 +23,21 @@ const discountSchema = new mongoose.Schema(
       type: String,
       required: [true, 'A discount must have a description'],
     },
+    startDate: {
+      type: Date,
+      required: [true, 'A discount must have a startDate'],
+    },
     expiryDate: {
-      type: String,
+      type: Date,
       required: [true, 'A discount must have a expiryDate'],
     },
-    // active: {
-    //   type: Boolean,
-    //   default: false,
-    // },
+    activePublic: {
+      type: Boolean,
+      default: false,
+    },
+    activeCode: {
+      type: String,
+    },
   },
   {
     toJSON: { virtuals: true },

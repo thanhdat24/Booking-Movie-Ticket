@@ -4,6 +4,7 @@ import peopleFill from "@iconify/icons-eva/people-fill";
 // ----------------------------------------------------------------------
 
 const getIcon = (name) => <Icon icon={name} width={22} height={22} />;
+const getImage = (src) => <img src={src} alt="iconImage" />;
 
 const sidebarConfig = [
   {
@@ -88,6 +89,23 @@ const sidebarConfig = [
     title: "Quản lý đánh giá",
     path: "/admin/review/list",
     icon: getIcon("bi:star-fill"),
+  },
+  {
+    title: "Quản lý khuyến mãi",
+    path: ["/admin/discount/list", "/admin/discount/create"],
+    icon: getImage("../../img/admin/discount/icon-coupon.svg"),
+    children: [
+      {
+        title: "List",
+        path: "/admin/discount/list",
+        icon: getIcon("ci:dot-02-s"),
+      },
+      {
+        title: "Create",
+        path: "/admin/discount/create",
+        icon: getIcon("ci:dot-02-s"),
+      },
+    ],
   },
 ];
 
