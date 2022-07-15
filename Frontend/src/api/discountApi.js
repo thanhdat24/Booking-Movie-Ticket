@@ -13,6 +13,10 @@ const discountsApi = {
     const path = `/v1/discounts/${_id}`;
     return axiosClient.patch(path, active);
   },
+  postCreateDiscount: (data) => {
+    const path = `/v1/discounts`;
+    return axiosClient.post(path, data);
+  },
 };
 
 export default discountsApi;

@@ -13,6 +13,9 @@ import {
   Box,
   TextField,
   Alert,
+  Dialog,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import * as Yup from "yup";
 import { useStyles } from "./styles";
@@ -20,25 +23,34 @@ import { useStyles } from "./styles";
 import moment from "moment";
 import { LoadingButton } from "@mui/lab";
 import { useFormik, Form, Formik } from "formik";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useSnackbar } from "notistack";
 import { useHistory } from "react-router-dom";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import CopyToClipboard from "react-copy-to-clipboard";
+import { createDiscount, resetDiscount } from "../../../redux/actions/Discount";
+import ModalDialog from "../../../components/ModalDialog/DialogTitle";
 
 export default function CreateDiscount() {
   const dispatch = useDispatch();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
+  const { loadingCreateDiscount, successCreateDiscount, errorCreateDiscount } =
+    useSelector((state) => state.DiscountReducer);
+  const codeRegExp = /^[A-Za-z0-9_-]{5,10}$/;
 
   const CreateSchema = Yup.object().shape({
     title: Yup.string().required("*Vui lòng nhập thông tin này"),
-    code: Yup.string().required("*Vui lòng nhập thông tin này"),
+    code: Yup.string()
+      .required("*Vui lòng nhập thông tin này")
+      .matches(
+        codeRegExp,
+        "Vui lòng nhập tối thiểu 5 ký tự và tối đa 10 ký tự"
+      ),
     price: Yup.string().required("*Vui lòng nhập thông tin này"),
     miniPrice: Yup.string().required("*Vui lòng nhập thông tin này"),
-    effectiveTime: Yup.date().required("*Vui lòng nhập thông tin này"),
   });
   const formik = useFormik({
     initialValues: {
@@ -46,20 +58,20 @@ export default function CreateDiscount() {
       code: "",
       price: "",
       percent: "",
-      description: "",
       miniPrice: "",
-      startDate: moment("").format("YYYY-MM-DD"),
-      expiryDate: moment("").format("YYYY-MM-DD"),
+      startDate: "",
+      expiryDate: "",
       activeCode: "",
       activePublic: true,
     },
 
     validationSchema: CreateSchema,
-    onSubmit: (movie) => {
-      // if (loadingAddMovie || !isReadyTaoLichChieu) {
-      //   return;
-      // }
-      // dispatch(addMovieUploadImg(movie));
+    onSubmit: (data) => {
+      console.log("data", data);
+      if (loadingCreateDiscount) {
+        return;
+      }
+      dispatch(createDiscount(data));
     },
   });
 
@@ -71,14 +83,28 @@ export default function CreateDiscount() {
     values,
     setFieldValue,
   } = formik;
+  const [open, setOpen] = React.useState(false);
 
   const [effectiveTime, setEffectiveTime] = useState([null, null]);
-  console.log("effectiveTime", effectiveTime);
-  console.log("day1", moment(effectiveTime[0])?.format("DD/MM/YYYY hh:mm:ss "));
-  console.log("day2", moment(effectiveTime[1])?.format("DD/MM/YYYY hh:mm:ss "));
   const handleChangePublic = (event, checked) => {
     setFieldValue("activePublic", checked ? true : false);
   };
+  const handleAlertCreate = () => {
+    if (isReadyCreateDiscount) setOpen(true);
+  };
+  const handleAlertClose = () => {
+    setOpen(false);
+  };
+  useEffect(() => {
+    values.startDate = moment(effectiveTime[0])?.format("YYYY-MM-DDTHH:mm:SS");
+    values.expiryDate = moment(effectiveTime[1])?.format("YYYY-MM-DDTHH:mm:SS");
+    let currentDay = moment().format("YYYY-MM-DDTHH:mm:SS");
+    if (currentDay < values.startDate) {
+      values.activeCode = "Sắp diễn ra";
+    } else {
+      values.activeCode = "Đang diễn ra";
+    }
+  }, [effectiveTime]);
 
   const DiscountInfo = styled(({ className, ...props }) => (
     <Tooltip
@@ -107,6 +133,48 @@ export default function CreateDiscount() {
       pointerEvents: "auto",
     },
   }));
+
+  const [isReadyCreateDiscount, setIsReadyCreateDiscount] = useState(false);
+  useEffect(() => {
+    if (
+      values.title &&
+      values.code &&
+      values.price &&
+      values.miniPrice &&
+      values.startDate !== "Invalid date" &&
+      values.expiryDate !== "Invalid date"
+    )
+      setIsReadyCreateDiscount(true);
+    else setIsReadyCreateDiscount(false);
+  }, [
+    values.title,
+    values.code,
+    values.price,
+    values.miniPrice,
+    values.startDate,
+    values.expiryDate,
+  ]);
+
+  useEffect(() => {
+    if (successCreateDiscount) {
+      setTimeout(() => {
+        history.push("/admin/discount/list");
+      }, 100);
+      setTimeout(() => {
+        enqueueSnackbar("Tạo thành công!", { variant: "success" });
+      }, 150);
+      return;
+    }
+    if (errorCreateDiscount) {
+      enqueueSnackbar(errorCreateDiscount, { variant: "error" });
+    }
+  }, [successCreateDiscount, errorCreateDiscount]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetDiscount());
+    };
+  }, []);
 
   const breadcrumbs = [
     <Link
@@ -165,7 +233,7 @@ export default function CreateDiscount() {
         <Fragment>
           <Box sx={{ margin: "20px 0" }}></Box>
           <Formik value={formik}>
-            <Form onSubmit={handleSubmit} enctype="multipart/form-data">
+            <Form onSubmit={handleSubmit} id="createDiscount">
               <Grid
                 container
                 rowSpacing={1}
@@ -224,12 +292,13 @@ export default function CreateDiscount() {
                             />
                             <Typography>Công khai</Typography>
                           </Box>
-
-                          <span className="text-red-500 text-sm">
-                            <span className="font-semibold"> Lưu ý:</span> Mã
-                            giảm giá được công khai trong trang chi tiết sản
-                            phẩm, cho tất cả các khách hàng!
-                          </span>
+                          {values.activePublic && (
+                            <span className="text-red-500 text-sm">
+                              <span className="font-semibold"> Lưu ý:</span> Mã
+                              giảm giá được công khai trong trang chi tiết sản
+                              phẩm, cho tất cả các khách hàng!
+                            </span>
+                          )}
                         </Box>
                       </Box>
                     </Stack>
@@ -319,7 +388,10 @@ export default function CreateDiscount() {
                               </span>
                             </li>
                             <li className={classes.typographyInfo}>
-                              <b className="text-green-600">Hiện</b> mã giảm giá
+                              <b className="text-green-600">
+                                {values.activePublic ? "Hiện" : "Ẩn"}
+                              </b>{" "}
+                              mã giảm giá
                             </li>
                             <li className={classes.typographyInfo}>
                               Áp dụng cho:
@@ -459,9 +531,7 @@ export default function CreateDiscount() {
                                               {effectiveTime[1] &&
                                                 moment(
                                                   effectiveTime[1]
-                                                )?.format(
-                                                  "DD/MM/YYYY "
-                                                )}
+                                                )?.format("DD/MM/YYYY ")}
                                             </div>
                                           </div>
                                           <div
@@ -499,13 +569,14 @@ export default function CreateDiscount() {
                                               <ul
                                                 className={classes.description}
                                               >
-                                                {/* {parse(item.description)} */}
                                                 <li>
-                                                  Giảm 120K cho đơn hàng từ 360K
+                                                  Giảm Giảm&nbsp;
+                                                  {values?.price / 1000}K Đơn
+                                                  hàng tối thiểu{" "}
+                                                  {values.miniPrice / 1000}K
                                                 </li>
                                                 <li>
-                                                  Mỗi khách hàng được sử dụng
-                                                  tối đa 1 lần.
+                                                  Áp dụng cho tất cả sản phẩm
                                                 </li>
                                               </ul>
                                             </div>
@@ -533,7 +604,10 @@ export default function CreateDiscount() {
                                   <div className="flex items-end mt-auto">
                                     <p className="pr-7 text-xs font-normal leading-5 m-0 p-0 text-gray-500 max-h-5">
                                       HSD:
-                                      {/* {item?.expiryDate} */}
+                                      {effectiveTime[1] &&
+                                        moment(effectiveTime[1])?.format(
+                                          "DD/MM/YYYY"
+                                        )}
                                     </p>
                                     <div className={classes.buttonSave}>
                                       Lưu
@@ -576,16 +650,105 @@ export default function CreateDiscount() {
                   </Button>
                   <LoadingButton
                     size="large"
-                    type="submit"
                     variant="contained"
-                    // loading={loadingAddMovie}
-                    // disabled={!isReadyTaoLichChieu}
+                    disabled={!isReadyCreateDiscount}
                     className={classes.buttonCreate}
+                    onClick={handleAlertCreate}
                   >
                     Tạo mới
                   </LoadingButton>
                 </Box>
               </Box>
+              {/* Modal  */}
+
+              <Dialog
+                onClose={handleAlertClose}
+                open={open}
+                maxWidth="xs"
+
+                // sx={{width: "500px" }}
+                // fullWidth
+              >
+                <ModalDialog onClose={handleAlertClose} className="text-center">
+                  Vui lòng kiểm tra điều kiện áp dụng
+                </ModalDialog>
+                <DialogContent dividers>
+                  <Alert
+                    className={classes.alert}
+                    icon={false}
+                    severity="success"
+                  >
+                    <ul className={classes.alertMessage}>
+                      <li className={classes.typographyInfo}>
+                        <span>
+                          Giảm{" "}
+                          <b className="text-green-600">
+                            {(values?.price * 1).toLocaleString("vi-VI")} ₫
+                          </b>
+                        </span>
+                      </li>
+                      <li className={classes.typographyInfo}>
+                        <b className="text-green-600">
+                          {values.activePublic ? "Hiện" : "Ẩn"}
+                        </b>{" "}
+                        mã giảm giá
+                      </li>
+                      <li className={classes.typographyInfo}>
+                        Áp dụng cho:
+                        <b className="text-green-600"> Tất cả sản phẩm</b>
+                      </li>
+                      <li className={classes.typographyInfo}>
+                        Giá trị đơn hàng tối thiểu:{" "}
+                        <b className="text-green-600">
+                          {(values?.miniPrice * 1).toLocaleString("vi-VI")} ₫
+                        </b>
+                      </li>
+                      {(effectiveTime[0] && effectiveTime[1]) !== null && (
+                        <li className={classes.typographyInfo}>
+                          Thời gian hiệu lực:{" "}
+                          <b className="text-green-600">
+                            {" "}
+                            {moment(effectiveTime[0])?.format(
+                              "DD/MM/YYYY hh:mm:ss "
+                            )}{" "}
+                            ~{" "}
+                            {moment(effectiveTime[1])?.format(
+                              "DD/MM/YYYY hh:mm:ss "
+                            )}
+                          </b>
+                        </li>
+                      )}
+                    </ul>
+                  </Alert>
+                </DialogContent>
+                <DialogActions sx={{ margin: "0 16px !important" }}>
+                  <Button
+                    sx={{
+                      color: "gray",
+                      borderColor: "gray ",
+                      "&:hover": { color: "primary.main" },
+                      width: "100%",
+                      height: "33px !important",
+                    }}
+                    variant="outlined"
+                    onClick={handleAlertClose}
+                    className={classes.buttonCreate}
+                  >
+                    Huỷ
+                  </Button>
+                  <LoadingButton
+                    sx={{ width: "100%", height: "33px !important" }}
+                    size="large"
+                    type="submit"
+                    variant="contained"
+                    loading={loadingCreateDiscount}
+                    className={classes.buttonCreate}
+                    form="createDiscount"
+                  >
+                    Tạo mới
+                  </LoadingButton>
+                </DialogActions>
+              </Dialog>
             </Form>
           </Formik>
         </Fragment>

@@ -168,8 +168,6 @@ export const getListSeat = (idShowtime) => {
 
 export const postCreateTicket = (data) => {
   return (dispatch, getState) => {
-    let currentUser = getState().AuthReducer.currentUser;
-
     dispatch({
       type: BOOK_TICKET_REQUEST,
     });

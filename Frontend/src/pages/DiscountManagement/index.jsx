@@ -18,6 +18,7 @@ import {
   Tooltip,
   Rating,
   Button,
+  Chip,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
 import { filter } from "lodash";
@@ -33,14 +34,17 @@ import { Link as RouterLink, useHistory } from "react-router-dom";
 import plusFill from "@iconify/icons-eva/plus-fill";
 
 import formatDate from "../../utils/formatDate";
+import { getDiscountsList, resetDiscount } from "../../redux/actions/Discount";
+import moment from "moment";
+import { useStyles } from "./styles";
 
 const TABLE_HEAD = [
-  { id: "movieId", label: "Tên phim", alignRight: false },
-  { id: "photo", label: "Hình ảnh", alignRight: false },
-  { id: "fullName", label: "Người đánh giá", alignRight: false },
-  { id: "review", label: "Nội dung bình luận", alignRight: false },
-  { id: "rating", label: "Số sao", alignRight: false },
-  { id: "createdAt", label: "Ngày bình luận", alignRight: false },
+  { id: "code", label: "Mã giảm giá", alignRight: false },
+  { id: "price", label: "Loại giảm giá", alignRight: false },
+  { id: "criteria", label: "Tiêu chí", alignRight: false },
+  { id: "date", label: "Thời gian áp dụng", alignRight: false },
+  // { id: "userCreate", label: "Người tạo", alignRight: false },
+  { id: "activeCode", label: "Trạng thái", alignRight: false },
 ];
 
 // ----------------------------------------------------------------------
@@ -79,13 +83,12 @@ function applySortFilter(array, comparator, query) {
 
 export default function DiscountManagement() {
   const {
-    commentList,
-    successUpdateActiveReview,
-    successDeleteReview,
-    errorDeleteReview,
-    errorUpdateActiveReview,
-  } = useSelector((state) => state.ReviewReducer);
+    discountList: { data: discountList },
+  } = useSelector((state) => state.DiscountReducer);
+  console.log("discountList", discountList);
   const { enqueueSnackbar } = useSnackbar();
+  const classes = useStyles();
+
   const [page, setPage] = useState(0);
   const history = useHistory();
   const [order, setOrder] = useState("asc");
@@ -95,36 +98,17 @@ export default function DiscountManagement() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const dispatch = useDispatch();
 
-  commentList?.sort(
+  discountList?.sort(
     (a, b) => formatDate(b.createdAt).getTime - formatDate(a.createdAt).getTime
   );
 
   useEffect(() => {
     // get list user lần đầu
-    if (!commentList) {
-      dispatch(getAllReviews());
+    if (!discountList) {
+      dispatch(getDiscountsList());
     }
-    return () => dispatch(resetReviewManagement());
+    return () => dispatch(resetDiscount());
   }, []);
-
-  useEffect(() => {
-    if (successDeleteReview) {
-      enqueueSnackbar("Xoá bình luận thành công!", { variant: "success" });
-      dispatch(getAllReviews());
-    }
-    if (errorDeleteReview) {
-      enqueueSnackbar(errorDeleteReview, { variant: "error" });
-    }
-  }, [successDeleteReview, errorDeleteReview]);
-
-  useEffect(() => {
-    if (successUpdateActiveReview) {
-      enqueueSnackbar("Duyệt bình luận thành công!", { variant: "success" });
-    }
-    if (errorUpdateActiveReview) {
-      enqueueSnackbar(errorUpdateActiveReview, { variant: "error" });
-    }
-  }, [successUpdateActiveReview, errorUpdateActiveReview]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -146,15 +130,15 @@ export default function DiscountManagement() {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - commentList?.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - discountList?.length) : 0;
 
   const filteredMovies = applySortFilter(
-    commentList,
+    discountList,
     getComparator(order, orderBy),
     filterNameMovie
   );
 
-  const isUserNotFound = commentList?.length === 0;
+  const isUserNotFound = discountList?.length === 0;
 
   const breadcrumbs = [
     <Link
@@ -202,13 +186,16 @@ export default function DiscountManagement() {
           </Button>
         </Stack>
         <Card>
-          <TableContainer sx={{ minWidth: 800 }}>
-            <Table>
+          <TableContainer
+            sx={{ minWidth: 800, fontSize: "13px !important" }}
+            className="text-xs"
+          >
+            <Table sx={{ fontSize: "13px !important" }} className="text-xs">
               <TicketListHead
                 order={order}
                 orderBy={orderBy}
                 headLabel={TABLE_HEAD}
-                rowCount={commentList?.length}
+                rowCount={discountList?.length}
                 numSelected={selected.length}
                 onRequestSort={handleRequestSort}
                 // onSelectAllClick={handleSelectAllClick}
@@ -219,65 +206,88 @@ export default function DiscountManagement() {
                   .map((row, index) => {
                     const {
                       _id,
-                      movieId,
-                      userId,
-                      createdAt,
-                      review,
-                      rating,
-                      active,
+                      title,
+                      code,
+                      price,
+                      percent,
+                      miniPrice,
+                      startDate,
+                      expiryDate,
+                      activeCode,
                     } = row;
                     return (
                       <TableRow hover key={_id} tabIndex={-1} name="checkbox">
-                        <TableCell align="left">{movieId.name}</TableCell>
-                        <TableCell align="left">
-                          <Tooltip
-                            placement="right"
-                            id="test"
-                            title={
-                              <img src={movieId.photo} width={170} alt="" />
-                            }
-                          >
-                            <Box
-                              sx={{
-                                display: "inline-block",
-                                width: 64,
-                                height: 84,
-                                objectFit: "cover",
-                                position: "relative",
-                                "&:hover > div": {
-                                  opacity: 1,
-                                },
-                                "& > div > img": {
-                                  verticalAlign: "top",
-                                },
-                              }}
-                            >
-                              <img
-                                className="w-full h-full rounded"
-                                src={movieId.photo}
-                                alt="poster movie"
-                                aria-label="test"
-                              />
-                            </Box>
-                          </Tooltip>
+                        <TableCell align="left" width="15%">
+                          <div className="grid">
+                            <span>{title}</span>
+                            <span className="mt-2">
+                              {" "}
+                              <strong>
+                                <Link
+                                  href="#"
+                                  color="info.main"
+                                  sx={{
+                                    "&:hover": { color: "#40a9ff" },
+                                  }}
+                                >
+                                  {code}
+                                </Link>
+                              </strong>
+                            </span>
+                          </div>
                         </TableCell>
-                        <TableCell align="left">{userId.fullName}</TableCell>
-                        <TableCell align="left">{review}</TableCell>
-                        <TableCell align="left">
-                          <Rating
-                            value={rating}
-                            precision={0.5}
-                            readOnly
-                            sx={{ fontSize: 20 }}
-                          />
+                        <TableCell align="left" width="15%">
+                          Giảm {(price * 1).toLocaleString("vi-VI")} đ
+                        </TableCell>
+                        <TableCell align="left" width="20%">
+                          <div className="grid">
+                            <span style={{ color: "#1682F8" }}>
+                              Tất cả sản phẩm
+                            </span>
+                            <span>Cho tất cả khách hàng</span>
+                            <span>
+                              {" "}
+                              {">"}= {(miniPrice * 1).toLocaleString("vi-VI")} ₫
+                              giá trị đơn hàng{" "}
+                            </span>
+                            <span>
+                              Không giới hạn số lần sử dụng mỗi khách hàng
+                            </span>
+                          </div>
                         </TableCell>
                         <TableCell align="left">
-                          {new Date(createdAt).toLocaleDateString()},{" "}
-                          {new Date(createdAt).toLocaleTimeString("en-US", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
+                          <span>
+                            <span className="font-semibold mr-4"> Từ: </span>
+                            {moment(startDate).format("DD/MM/YYYY hh:mm:ss")}
+                          </span>{" "}
+                          <br />
+                          <span>
+                            <span className="font-semibold mr-4"> Đến: </span>
+                            {moment(expiryDate).format("DD/MM/YYYY hh:mm:ss")}
+                          </span>
                         </TableCell>
+                        <TableCell align="left">
+                          {activeCode === "Sắp diễn ra" ? (
+                            <Chip
+                              label={activeCode}
+                              variant="outlined"
+                              className={classes.labelComingSoon}
+                            />
+                          ) : activeCode === "Đang diễn ra" ? (
+                            <Chip
+                              label={activeCode}
+                              variant="outlined"
+                              className={classes.labelNowShowing}
+                            />
+                          ) : (
+                            <Chip
+                              label="Kết thúc"
+                              variant="outlined"
+                              className={classes.labelEnd}
+                            />
+                          )}
+                        </TableCell>
+                        <TableCell align="left"></TableCell>
                       </TableRow>
                     );
                   })}
@@ -304,7 +314,7 @@ export default function DiscountManagement() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={commentList?.length}
+            count={discountList?.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

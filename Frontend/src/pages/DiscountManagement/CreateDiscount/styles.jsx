@@ -78,6 +78,7 @@ const useStyles = makeStyles(() => {
     textValidation: {
       fontSize: "12.5px",
       color: " rgb(89, 89, 89)",
+      marginBottom: "10px !important",
     },
   };
 });

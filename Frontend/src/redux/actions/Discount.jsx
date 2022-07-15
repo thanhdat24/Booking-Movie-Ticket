@@ -1,11 +1,15 @@
 import discountsApi from "../../api/discountApi";
 import {
+  CREATE_DISCOUNT_FAIL,
+  CREATE_DISCOUNT_REQUEST,
+  CREATE_DISCOUNT_SUCCESS,
   GET_DISCOUNT_FAIL,
   GET_DISCOUNT_LIST_FAIL,
   GET_DISCOUNT_LIST_REQUEST,
   GET_DISCOUNT_LIST_SUCCESS,
   GET_DISCOUNT_REQUEST,
   GET_DISCOUNT_SUCCESS,
+  RESET_DISCOUNT,
   UPDATE_ACTIVE_DISCOUNT_FAIL,
   UPDATE_ACTIVE_DISCOUNT_REQUEST,
   UPDATE_ACTIVE_DISCOUNT_SUCCESS,
@@ -60,7 +64,6 @@ export const getDetailDiscount = (_id) => {
   };
 };
 
-
 export const updateActiveDiscount = (active, _id) => {
   return (dispatch) => {
     dispatch({
@@ -84,5 +87,37 @@ export const updateActiveDiscount = (active, _id) => {
           },
         });
       });
+  };
+};
+export const createDiscount = (data) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: CREATE_DISCOUNT_REQUEST,
+      });
+      const result = await discountsApi.postCreateDiscount(data);
+      dispatch({
+        type: CREATE_DISCOUNT_SUCCESS,
+        payload: {
+          data: result.data,
+        },
+      });
+    } catch (error) {
+      dispatch({
+        type: CREATE_DISCOUNT_FAIL,
+        payload: {
+          error: error.response?.data.message,
+        },
+      });
+    }
+  };
+};
+
+
+export const resetDiscount = () => {
+  return (dispatch) => {
+    dispatch({
+      type: RESET_DISCOUNT,
+    });
   };
 };

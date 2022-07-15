@@ -19,10 +19,6 @@ const discountSchema = new mongoose.Schema(
       type: String,
       required: [true, 'A discount must have a code'],
     },
-    description: {
-      type: String,
-      required: [true, 'A discount must have a description'],
-    },
     startDate: {
       type: Date,
       required: [true, 'A discount must have a startDate'],

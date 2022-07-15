@@ -9,6 +9,8 @@ import { postCreateTicket } from "../../../redux/actions/BookTicket";
 import { SET_READY_PAYMENT } from "../../../redux/constants/BookTicket";
 import { blue } from "@mui/material/colors";
 import parse from "html-react-parser";
+import ModalDialog from "../../../components/ModalDialog/DialogTitle";
+
 import {
   Button,
   Dialog,
@@ -317,35 +319,6 @@ export default function PayMent(props) {
         variant: "success",
       });
     }, 100);
-  };
-
-  const BootstrapDialogTitle = (props) => {
-    const { children, onClose, ...other } = props;
-
-    return (
-      <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
-        {children}
-        {onClose ? (
-          <IconButton
-            aria-label="close"
-            onClick={onClose}
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        ) : null}
-      </DialogTitle>
-    );
-  };
-
-  BootstrapDialogTitle.propTypes = {
-    children: PropTypes.node,
-    onClose: PropTypes.func.isRequired,
   };
 
   const ButtonDiscount = styled(Button)(({ theme }) => ({
@@ -672,9 +645,9 @@ export default function PayMent(props) {
       </div>
 
       <Dialog onClose={handleClose} open={open} maxWidth="md">
-        <BootstrapDialogTitle onClose={handleClose}>
+        <ModalDialog onClose={handleClose}>
           Khuyến Mãi
-        </BootstrapDialogTitle>
+        </ModalDialog>
         <div
           className="p-3 my-0 mx-8 flex mb-3 rounded"
           style={{ background: " rgb(242, 242, 242)" }}
@@ -887,7 +860,7 @@ export default function PayMent(props) {
                                       }}
                                     >
                                       <ul className={classes.description}>
-                                        {parse(item.description)}
+                                        {/* {parse(item.description)} */}
                                       </ul>
                                     </div>
                                   </div>
@@ -1072,7 +1045,7 @@ export default function PayMent(props) {
                                       }}
                                     >
                                       <ul className={classes.description}>
-                                        {parse(item.description)}
+                                        {/* {parse(item.description)} */}
                                       </ul>
                                     </div>
                                   </div>

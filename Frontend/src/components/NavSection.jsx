@@ -63,10 +63,8 @@ NavItem.propTypes = {
 function NavItem({ item, active }) {
   const theme = useTheme();
   const isActiveRoot = active(item.path);
-  console.log("isActiveRoot", isActiveRoot);
   const { title, path, icon, info, children } = item;
   const [open, setOpen] = useState(isActiveRoot);
-  console.log("path", path);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -130,8 +128,6 @@ function NavItem({ item, active }) {
             {children.map((item, i) => {
               const { title, path } = item;
               const isActiveSub = active(path);
-              console.log("isActiveSub", isActiveSub);
-              console.log("path", path);
               return (
                 <ListItemStyle
                   key={title}
@@ -214,7 +210,6 @@ export default function NavSection({ navConfig, openDrawer, ...other }) {
   const { pathname } = useLocation();
   const match = (path) =>
     path ? !!matchPath(pathname, { path, end: false }) : false;
-  console.log("match", match);
   return (
     <Box {...other}>
       <List disablePadding>
