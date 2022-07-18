@@ -23,6 +23,7 @@ import { updateActiveDiscount } from "../../../redux/actions/Discount";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { useSnackbar } from "notistack";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import moment from "moment";
 
 const makeObjError = (name, value, dataSubmit) => {
   // kiểm tra và set lỗi rỗng
@@ -66,7 +67,6 @@ export default function PayMent(props) {
     danhSachPhongVe: { data },
     idShowtime,
     miniPrice,
-    activeCoupon,
     isSelectedSeat,
     listSeatSelected,
   } = useSelector((state) => state.BookTicketReducer);
@@ -76,6 +76,7 @@ export default function PayMent(props) {
   const { enqueueSnackbar } = useSnackbar();
 
   const [open, setOpen] = React.useState(false);
+  let [discountIsChoose, setDiscountIsChoose] = React.useState("");
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -94,7 +95,6 @@ export default function PayMent(props) {
       paymentMethod: paymentMethod,
       discount: discount,
       miniPrice: miniPrice,
-      activeCoupon: activeCoupon,
     },
     errors: {
       email: "",
@@ -110,7 +110,6 @@ export default function PayMent(props) {
     paymentMethod,
     discount,
     miniPrice,
-    activeCoupon,
   });
 
   const onChange = (e) => {
@@ -138,7 +137,6 @@ export default function PayMent(props) {
           paymentMethod: dataSubmit.values.paymentMethod,
           discount: dataSubmit.values.discount,
           miniPrice: dataSubmit.values.miniPrice,
-          activeCoupon: dataSubmit.values.activeCoupon,
         },
       });
       // khi không có lỗi và đủ dữ liệu thì set data sẵn sàng đặt vé và ngược lại, set activeStep = 1 nếu đủ dữ liệu và chưa đặt vé
@@ -178,7 +176,6 @@ export default function PayMent(props) {
           paymentMethod: paymentMethod,
           discount: discount,
           miniPrice: miniPrice,
-          activeCoupon: activeCoupon,
         },
         errors: { email: emailErrors.email, phone: phoneErrors.phone },
       }));
@@ -191,7 +188,6 @@ export default function PayMent(props) {
           paymentMethod: paymentMethod,
           discount: discount,
           miniPrice: miniPrice,
-          activeCoupon: activeCoupon,
         },
         errors: { email: emailErrors.email, phone: phoneErrors.phone },
       }));
@@ -200,31 +196,50 @@ export default function PayMent(props) {
   const handleBookTicket = () => {
     dispatch(postCreateTicket({ idShowtime, seatCodes, discount }));
   };
-  const handleDiscount = (item) => {
-    let { id, price, miniPrice } = item;
-    const discountListUpdate = discountList.find((item) => item._id === id);
+  const handleRemoveDiscount = (item, index) => {
+    const { price } = item;
+    setDiscountIsChoose("");
+    let newValues = {
+      ...dataSubmit.values,
+      discount: 0,
+      miniPrice: 0,
+    };
+    let newErrors = makeObjError(discount, price, dataSubmit);
+    setdataSubmit((dataSubmit) => ({
+      ...dataSubmit,
+      values: newValues,
+      errors: newErrors,
+    }));
+    setOpen(false);
+  };
 
-    if (discountListUpdate) {
-      discountListUpdate.active = !discountListUpdate.active;
-      dispatch(updateActiveDiscount(discountListUpdate, id));
-    }
-    if (discountListUpdate.active) {
+  const handleDiscount = (item, index) => {
+    let { id, price, miniPrice, code } = item;
+    discountIsChoose = index;
+    setDiscountIsChoose(discountIsChoose);
+    console.log("discountIsChoose", discountIsChoose);
+    console.log("index", index);
+    // const discountListUpdate = discountList.find((item) => item._id === id);
+
+    // if (discountListUpdate) {
+    //   discountListUpdate.active = !discountListUpdate.active;
+    //   dispatch(updateActiveDiscount(discountListUpdate, id));
+    // }
+    if (discountIsChoose === index) {
       setTimeout(() => {
-        enqueueSnackbar(
-          `Mã khuyến mãi "${discountListUpdate.code}" được áp dụng thành công`,
-          { variant: "info" }
-        );
+        enqueueSnackbar(`Mã khuyến mãi "${code}" được áp dụng thành công`, {
+          variant: "info",
+        });
       }, 100);
 
       setOpen(false);
     }
-    if (discountListUpdate.active) {
+    if (discountIsChoose === index) {
       if (amount >= miniPrice) {
         let newValues = {
           ...dataSubmit.values,
           discount: price,
           miniPrice: miniPrice,
-          activeCoupon: discountListUpdate.active,
         };
         let newErrors = makeObjError(discount, price, dataSubmit);
         setdataSubmit((dataSubmit) => ({
@@ -238,7 +253,6 @@ export default function PayMent(props) {
         ...dataSubmit.values,
         discount: 0,
         miniPrice: 0,
-        activeCoupon: false,
       };
       let newErrors = makeObjError(discount, price, dataSubmit);
       setdataSubmit((dataSubmit) => ({
@@ -269,10 +283,10 @@ export default function PayMent(props) {
   };
 
   const handlePostCoupon = () => {
-
     const code = discountList.find((item) => item.code === coupon);
 
     if (code && amount >= code.miniPrice) {
+      setDiscountIsChoose(coupon);
       code.active = true;
       dispatch(updateActiveDiscount(code, code.id));
       setTimeout(() => {
@@ -284,7 +298,6 @@ export default function PayMent(props) {
         ...dataSubmit.values,
         discount: code.price,
         miniPrice: code.miniPrice,
-        activeCoupon: code.active,
       };
       let newErrors = makeObjError(discount, code.price, dataSubmit);
       setdataSubmit((dataSubmit) => ({
@@ -442,7 +455,7 @@ export default function PayMent(props) {
 
         <div className={classes.payMentItem}>
           <label className={classes.label}>Mã giảm giá</label>
-          {dataSubmit.values.activeCoupon &&
+          {(discountIsChoose > 0 || discountIsChoose !== "") &&
             amount >= dataSubmit.values.miniPrice && (
               <div className="flex flex-wrap mt-2">
                 <div className="overflow-hidden">
@@ -645,9 +658,7 @@ export default function PayMent(props) {
       </div>
 
       <Dialog onClose={handleClose} open={open} maxWidth="md">
-        <ModalDialog onClose={handleClose}>
-          Khuyến Mãi
-        </ModalDialog>
+        <ModalDialog onClose={handleClose}>Khuyến Mãi</ModalDialog>
         <div
           className="p-3 my-0 mx-8 flex mb-3 rounded"
           style={{ background: " rgb(242, 242, 242)" }}
@@ -729,7 +740,8 @@ export default function PayMent(props) {
                 <div className="relative">
                   <div className="relative w-full z-10 flex">
                     <div className="relative opacity-100 h-36">
-                      {!item.active ? (
+                      {discountIsChoose !== index &&
+                      discountIsChoose !== item.code ? (
                         <img
                           className="w-full h-36"
                           src="../img/discount/ticket_box.svg"
@@ -825,7 +837,9 @@ export default function PayMent(props) {
                                       Hạn sử dụng
                                     </div>
                                     <div className="pr-2 overflow-hidden">
-                                      {item.expiryDate}
+                                      {moment(item?.expiryDate).format(
+                                        "DD/MM/YY"
+                                      )}
                                     </div>
                                   </div>
                                   <div
@@ -884,12 +898,13 @@ export default function PayMent(props) {
                           </div>
                           <div className="flex items-end mt-auto">
                             <p className="pr-7 text-sm font-normal leading-5 m-0 p-0 text-gray-500 max-h-5">
-                              HSD: {item?.expiryDate}
+                              HSD: {moment(item?.expiryDate).format("DD/MM/YY")}
                             </p>
-                            {!item.active ? (
+                            {discountIsChoose !== index &&
+                            discountIsChoose !== item.code ? (
                               <ButtonDiscount
                                 className="ml-auto"
-                                onClick={(e) => handleDiscount(item)}
+                                onClick={(e) => handleDiscount(item, index)}
                                 variant="outlined"
                                 // color="primary"
                               >
@@ -899,7 +914,9 @@ export default function PayMent(props) {
                               <ButtonDiscount
                                 className="ml-auto"
                                 variant="outlined"
-                                onClick={(e) => handleDiscount(item)}
+                                onClick={(e) =>
+                                  handleRemoveDiscount(item, index)
+                                }
                               >
                                 Bỏ Chọn
                               </ButtonDiscount>
@@ -1010,7 +1027,9 @@ export default function PayMent(props) {
                                       Hạn sử dụng
                                     </div>
                                     <div className="pr-2 overflow-hidden">
-                                      {item.expiryDate}
+                                      {moment(item?.expiryDate).format(
+                                        "DD/MM/YY"
+                                      )}
                                     </div>
                                   </div>
                                   <div

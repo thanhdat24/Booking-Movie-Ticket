@@ -96,7 +96,6 @@ const stateDefault = {
   activeStep: 0,
   discount: 0,
   miniPrice: 0,
-  activeCoupon: false,
 
   loadingCreateShowtime: false,
   successCreateShowtime: null,
@@ -176,7 +175,6 @@ export const BookTicketReducer = (state = stateDefault, action) => {
         paymentMethod: "",
         discount: "",
         miniPrice: "",
-        activeCoupon: false,
         isReadyPayment: false,
         isSelectedSeat: false,
         listSeatSelected: [],
@@ -198,7 +196,6 @@ export const BookTicketReducer = (state = stateDefault, action) => {
         paymentMethod: action.payload.paymentMethod,
         discount: action.payload.discount,
         miniPrice: action.payload.miniPrice,
-        activeCoupon: action.payload.activeCoupon,
       };
     }
     case SET_READY_PAYMENT: {
