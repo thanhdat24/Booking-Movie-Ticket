@@ -17,6 +17,10 @@ const discountsApi = {
     const path = `/v1/discounts`;
     return axiosClient.post(path, data);
   },
+  deleteDiscount: (_id) => {
+    const path = `/v1/discounts/${_id}`;
+    return axiosClient.delete(path);
+  },
 };
 
 export default discountsApi;

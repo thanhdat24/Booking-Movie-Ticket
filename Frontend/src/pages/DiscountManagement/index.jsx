@@ -88,6 +88,8 @@ export default function DiscountManagement() {
     discountList: { data: discountList },
     successUpdateDiscount,
     errorUpdateDiscount,
+    successDeleteDiscount,
+    errorDeleteDiscount,
   } = useSelector((state) => state.DiscountReducer);
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
@@ -114,6 +116,16 @@ export default function DiscountManagement() {
     }
     return () => dispatch(resetDiscount());
   }, []);
+
+  useEffect(() => {
+    if (successDeleteDiscount) {
+      enqueueSnackbar("Xoá mã giảm giá thành công!", { variant: "success" });
+      dispatch(getDiscountsList());
+    }
+    if (errorDeleteDiscount) {
+      enqueueSnackbar(errorDeleteDiscount, { variant: "error" });
+    }
+  }, [successDeleteDiscount, errorDeleteDiscount]);
 
   useEffect(() => {
     if (successCreateDiscount || successUpdateDiscount) {

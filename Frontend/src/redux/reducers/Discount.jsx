@@ -2,6 +2,9 @@ import {
   CREATE_DISCOUNT_FAIL,
   CREATE_DISCOUNT_REQUEST,
   CREATE_DISCOUNT_SUCCESS,
+  DELETE_DISCOUNT_FAIL,
+  DELETE_DISCOUNT_REQUEST,
+  DELETE_DISCOUNT_SUCCESS,
   GET_DISCOUNT_FAIL,
   GET_DISCOUNT_LIST_FAIL,
   GET_DISCOUNT_LIST_REQUEST,
@@ -31,6 +34,10 @@ const stateDefault = {
   successDetailDiscount: "",
   loadingDetailDiscount: false,
   errorDetailDiscount: null,
+
+  successDeleteDiscount: "",
+  loadingDeleteDiscount: false,
+  errorDeleteDiscount: null,
 };
 
 export const DiscountReducer = (state = stateDefault, action) => {
@@ -128,6 +135,31 @@ export const DiscountReducer = (state = stateDefault, action) => {
       };
     }
 
+    case DELETE_DISCOUNT_REQUEST: {
+      return {
+        ...state,
+        loadingDeleteDiscount: true,
+        errorDeleteDiscount: null,
+        successDeleteDiscount: "",
+      };
+    }
+    case DELETE_DISCOUNT_SUCCESS: {
+      return {
+        ...state,
+        loadingDeleteDiscount: false,
+        successDeleteDiscount: action.payload.data,
+        errorDeleteDiscount: null,
+      };
+    }
+    case DELETE_DISCOUNT_FAIL: {
+      return {
+        ...state,
+        loadingDeleteDiscount: false,
+        errorDeleteDiscount: action.payload.error,
+        successDeleteDiscount: "",
+      };
+    }
+
     case RESET_DISCOUNT: {
       return {
         ...state,
@@ -137,6 +169,10 @@ export const DiscountReducer = (state = stateDefault, action) => {
 
         successCreateDiscount: "",
         errorCreateDiscount: null,
+
+        successDeleteDiscount: "",
+        loadingDeleteDiscount: false,
+        errorDeleteDiscount: null,
       };
     }
     case RESET_DISCOUNT_DETAIL: {

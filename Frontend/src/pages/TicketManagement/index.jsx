@@ -82,7 +82,6 @@ export default function TicketManagement() {
     ticketList: { data },
     ticketList,
   } = useSelector((state) => state.BookTicketReducer);
-  console.log("data", data);
   const getIdSeat = (danhSachGhe) => {
     return danhSachGhe
       .reduce((listSeat, seat) => {

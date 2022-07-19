@@ -67,7 +67,6 @@ export default function CreateDiscount() {
 
     validationSchema: CreateSchema,
     onSubmit: (data) => {
-      console.log("data", data);
       if (loadingCreateDiscount) {
         return;
       }
@@ -83,12 +82,10 @@ export default function CreateDiscount() {
     values,
     setFieldValue,
   } = formik;
-  console.log("values", values);
 
   const [open, setOpen] = React.useState(false);
 
   const [effectiveTime, setEffectiveTime] = useState([null, null]);
-  console.log("effectiveTime", effectiveTime);
 
   const handleChangePublic = (event, checked) => {
     setFieldValue("activePublic", checked ? true : false);

@@ -3,6 +3,9 @@ import {
   CREATE_DISCOUNT_FAIL,
   CREATE_DISCOUNT_REQUEST,
   CREATE_DISCOUNT_SUCCESS,
+  DELETE_DISCOUNT_FAIL,
+  DELETE_DISCOUNT_REQUEST,
+  DELETE_DISCOUNT_SUCCESS,
   GET_DISCOUNT_FAIL,
   GET_DISCOUNT_LIST_FAIL,
   GET_DISCOUNT_LIST_REQUEST,
@@ -113,6 +116,31 @@ export const createDiscount = (data) => {
   };
 };
 
+export const deleteDiscount = (_id) => {
+  return (dispatch) => {
+    dispatch({
+      type: DELETE_DISCOUNT_REQUEST,
+    });
+    discountsApi
+      .deleteDiscount(_id)
+      .then((result) => {
+        dispatch({
+          type: DELETE_DISCOUNT_SUCCESS,
+          payload: {
+            data: result.data.data,
+          },
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: DELETE_DISCOUNT_FAIL,
+          payload: {
+            error: error.response?.data.message,
+          },
+        });
+      });
+  };
+};
 
 export const resetDiscount = () => {
   return (dispatch) => {
@@ -121,4 +149,3 @@ export const resetDiscount = () => {
     });
   };
 };
-

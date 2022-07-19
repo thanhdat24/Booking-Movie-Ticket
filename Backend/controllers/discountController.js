@@ -11,6 +11,7 @@ exports.getAllDiscount = catchAsync(async (req, res, next) => {
     result.map(async (day) => {
       if (
         moment(day.startDate).format('YYYY-MM-DDTHH:mm:SS') > currentDay &&
+        moment(day.expiryDate).format('YYYY-MM-DDTHH:mm:SS') > currentDay &&
         day.activeCode !== 'Kết thúc'
       ) {
         day.activeCode = 'Sắp diễn ra';
@@ -19,6 +20,7 @@ exports.getAllDiscount = catchAsync(async (req, res, next) => {
         });
       } else if (
         moment(day.startDate).format('YYYY-MM-DDTHH:mm:SS') < currentDay &&
+        moment(day.expiryDate).format('YYYY-MM-DDTHH:mm:SS') > currentDay &&
         day.activeCode !== 'Kết thúc'
       ) {
         day.activeCode = 'Đang diễn ra';

@@ -27,7 +27,6 @@ import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import CopyToClipboard from "react-copy-to-clipboard";
 import ModalDialog from "../../../../components/ModalDialog/DialogTitle";
-import addWeeks from "date-fns/addWeeks";
 import {
   resetDiscount,
   updateDiscount,
@@ -38,11 +37,8 @@ export default function Info({ successDetailDiscount }) {
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
-  const {
-    loadingUpdateDiscount,
-    successUpdateDiscount,
-    errorUpdateDiscount,
-  } = useSelector((state) => state.DiscountReducer);
+  const { loadingUpdateDiscount, successUpdateDiscount, errorUpdateDiscount } =
+    useSelector((state) => state.DiscountReducer);
   const EditSchema = Yup.object().shape({
     title: Yup.string().required("*Vui lòng nhập thông tin này"),
     price: Yup.string().required("*Vui lòng nhập thông tin này"),
@@ -50,7 +46,6 @@ export default function Info({ successDetailDiscount }) {
   });
 
   const [effectiveTime, setEffectiveTime] = useState([null, null]);
-  console.log("effectiveTime", effectiveTime);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -60,14 +55,19 @@ export default function Info({ successDetailDiscount }) {
       price: successDetailDiscount?.price,
       percent: successDetailDiscount?.percent,
       miniPrice: successDetailDiscount?.miniPrice,
-      startDate: moment(effectiveTime[0])?.format("YYYY-MM-DD"),
-      expiryDate: moment(effectiveTime[1])?.format("YYYY-MM-DD"),
+      startDate:
+        moment(effectiveTime[0])?.format("YYYY-MM-DD") !== "Invalid date"
+          ? moment(effectiveTime[0])?.format("YYYY-MM-DD")
+          : successDetailDiscount?.startDate,
+      expiryDate:
+        moment(effectiveTime[1])?.format("YYYY-MM-DD") !== "Invalid date"
+          ? moment(effectiveTime[1])?.format("YYYY-MM-DD")
+          : successDetailDiscount?.expiryDate,
       activeCode: successDetailDiscount?.activeCode,
       activePublic: successDetailDiscount?.activePublic,
     },
     validationSchema: EditSchema,
     onSubmit: (data) => {
-      console.log("data", data);
       if (loadingUpdateDiscount) {
         return;
       }
@@ -83,7 +83,6 @@ export default function Info({ successDetailDiscount }) {
     values,
     setFieldValue,
   } = formik;
-  console.log("values", values);
   const [open, setOpen] = React.useState(false);
 
   const handleChangePublic = (event, checked) => {

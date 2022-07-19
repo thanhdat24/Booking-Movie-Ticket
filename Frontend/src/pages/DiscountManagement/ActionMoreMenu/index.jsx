@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { updateDiscount } from "../../../redux/actions/Discount";
+import { deleteDiscount, updateDiscount } from "../../../redux/actions/Discount";
 import { LoadingButton } from "@mui/lab";
 export default function ActionMoreMenu({ id, activeCode }) {
   const {
@@ -31,7 +31,9 @@ export default function ActionMoreMenu({ id, activeCode }) {
   const handleCloseNotify = () => {
     setOpenNotify(false);
   };
-
+  const handleDeleteDiscount = () => {
+    dispatch(deleteDiscount(id));
+  };
   const handleActiveCode = () => {
     const discountChangeActiveCode = discountList.find(
       (item) => item._id === id
@@ -106,7 +108,7 @@ export default function ActionMoreMenu({ id, activeCode }) {
         color="error"
         className={classes.ButtonAction}
         variant="outlined"
-        onClick={(e) => handleEditDetail()}
+        onClick={handleDeleteDiscount}
       >
         Xoá
       </Button>
