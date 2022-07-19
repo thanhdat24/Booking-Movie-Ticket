@@ -35,6 +35,11 @@ const BookTickets = lazy(() => import("./pages/Bookticket"));
 const TicketManagement = lazy(() => import("./pages/TicketManagement"));
 const ReviewManagement = lazy(() => import("./pages/ReviewManagement"));
 const DiscountManagement = lazy(() => import("./pages/DiscountManagement"));
+const EditDiscount = lazy(() =>
+  import("./pages/DiscountManagement/ActionMoreMenu/EditDiscount")
+);
+
+
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const UserEdit = lazy(() => import("./pages/UsersManagement/UserEdit"));
 const CreateTheater = lazy(() =>
@@ -53,7 +58,9 @@ const TheaterManagement = lazy(() => import("./pages/TheaterManagement"));
 const ShowtimesManagement = lazy(() => import("./pages/ShowtimesManagement"));
 const MovieEdit = lazy(() => import("./pages/MoviesManagement/MovieEdit"));
 const CreateMovie = lazy(() => import("./pages/MoviesManagement/CreateMovie"));
-const CreateDiscount = lazy(() => import("./pages/DiscountManagement/CreateDiscount"));
+const CreateDiscount = lazy(() =>
+  import("./pages/DiscountManagement/CreateDiscount")
+);
 const UserProfile = lazy(() => import("./pages/UserProfile"));
 
 // guards
@@ -280,7 +287,11 @@ function App() {
               </Route>
               <Route
                 exact
-                path={["/admin/discount/list", "/admin/discount/create"]}
+                path={[
+                  "/admin/discount/list",
+                  "/admin/discount/create",
+                  "/admin/discount/edit/:discountId",
+                ]}
               >
                 <AdminLayout>
                   <AdminRoute
@@ -292,6 +303,11 @@ function App() {
                     exact
                     path="/admin/discount/create"
                     component={CreateDiscount}
+                  />
+                  <AdminRoute
+                    exact
+                    path="/admin/discount/edit/:discountId"
+                    component={EditDiscount}
                   />
                 </AdminLayout>
               </Route>

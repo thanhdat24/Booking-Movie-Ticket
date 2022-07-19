@@ -31,7 +31,7 @@ export default function StepCheckout() {
   const steps = ["CHỌN GHẾ", "THANH TOÁN", "KẾT QUẢ ĐẶT VÉ"];
 
   function StepIcon(props) {
-    console.log("userListBooking", userListBooking);
+    // console.log("userListBooking", userListBooking);
     const { active, completed } = props;
     const icons = {
       1: <WeekendIcon />,

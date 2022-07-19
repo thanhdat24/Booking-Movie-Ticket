@@ -83,9 +83,13 @@ export default function CreateDiscount() {
     values,
     setFieldValue,
   } = formik;
+  console.log("values", values);
+
   const [open, setOpen] = React.useState(false);
 
   const [effectiveTime, setEffectiveTime] = useState([null, null]);
+  console.log("effectiveTime", effectiveTime);
+
   const handleChangePublic = (event, checked) => {
     setFieldValue("activePublic", checked ? true : false);
   };
@@ -339,6 +343,9 @@ export default function CreateDiscount() {
                           startText="Ngày bắt đầu"
                           endText="Ngày kết thúc"
                           value={effectiveTime}
+                          disablePast={
+                            values.activeCode === "Sắp diễn ra" && true
+                          }
                           onChange={(newValue) => {
                             setEffectiveTime(newValue);
                           }}

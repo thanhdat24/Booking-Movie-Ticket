@@ -64,13 +64,13 @@ export const getDetailDiscount = (_id) => {
   };
 };
 
-export const updateActiveDiscount = (active, _id) => {
+export const updateDiscount = (data, _id) => {
   return (dispatch) => {
     dispatch({
       type: UPDATE_ACTIVE_DISCOUNT_REQUEST,
     });
     discountsApi
-      .updateActiveDiscount(active, _id)
+      .updateDiscount(data, _id)
       .then((result) => {
         dispatch({
           type: UPDATE_ACTIVE_DISCOUNT_SUCCESS,
@@ -121,3 +121,4 @@ export const resetDiscount = () => {
     });
   };
 };
+

@@ -2,10 +2,14 @@ import {
   CREATE_DISCOUNT_FAIL,
   CREATE_DISCOUNT_REQUEST,
   CREATE_DISCOUNT_SUCCESS,
+  GET_DISCOUNT_FAIL,
   GET_DISCOUNT_LIST_FAIL,
   GET_DISCOUNT_LIST_REQUEST,
   GET_DISCOUNT_LIST_SUCCESS,
+  GET_DISCOUNT_REQUEST,
+  GET_DISCOUNT_SUCCESS,
   RESET_DISCOUNT,
+  RESET_DISCOUNT_DETAIL,
   UPDATE_ACTIVE_DISCOUNT_FAIL,
   UPDATE_ACTIVE_DISCOUNT_REQUEST,
   UPDATE_ACTIVE_DISCOUNT_SUCCESS,
@@ -16,13 +20,17 @@ const stateDefault = {
   loadingDiscountList: false,
   errorDiscountList: null,
 
-  successUpdateActiveDiscount: "",
-  loadingUpdateActiveDiscount: false,
-  errorUpdateActiveDiscount: null,
+  successUpdateDiscount: "",
+  loadingUpdateDiscount: false,
+  errorUpdateDiscount: null,
 
   loadingCreateDiscount: false,
   successCreateDiscount: null,
   errorCreateDiscount: null,
+
+  successDetailDiscount: "",
+  loadingDetailDiscount: false,
+  errorDetailDiscount: null,
 };
 
 export const DiscountReducer = (state = stateDefault, action) => {
@@ -51,25 +59,25 @@ export const DiscountReducer = (state = stateDefault, action) => {
     case UPDATE_ACTIVE_DISCOUNT_REQUEST: {
       return {
         ...state,
-        loadingUpdateActiveDiscount: true,
-        errorUpdateActiveDiscount: null,
-        successUpdateActiveDiscount: "",
+        loadingUpdateDiscount: true,
+        errorUpdateDiscount: null,
+        successUpdateDiscount: "",
       };
     }
     case UPDATE_ACTIVE_DISCOUNT_SUCCESS: {
       return {
         ...state,
-        loadingUpdateActiveDiscount: false,
-        successUpdateActiveDiscount: action.payload.data,
-        errorUpdateActiveDiscount: null,
+        loadingUpdateDiscount: false,
+        successUpdateDiscount: action.payload.data,
+        errorUpdateDiscount: null,
       };
     }
     case UPDATE_ACTIVE_DISCOUNT_FAIL: {
       return {
         ...state,
-        loadingUpdateActiveDiscount: false,
-        errorUpdateActiveDiscount: action.payload.error,
-        successUpdateActiveDiscount: "",
+        loadingUpdateDiscount: false,
+        errorUpdateDiscount: action.payload.error,
+        successUpdateDiscount: "",
       };
     }
 
@@ -95,11 +103,48 @@ export const DiscountReducer = (state = stateDefault, action) => {
       };
     }
 
+    case GET_DISCOUNT_REQUEST: {
+      return {
+        ...state,
+        loadingDetailDiscount: true,
+        errorDetailDiscount: null,
+        successDetailDiscount: "",
+      };
+    }
+    case GET_DISCOUNT_SUCCESS: {
+      return {
+        ...state,
+        loadingDetailDiscount: false,
+        successDetailDiscount: action.payload.data,
+        errorDetailDiscount: null,
+      };
+    }
+    case GET_DISCOUNT_FAIL: {
+      return {
+        ...state,
+        loadingDetailDiscount: false,
+        errorDetailDiscount: action.payload.error,
+        successDetailDiscount: "",
+      };
+    }
+
     case RESET_DISCOUNT: {
       return {
         ...state,
+        successUpdateDiscount: "",
+        loadingUpdateDiscount: false,
+        errorUpdateDiscount: null,
+
         successCreateDiscount: "",
         errorCreateDiscount: null,
+      };
+    }
+    case RESET_DISCOUNT_DETAIL: {
+      return {
+        ...state,
+        successDetailDiscount: "",
+        loadingDetailDiscount: false,
+        errorDetailDiscount: null,
       };
     }
     default:

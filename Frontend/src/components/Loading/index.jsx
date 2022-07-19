@@ -88,13 +88,17 @@ export default function Loading() {
   const loadingGetDetailUser = useSelector(
     (state) => state.AuthReducer.loadingGetDetailUser
   );
+    const loadingDetailDiscount = useSelector(
+      (state) => state.DiscountReducer.loadingDetailDiscount
+    );
   const loading =
     isLazy ||
     loadingMovieList ||
     loadingGetListSeat ||
     loadingDetailMovie ||
     isLoadingBackToHome ||
-    loadingGetDetailUser;
+    loadingGetDetailUser ||
+    loadingDetailDiscount;
   const loadingPrevious = useRef(false);
 
   const [controlEffect, setControlEffect] = useState({

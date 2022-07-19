@@ -22,10 +22,12 @@ const discountSchema = new mongoose.Schema(
     startDate: {
       type: Date,
       required: [true, 'A discount must have a startDate'],
+      trim: true,
     },
     expiryDate: {
       type: Date,
       required: [true, 'A discount must have a expiryDate'],
+      trim: true,
     },
     activePublic: {
       type: Boolean,

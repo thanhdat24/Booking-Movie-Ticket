@@ -9,9 +9,9 @@ const discountsApi = {
     const path = `/v1/discounts/${_id}`;
     return axiosClient.get(path);
   },
-  updateActiveDiscount: (active, _id) => {
+  updateDiscount: (data, _id) => {
     const path = `/v1/discounts/${_id}`;
-    return axiosClient.patch(path, active);
+    return axiosClient.patch(path, data);
   },
   postCreateDiscount: (data) => {
     const path = `/v1/discounts`;

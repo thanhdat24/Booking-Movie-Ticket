@@ -19,7 +19,7 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { updateActiveDiscount } from "../../../redux/actions/Discount";
+import { updateDiscount } from "../../../redux/actions/Discount";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { useSnackbar } from "notistack";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -217,14 +217,6 @@ export default function PayMent(props) {
     let { id, price, miniPrice, code } = item;
     discountIsChoose = index;
     setDiscountIsChoose(discountIsChoose);
-    console.log("discountIsChoose", discountIsChoose);
-    console.log("index", index);
-    // const discountListUpdate = discountList.find((item) => item._id === id);
-
-    // if (discountListUpdate) {
-    //   discountListUpdate.active = !discountListUpdate.active;
-    //   dispatch(updateActiveDiscount(discountListUpdate, id));
-    // }
     if (discountIsChoose === index) {
       setTimeout(() => {
         enqueueSnackbar(`Mã khuyến mãi "${code}" được áp dụng thành công`, {
@@ -288,7 +280,7 @@ export default function PayMent(props) {
     if (code && amount >= code.miniPrice) {
       setDiscountIsChoose(coupon);
       code.active = true;
-      dispatch(updateActiveDiscount(code, code.id));
+      dispatch(updateDiscount(code, code.id));
       setTimeout(() => {
         enqueueSnackbar(`Mã khuyến mãi "${coupon}" được áp dụng thành công`, {
           variant: "info",

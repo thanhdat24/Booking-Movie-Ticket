@@ -24,10 +24,7 @@ import { Icon } from "@iconify/react";
 import { filter } from "lodash";
 import TicketListHead from "../../components/Ticket/TicketListHead";
 import TicketListToolbar from "../../components/Ticket/TicketToolbar";
-import {
-  getAllReviews,
-  resetReviewManagement,
-} from "../../redux/actions/Review";
+
 import ReviewMoreMenu from "../../components/Review/ReviewMoreMenu";
 import { useSnackbar } from "notistack";
 import { Link as RouterLink, useHistory } from "react-router-dom";
@@ -37,6 +34,7 @@ import formatDate from "../../utils/formatDate";
 import { getDiscountsList, resetDiscount } from "../../redux/actions/Discount";
 import moment from "moment";
 import { useStyles } from "./styles";
+import ActionMoreMenu from "./ActionMoreMenu";
 
 const TABLE_HEAD = [
   { id: "code", label: "Mã giảm giá", alignRight: false },
@@ -45,6 +43,7 @@ const TABLE_HEAD = [
   { id: "date", label: "Thời gian áp dụng", alignRight: false },
   // { id: "userCreate", label: "Người tạo", alignRight: false },
   { id: "activeCode", label: "Trạng thái", alignRight: false },
+  { id: "action", label: "Thao tác", alignRight: false },
 ];
 
 // ----------------------------------------------------------------------
@@ -81,14 +80,20 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis?.map((el) => el[0]);
 }
 
+function formatDateShow(date) {
+  return moment(date).add(0, "hours").format("DD/MM/YYYY - hh:mm:ss");
+}
 export default function DiscountManagement() {
   const {
     discountList: { data: discountList },
+    successUpdateDiscount,
+    errorUpdateDiscount,
   } = useSelector((state) => state.DiscountReducer);
-  console.log("discountList", discountList);
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
-
+  const { successCreateDiscount } = useSelector(
+    (state) => state.DiscountReducer
+  );
   const [page, setPage] = useState(0);
   const history = useHistory();
   const [order, setOrder] = useState("asc");
@@ -109,6 +114,21 @@ export default function DiscountManagement() {
     }
     return () => dispatch(resetDiscount());
   }, []);
+
+  useEffect(() => {
+    if (successCreateDiscount || successUpdateDiscount) {
+      dispatch(getDiscountsList());
+    }
+  }, [successCreateDiscount, successUpdateDiscount]);
+
+  useEffect(() => {
+    if (successUpdateDiscount) {
+      enqueueSnackbar("Lưu thành công!", { variant: "success" });
+    }
+    if (errorUpdateDiscount) {
+      enqueueSnackbar(errorUpdateDiscount, { variant: "error" });
+    }
+  }, [successUpdateDiscount, errorUpdateDiscount]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -209,7 +229,6 @@ export default function DiscountManagement() {
                       title,
                       code,
                       price,
-                      percent,
                       miniPrice,
                       startDate,
                       expiryDate,
@@ -255,15 +274,15 @@ export default function DiscountManagement() {
                             </span>
                           </div>
                         </TableCell>
-                        <TableCell align="left">
+                        <TableCell align="left" width="20%">
                           <span>
                             <span className="font-semibold mr-4"> Từ: </span>
-                            {moment(startDate).format("DD/MM/YYYY hh:mm:ss")}
+                            {formatDateShow(startDate)}
                           </span>{" "}
                           <br />
                           <span>
                             <span className="font-semibold mr-4"> Đến: </span>
-                            {moment(expiryDate).format("DD/MM/YYYY hh:mm:ss")}
+                            {formatDateShow(expiryDate)}
                           </span>
                         </TableCell>
                         <TableCell align="left">
@@ -287,7 +306,9 @@ export default function DiscountManagement() {
                             />
                           )}
                         </TableCell>
-                        <TableCell align="left"></TableCell>
+                        <TableCell align="left">
+                          <ActionMoreMenu id={_id} activeCode={activeCode} />
+                        </TableCell>
                       </TableRow>
                     );
                   })}

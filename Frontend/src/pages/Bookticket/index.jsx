@@ -73,7 +73,6 @@ export default function BookTickets(props) {
     socket.current.on(
       "send danhSachGheDangDat from server to client",
       (danhSachGheDangDat) => {
-        console.log("danhSachGheDangDat", danhSachGheDangDat);
         // B1: Loại bỏ mình ra khỏi ds dang dat
         danhSachGheDangDat = danhSachGheDangDat.filter(
           (item) => item.fullName !== user?.fullName
@@ -92,7 +91,6 @@ export default function BookTickets(props) {
         arrGheKhachDat = _.uniqBy(arrGheKhachDat, "id");
 
         // Đưa dữ liệu ghế khách đặt về redux
-        console.log("arrGheKhachDat", arrGheKhachDat);
         dispatch({
           type: "DAT_GHE",
           arrGheKhachDat,
