@@ -20,7 +20,7 @@ import {
 import MenuPopover from "./MenuPopover";
 import Iconify from "./Iconify";
 import Scrollbar from "./Scrollbar";
-import formatDate, { fToNow } from "../../utils/formatDate";
+import formatDate, { calculateTimeout, fToNow } from "../../utils/formatDate";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAllTicket,
@@ -170,16 +170,7 @@ export default function NotificationsPopover() {
 function NotificationItem({ notification, id, key }) {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-  const calculateTimeout = (dateShow) => {
-    const fakeThoiLuong = 120;
-    const timeInObj = new Date(dateShow);
-    const timeOutObj = new Date(
-      timeInObj.getTime() + fakeThoiLuong * 60 * 1000
-    );
-    // lấy id ghế để render ra nhiều ghê
 
-    return timeOutObj.toLocaleTimeString([], { hour12: false }).slice(0, 5);
-  };
   const getIdSeat = (danhSachGhe) => {
     return danhSachGhe
       .reduce((listSeat, seat) => {

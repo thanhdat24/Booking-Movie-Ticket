@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import formatDate from "../../../utils/formatDate";
+import formatDate, { calculateTimeout } from "../../../utils/formatDate";
 import useStyles from "./style";
 import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
@@ -24,6 +24,7 @@ import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { useSnackbar } from "notistack";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import moment from "moment";
+import Paypal from "./paypal";
 
 const makeObjError = (name, value, dataSubmit) => {
   // kiểm tra và set lỗi rỗng
@@ -260,16 +261,6 @@ export default function PayMent(props) {
   const onBlur = (e) => {
     setDataFocus({ ...dataFocus, [e.target.name]: false });
   };
-  const calculateTimeout = (dateShow) => {
-    const fakeThoiLuong = 120;
-    const timeInObj = new Date(dateShow);
-    const timeOutObj = new Date(
-      timeInObj.getTime() + fakeThoiLuong * 60 * 1000
-    );
-
-    return timeOutObj.toLocaleTimeString([], { hour12: false }).slice(0, 5);
-  };
-
   const handleCoupon = (event) => {
     setCoupon(event.target.value);
   };
@@ -604,7 +595,9 @@ export default function PayMent(props) {
               />
               <label>Thanh toán tại cửa hàng tiện ích</label>
             </div> */}
-            {/* <div className={classes.formPaymentItem}>
+
+            {/* PAYPAL  */}
+            <div className={classes.formPaymentItem}>
               <input
                 className={classes.input}
                 type="radio"
@@ -619,11 +612,28 @@ export default function PayMent(props) {
                 alt="cuahang"
               />
               <label>Thanh toán qua PayPal</label>
-            </div> */}
+            </div>
           </div>
         </div>
 
-        <div className={classes.bottomSection}>
+        {/* đặt vé */}
+        {paymentMethod === "PayPal" ? (
+          <div className={`${classes.formPaymentPayPal} `}>
+            <Paypal seatCodes={seatCodes} />
+          </div>
+        ) : (
+          <div className={classes.bottomSection}>
+            <button
+              className={classes.btnDatVe}
+              disabled={!isReadyPayment}
+              onClick={handleBookTicket}
+            >
+              <p className={classes.txtDatVe}>Đặt Vé</p>
+            </button>
+          </div>
+        )}
+
+        {/* <div className={classes.bottomSection}>
           <button
             className={classes.btnDatVe}
             disabled={!isReadyPayment}
@@ -631,7 +641,7 @@ export default function PayMent(props) {
           >
             <p className={classes.txtDatVe}>Đặt Vé</p>
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* notice */}
@@ -723,17 +733,218 @@ export default function PayMent(props) {
               Áp dụng tối đa: 1
             </div>
           </div>
-          {discountList?.map((item, index) =>
-            amount >= item.miniPrice ? (
-              <div
-                className="grid  gap-4 truncate py-1 px-2 max-h-80"
-                key={index}
-              >
-                <div className="relative">
-                  <div className="relative w-full z-10 flex">
-                    <div className="relative opacity-100 h-36">
-                      {discountIsChoose !== index &&
-                      discountIsChoose !== item.code ? (
+          {discountList
+            ?.filter(
+              (itemFilter) =>
+                itemFilter.activeCode === "Đang diễn ra" &&
+                itemFilter.activePublic
+            )
+            .map((item, index) =>
+              amount >= item.miniPrice ? (
+                <div
+                  className="grid  gap-4 truncate py-1 px-2 max-h-80"
+                  key={index}
+                >
+                  <div className="relative">
+                    <div className="relative w-full z-10 flex">
+                      <div className="relative opacity-100 h-36">
+                        {discountIsChoose !== index &&
+                        discountIsChoose !== item.code ? (
+                          <img
+                            className="w-full h-36"
+                            src="../img/discount/ticket_box.svg"
+                            alt=""
+                            style={{
+                              filter:
+                                "drop-shadow(rgba(0, 0, 0, 0.15) 0px 1px 3px)",
+                            }}
+                          />
+                        ) : (
+                          <img
+                            className="w-full h-36"
+                            src="../img/discount/ticket_box_active.svg"
+                            alt=""
+                            style={{
+                              filter:
+                                "drop-shadow(rgba(0, 0, 0, 0.15) 0px 1px 3px)",
+                            }}
+                          />
+                        )}
+
+                        <div className="flex absolute top-0 left-0 w-full h-full">
+                          <div className="flex flex-col items-center w-52 h-32 p-2 self-center justify-center">
+                            <div className="relative w-14 h-14">
+                              <div className="w-full relative">
+                                <img
+                                  src="../img/discount/vourcher.png"
+                                  alt=""
+                                  className="object-contain rounded-lg"
+                                />
+                              </div>
+                            </div>
+                            <div
+                              style={{
+                                margin: "4px 4px 0px",
+                                textAlign: "center",
+                                fontSize: "13px",
+                              }}
+                            >
+                              <p>{item.title}</p>
+                            </div>
+                          </div>
+                          <div className="flex flex-col p-3 w-full">
+                            <button className="absolute top-3 right-3 translate-x-2 -translate-y-2 p-2 block bg-transparent">
+                              <DiscountInfo
+                                title={
+                                  <React.Fragment>
+                                    <div
+                                      className="pr-4 flex items-center"
+                                      style={{
+                                        backgroundColor: "rgb(250, 250, 250)",
+                                      }}
+                                    >
+                                      <div
+                                        style={{
+                                          width: "50%",
+                                          minWidth: "110px",
+                                          flex: "0 0 auto",
+                                          padding: "12px 24px",
+                                          fontSize: "13px",
+                                          lineHeight: "20px",
+                                          color: "rgb(120, 120, 120)",
+                                        }}
+                                      >
+                                        Mã
+                                      </div>
+                                      <div className="pr-2 overflow-hidden">
+                                        {item.code}
+                                      </div>
+                                      <CopyToClipboard
+                                        text={item.code}
+                                        onCopy={handleCopy}
+                                      >
+                                        <img
+                                          className="cursor-pointer"
+                                          src="../img/discount/copy-icon.svg"
+                                          alt="copy-icon"
+                                        />
+                                      </CopyToClipboard>
+                                    </div>
+                                    <div className="pr-4 flex items-center">
+                                      <div
+                                        style={{
+                                          width: "50%%",
+                                          minWidth: "110px",
+                                          flex: "0 0 auto",
+                                          padding: "12px 24px",
+                                          fontSize: "13px",
+                                          lineHeight: "20px",
+                                          color: "rgb(120, 120, 120)",
+                                        }}
+                                      >
+                                        Hạn sử dụng
+                                      </div>
+                                      <div className="pr-2 overflow-hidden">
+                                        {moment(item?.expiryDate).format(
+                                          "DD/MM/YY"
+                                        )}
+                                      </div>
+                                    </div>
+                                    <div
+                                      className=""
+                                      style={{
+                                        backgroundColor: " rgb(250, 250, 250)",
+                                        display: "flex",
+                                        flexFlow: "row wrap",
+                                        alignItems: "center",
+                                      }}
+                                    >
+                                      <div
+                                        style={{
+                                          width: "50%",
+                                          minWidth: " 35px",
+                                          flex: "0 0 auto",
+                                          padding: "12px 24px",
+                                          fontSize: "13px",
+                                          lineHeight: "20px",
+                                          color: "rgb(120, 120, 120)",
+                                        }}
+                                      >
+                                        Điều kiện
+                                      </div>
+                                      <div
+                                        className="description"
+                                        style={{
+                                          padding: "12px 24px",
+                                          fontSize: "13px",
+                                          lineHeight: " 20px",
+                                          color: "rgb(36, 36, 36)",
+                                        }}
+                                      >
+                                        <ul className={classes.description}>
+                                          {/* {parse(item.description)} */}
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  </React.Fragment>
+                                }
+                              >
+                                <img
+                                  className="m-w-full"
+                                  src="../img/discount/info_active.svg"
+                                  alt=""
+                                />
+                              </DiscountInfo>
+                            </button>
+                            <div className="pr-7">
+                              <h4 className="text-lg font-medium leading-6 m-0 p-0 text-gray-900 max-h-6">
+                                Giảm {item?.price / 1000}K
+                              </h4>
+                              <p className="text-sm font-normal leading-5 m-0 p-0 text-gray-500 max-h-5">
+                                Cho đơn hàng từ {item.miniPrice / 1000}K
+                              </p>
+                            </div>
+                            <div className="flex items-end mt-auto">
+                              <p className="pr-7 text-sm font-normal leading-5 m-0 p-0 text-gray-500 max-h-5">
+                                HSD:{" "}
+                                {moment(item?.expiryDate).format("DD/MM/YY")}
+                              </p>
+                              {discountIsChoose !== index &&
+                              discountIsChoose !== item.code ? (
+                                <ButtonDiscount
+                                  className="ml-auto"
+                                  onClick={(e) => handleDiscount(item, index)}
+                                  variant="outlined"
+                                  // color="primary"
+                                >
+                                  Áp Dụng
+                                </ButtonDiscount>
+                              ) : (
+                                <ButtonDiscount
+                                  className="ml-auto"
+                                  variant="outlined"
+                                  onClick={(e) =>
+                                    handleRemoveDiscount(item, index)
+                                  }
+                                >
+                                  Bỏ Chọn
+                                </ButtonDiscount>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  className="grid  gap-4 truncate py-1 px-2 max-h-80"
+                  key={index}
+                >
+                  <div className="relative">
+                    <div className="relative w-full z-10 flex">
+                      <div className="relative opacity-100 h-36">
                         <img
                           className="w-full h-36"
                           src="../img/discount/ticket_box.svg"
@@ -743,354 +954,161 @@ export default function PayMent(props) {
                               "drop-shadow(rgba(0, 0, 0, 0.15) 0px 1px 3px)",
                           }}
                         />
-                      ) : (
-                        <img
-                          className="w-full h-36"
-                          src="../img/discount/ticket_box_active.svg"
-                          alt=""
-                          style={{
-                            filter:
-                              "drop-shadow(rgba(0, 0, 0, 0.15) 0px 1px 3px)",
-                          }}
-                        />
-                      )}
-
-                      <div className="flex absolute top-0 left-0 w-full h-full">
-                        <div className="flex flex-col items-center w-52 h-32 p-2 self-center justify-center">
-                          <div className="relative w-14 h-14">
-                            <div className="w-full relative">
-                              <img
-                                src="../img/discount/vourcher.png"
-                                alt=""
-                                className="object-contain rounded-lg"
-                              />
+                        <div className="flex absolute top-0 left-0 w-full h-full">
+                          <img
+                            className="absolute h-16 w-20 bottom-1 right-1 max-w-full"
+                            src="../img/discount/not_eligible_stamp.svg"
+                            alt=""
+                          />
+                          <div className="flex flex-col items-center w-52 h-32 p-2 self-center justify-center">
+                            <div className="relative w-14 h-14">
+                              <div
+                                className="w-full relative"
+                                style={{ paddingBottom: "calc(100%)" }}
+                              >
+                                <img
+                                  src="../img/discount/vourcher.png"
+                                  alt=""
+                                  className="object-contain rounded-lg"
+                                />
+                              </div>
+                            </div>
+                            <div
+                              style={{
+                                margin: "4px 4px 0px",
+                                textAlign: "center",
+                                fontSize: "13px",
+                              }}
+                            >
+                              <p>{item.title}</p>
                             </div>
                           </div>
-                          <div
-                            style={{
-                              margin: "4px 4px 0px",
-                              textAlign: "center",
-                              fontSize: "13px",
-                            }}
-                          >
-                            <p>{item.title}</p>
-                          </div>
-                        </div>
-                        <div className="flex flex-col p-3 w-full">
-                          <button className="absolute top-3 right-3 translate-x-2 -translate-y-2 p-2 block bg-transparent">
-                            <DiscountInfo
-                              title={
-                                <React.Fragment>
-                                  <div
-                                    className="pr-4 flex items-center"
-                                    style={{
-                                      backgroundColor: "rgb(250, 250, 250)",
-                                    }}
-                                  >
+                          <div className="flex flex-col p-3 w-full">
+                            <button className="absolute top-3 right-3 translate-x-2 -translate-y-2 p-2 block bg-transparent">
+                              <DiscountInfo
+                                title={
+                                  <React.Fragment>
                                     <div
+                                      className="pr-4 flex items-center"
                                       style={{
-                                        width: "50%",
-                                        minWidth: "110px",
-                                        flex: "0 0 auto",
-                                        padding: "12px 24px",
-                                        fontSize: "13px",
-                                        lineHeight: "20px",
-                                        color: "rgb(120, 120, 120)",
+                                        backgroundColor: "rgb(250, 250, 250)",
                                       }}
                                     >
-                                      Mã
+                                      <div
+                                        style={{
+                                          width: "33%",
+                                          minWidth: "110px",
+                                          flex: "0 0 auto",
+                                          padding: "12px 24px",
+                                          fontSize: "13px",
+                                          lineHeight: "20px",
+                                          color: "rgb(120, 120, 120)",
+                                        }}
+                                      >
+                                        Mã
+                                      </div>
+                                      <div className="pr-2 overflow-hidden">
+                                        {item.code}
+                                      </div>
+                                      <CopyToClipboard
+                                        text={item.code}
+                                        onCopy={handleCopy}
+                                      >
+                                        <img
+                                          className="cursor-pointer"
+                                          src="../img/discount/copy-icon.svg"
+                                          alt="copy-icon"
+                                        />
+                                      </CopyToClipboard>
                                     </div>
-                                    <div className="pr-2 overflow-hidden">
-                                      {item.code}
-                                    </div>
-                                    <CopyToClipboard
-                                      text={item.code}
-                                      onCopy={handleCopy}
-                                    >
-                                      <img
-                                        className="cursor-pointer"
-                                        src="../img/discount/copy-icon.svg"
-                                        alt="copy-icon"
-                                      />
-                                    </CopyToClipboard>
-                                  </div>
-                                  <div className="pr-4 flex items-center">
-                                    <div
-                                      style={{
-                                        width: "50%%",
-                                        minWidth: "110px",
-                                        flex: "0 0 auto",
-                                        padding: "12px 24px",
-                                        fontSize: "13px",
-                                        lineHeight: "20px",
-                                        color: "rgb(120, 120, 120)",
-                                      }}
-                                    >
-                                      Hạn sử dụng
-                                    </div>
-                                    <div className="pr-2 overflow-hidden">
-                                      {moment(item?.expiryDate).format(
-                                        "DD/MM/YY"
-                                      )}
-                                    </div>
-                                  </div>
-                                  <div
-                                    className=""
-                                    style={{
-                                      backgroundColor: " rgb(250, 250, 250)",
-                                      display: "flex",
-                                      flexFlow: "row wrap",
-                                      alignItems: "center",
-                                    }}
-                                  >
-                                    <div
-                                      style={{
-                                        width: "50%",
-                                        minWidth: " 35px",
-                                        flex: "0 0 auto",
-                                        padding: "12px 24px",
-                                        fontSize: "13px",
-                                        lineHeight: "20px",
-                                        color: "rgb(120, 120, 120)",
-                                      }}
-                                    >
-                                      Điều kiện
+                                    <div className="pr-4 flex items-center">
+                                      <div
+                                        style={{
+                                          width: "50%%",
+                                          minWidth: "110px",
+                                          flex: "0 0 auto",
+                                          padding: "12px 24px",
+                                          fontSize: "13px",
+                                          lineHeight: "20px",
+                                          color: "rgb(120, 120, 120)",
+                                        }}
+                                      >
+                                        Hạn sử dụng
+                                      </div>
+                                      <div className="pr-2 overflow-hidden">
+                                        {moment(item?.expiryDate).format(
+                                          "DD/MM/YY"
+                                        )}
+                                      </div>
                                     </div>
                                     <div
-                                      className="description"
+                                      className=""
                                       style={{
-                                        padding: "12px 24px",
-                                        fontSize: "13px",
-                                        lineHeight: " 20px",
-                                        color: "rgb(36, 36, 36)",
+                                        backgroundColor: " rgb(250, 250, 250)",
+                                        display: "flex",
+                                        flexFlow: "row wrap",
+                                        alignItems: "center",
                                       }}
                                     >
-                                      <ul className={classes.description}>
-                                        {/* {parse(item.description)} */}
-                                      </ul>
+                                      <div
+                                        style={{
+                                          width: "50%",
+                                          minWidth: " 35px",
+                                          flex: "0 0 auto",
+                                          padding: "12px 24px",
+                                          fontSize: "13px",
+                                          lineHeight: "20px",
+                                          color: "rgb(120, 120, 120)",
+                                        }}
+                                      >
+                                        Điều kiện
+                                      </div>
+                                      <div
+                                        className="description"
+                                        style={{
+                                          padding: "12px 24px",
+                                          fontSize: "13px",
+                                          lineHeight: " 20px",
+                                          color: "rgb(36, 36, 36)",
+                                        }}
+                                      >
+                                        <ul className={classes.description}>
+                                          {/* {parse(item.description)} */}
+                                        </ul>
+                                      </div>
                                     </div>
-                                  </div>
-                                </React.Fragment>
-                              }
-                            >
-                              <img
-                                className="m-w-full"
-                                src="../img/discount/info_active.svg"
-                                alt=""
-                              />
-                            </DiscountInfo>
-                          </button>
-                          <div className="pr-7">
-                            <h4 className="text-lg font-medium leading-6 m-0 p-0 text-gray-900 max-h-6">
-                              Giảm {item?.price / 1000}K
-                            </h4>
-                            <p className="text-sm font-normal leading-5 m-0 p-0 text-gray-500 max-h-5">
-                              Cho đơn hàng từ {item.miniPrice / 1000}K
-                            </p>
-                          </div>
-                          <div className="flex items-end mt-auto">
-                            <p className="pr-7 text-sm font-normal leading-5 m-0 p-0 text-gray-500 max-h-5">
-                              HSD: {moment(item?.expiryDate).format("DD/MM/YY")}
-                            </p>
-                            {discountIsChoose !== index &&
-                            discountIsChoose !== item.code ? (
-                              <ButtonDiscount
-                                className="ml-auto"
-                                onClick={(e) => handleDiscount(item, index)}
-                                variant="outlined"
-                                // color="primary"
-                              >
-                                Áp Dụng
-                              </ButtonDiscount>
-                            ) : (
-                              <ButtonDiscount
-                                className="ml-auto"
-                                variant="outlined"
-                                onClick={(e) =>
-                                  handleRemoveDiscount(item, index)
+                                  </React.Fragment>
                                 }
                               >
-                                Bỏ Chọn
-                              </ButtonDiscount>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div
-                className="grid  gap-4 truncate py-1 px-2 max-h-80"
-                key={index}
-              >
-                <div className="relative">
-                  <div className="relative w-full z-10 flex">
-                    <div className="relative opacity-100 h-36">
-                      <img
-                        className="w-full h-36"
-                        src="../img/discount/ticket_box.svg"
-                        alt=""
-                        style={{
-                          filter:
-                            "drop-shadow(rgba(0, 0, 0, 0.15) 0px 1px 3px)",
-                        }}
-                      />
-                      <div className="flex absolute top-0 left-0 w-full h-full">
-                        <img
-                          className="absolute h-16 w-20 bottom-1 right-1 max-w-full"
-                          src="../img/discount/not_eligible_stamp.svg"
-                          alt=""
-                        />
-                        <div className="flex flex-col items-center w-52 h-32 p-2 self-center justify-center">
-                          <div className="relative w-14 h-14">
-                            <div
-                              className="w-full relative"
-                              style={{ paddingBottom: "calc(100%)" }}
-                            >
-                              <img
-                                src="../img/discount/vourcher.png"
-                                alt=""
-                                className="object-contain rounded-lg"
-                              />
+                                <img
+                                  className="m-w-full"
+                                  src="../img/discount/info.svg"
+                                  alt=""
+                                />
+                              </DiscountInfo>
+                            </button>
+                            <div className="pr-7 ">
+                              <h4 className="text-lg font-medium leading-6 m-0 p-0 text-gray-900 max-h-6">
+                                Giảm {item?.price / 1000}K
+                              </h4>
+                              <p className="text-sm font-normal leading-5 m-0 p-0 text-gray-500 max-h-5">
+                                Cho đơn hàng từ {item.miniPrice / 1000}K
+                              </p>
+                            </div>
+                            <div className="flex items-end mt-auto">
+                              <p className="pr-7 text-sm font-normal leading-5 m-0 p-0 text-gray-500 max-h-5">
+                                HSD:{" "}
+                                {moment(item?.expiryDate).format("DD/MM/YY")}
+                              </p>
                             </div>
                           </div>
-                          <div
-                            style={{
-                              margin: "4px 4px 0px",
-                              textAlign: "center",
-                              fontSize: "13px",
-                            }}
-                          >
-                            <p>{item.title}</p>
-                          </div>
-                        </div>
-                        <div className="flex flex-col p-3 w-full">
-                          <button className="absolute top-3 right-3 translate-x-2 -translate-y-2 p-2 block bg-transparent">
-                            <DiscountInfo
-                              title={
-                                <React.Fragment>
-                                  <div
-                                    className="pr-4 flex items-center"
-                                    style={{
-                                      backgroundColor: "rgb(250, 250, 250)",
-                                    }}
-                                  >
-                                    <div
-                                      style={{
-                                        width: "33%",
-                                        minWidth: "110px",
-                                        flex: "0 0 auto",
-                                        padding: "12px 24px",
-                                        fontSize: "13px",
-                                        lineHeight: "20px",
-                                        color: "rgb(120, 120, 120)",
-                                      }}
-                                    >
-                                      Mã
-                                    </div>
-                                    <div className="pr-2 overflow-hidden">
-                                      {item.code}
-                                    </div>
-                                    <CopyToClipboard
-                                      text={item.code}
-                                      onCopy={handleCopy}
-                                    >
-                                      <img
-                                        className="cursor-pointer"
-                                        src="../img/discount/copy-icon.svg"
-                                        alt="copy-icon"
-                                      />
-                                    </CopyToClipboard>
-                                  </div>
-                                  <div className="pr-4 flex items-center">
-                                    <div
-                                      style={{
-                                        width: "50%%",
-                                        minWidth: "110px",
-                                        flex: "0 0 auto",
-                                        padding: "12px 24px",
-                                        fontSize: "13px",
-                                        lineHeight: "20px",
-                                        color: "rgb(120, 120, 120)",
-                                      }}
-                                    >
-                                      Hạn sử dụng
-                                    </div>
-                                    <div className="pr-2 overflow-hidden">
-                                      {moment(item?.expiryDate).format(
-                                        "DD/MM/YY"
-                                      )}
-                                    </div>
-                                  </div>
-                                  <div
-                                    className=""
-                                    style={{
-                                      backgroundColor: " rgb(250, 250, 250)",
-                                      display: "flex",
-                                      flexFlow: "row wrap",
-                                      alignItems: "center",
-                                    }}
-                                  >
-                                    <div
-                                      style={{
-                                        width: "50%",
-                                        minWidth: " 35px",
-                                        flex: "0 0 auto",
-                                        padding: "12px 24px",
-                                        fontSize: "13px",
-                                        lineHeight: "20px",
-                                        color: "rgb(120, 120, 120)",
-                                      }}
-                                    >
-                                      Điều kiện
-                                    </div>
-                                    <div
-                                      className="description"
-                                      style={{
-                                        padding: "12px 24px",
-                                        fontSize: "13px",
-                                        lineHeight: " 20px",
-                                        color: "rgb(36, 36, 36)",
-                                      }}
-                                    >
-                                      <ul className={classes.description}>
-                                        {/* {parse(item.description)} */}
-                                      </ul>
-                                    </div>
-                                  </div>
-                                </React.Fragment>
-                              }
-                            >
-                              <img
-                                className="m-w-full"
-                                src="../img/discount/info.svg"
-                                alt=""
-                              />
-                            </DiscountInfo>
-                          </button>
-                          <div className="pr-7 ">
-                            <h4 className="text-lg font-medium leading-6 m-0 p-0 text-gray-900 max-h-6">
-                              Giảm {item?.price / 1000}K
-                            </h4>
-                            <p className="text-sm font-normal leading-5 m-0 p-0 text-gray-500 max-h-5">
-                              Cho đơn hàng từ {item.miniPrice / 1000}K
-                            </p>
-                          </div>
-                          <div className="flex items-end mt-auto">
-                            <p className="pr-7 text-sm font-normal leading-5 m-0 p-0 text-gray-500 max-h-5">
-                              HSD: {item?.expiryDate}
-                            </p>
-                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )
-          )}
+              )
+            )}
         </DialogContent>
       </Dialog>
     </aside>

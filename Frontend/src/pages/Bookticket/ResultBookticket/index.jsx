@@ -4,7 +4,7 @@ import { colorTheater } from "../../../constants/theaterData";
 import { useSelector } from "react-redux";
 
 import useStyles from "./style";
-import formatDate from "../../../utils/formatDate";
+import formatDate, { calculateTimeout } from "../../../utils/formatDate";
 
 export default function SuccessBooking(props) {
   const {
@@ -23,15 +23,6 @@ export default function SuccessBooking(props) {
     data,
     color: colorTheater[data?.theaterClusterName.slice(0, 3).toUpperCase()],
   });
-  const calculateTimeout = (dateShow) => {
-    const fakeThoiLuong = 120;
-    const timeInObj = new Date(dateShow);
-    const timeOutObj = new Date(
-      timeInObj.getTime() + fakeThoiLuong * 60 * 1000
-    );
-
-    return timeOutObj.toLocaleTimeString([], { hour12: false }).slice(0, 5);
-  };
 
   return (
     <div className={classes.resultBookticket}>

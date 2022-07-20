@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { calculateTimeout } from "../../utils/formatDate";
 
 import useStyles from "./styles";
 export default function BtnGoToCheckout({ movieShowtimes }) {
@@ -10,15 +11,7 @@ export default function BtnGoToCheckout({ movieShowtimes }) {
     .toLocaleTimeString([], { hour12: false })
     .slice(0, 5);
 
-  const calculateTimeout = (dateShow) => {
-    const fakeThoiLuong = 120;
-    const timeInObj = new Date(dateShow);
-    const timeOutObj = new Date(
-      timeInObj.getTime() + fakeThoiLuong * 60 * 1000
-    );
 
-    return timeOutObj.toLocaleTimeString([], { hour12: false }).slice(0, 5);
-  };
 
   return (
     <button

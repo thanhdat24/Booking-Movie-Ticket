@@ -82,8 +82,8 @@ const useStyles = makeStyles({
   },
   seatName: {
     position: "absolute",
-    top: "49%",
-    left: "55%",
+    top: "51%",
+    left: "46%",
     transform: "translate(-50%, -50%)",
     zIndex: 2,
     fontSize: (props) => props.widthLabel,
@@ -96,7 +96,7 @@ const useStyles = makeStyles({
     transform: "translate(-50%, -50%)",
   },
   seatIcon: {
-    width: "110% !important",
+    width: "97% !important",
     height: "100% !important",
   },
   viewCenter: {

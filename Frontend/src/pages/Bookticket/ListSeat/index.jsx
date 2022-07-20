@@ -4,7 +4,7 @@ import useStyles from "./style";
 import Countdown from "../Countdown";
 import SquareRoundedIcon from "@mui/icons-material/SquareRounded";
 import { useParams } from "react-router-dom";
-import formatDate from "../../../utils/formatDate";
+import formatDate, { calculateTimeout } from "../../../utils/formatDate";
 import { colorTheater } from "../../../constants/theaterData";
 
 import {
@@ -28,7 +28,7 @@ export default function ListSeat(props) {
   const classes = useStyles({
     color: colorTheater[data?.theaterClusterName.slice(0, 3).toUpperCase()],
     modalLeftImg: data?.moviePhoto,
-    widthLabel: widthSeat / 2,
+    widthLabel: widthSeat / 2 - 2,
   });
 
   useEffect(() => {
@@ -142,15 +142,6 @@ export default function ListSeat(props) {
     }
     return color;
   };
-  const calculateTimeout = (dateShow) => {
-    const fakeThoiLuong = 120;
-    const timeInObj = new Date(dateShow);
-    const timeOutObj = new Date(
-      timeInObj.getTime() + fakeThoiLuong * 60 * 1000
-    );
-
-    return timeOutObj.toLocaleTimeString([], { hour12: false }).slice(0, 5);
-  };
   return (
     <main className={classes.listSeat}>
       {/* thông tin phim */}
@@ -247,6 +238,12 @@ export default function ListSeat(props) {
           <div>
             <SquareRoundedIcon style={{ color: "#44c020", fontSize: 27 }} />
             <p>Ghế đang chọn</p>
+          </div>
+          <div>
+            <div style={{ position: "relative" }}>
+              <SquareRoundedIcon style={{ color: "#a50064", fontSize: 27 }} />
+            </div>
+            <p>Ghế đang có người chọn</p>
           </div>
           <div>
             <div style={{ position: "relative" }}>

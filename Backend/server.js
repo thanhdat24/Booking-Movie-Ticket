@@ -122,8 +122,6 @@ io.on('connection', (socket) => {
           getDanhSachGheDangDat(showtimeId)
         );
 
-        console.log('idShowtime', idShowtime);
-        console.log('fullName', fullName);
       }
     );
 

@@ -220,7 +220,7 @@ export default function CreateDiscount() {
                 height: 24.5,
               }}
               className="inline-block mr-1"
-              src="../../img/admin/discount/icon-coupon.svg"
+              src="../../../img/admin/discount/icon-coupon.svg"
               alt="iconImage"
             />{" "}
             Tạo mã giảm giá mới
@@ -386,8 +386,9 @@ export default function CreateDiscount() {
                               <span>
                                 Giảm{" "}
                                 <b className="text-green-600">
-                                  {(values?.price * 1).toLocaleString("vi-VI")}{" "}
-                                  ₫
+                                  {`${(values?.price * 1).toLocaleString(
+                                    "vi-VI"
+                                  )} đ`}
                                 </b>
                               </span>
                             </li>
@@ -404,10 +405,9 @@ export default function CreateDiscount() {
                             <li className={classes.typographyInfo}>
                               Giá trị đơn hàng tối thiểu:{" "}
                               <b className="text-green-600">
-                                {(values?.miniPrice * 1).toLocaleString(
+                                {`${(values?.miniPrice * 1).toLocaleString(
                                   "vi-VI"
-                                )}{" "}
-                                ₫
+                                )} đ`}
                               </b>
                             </li>
                             {(effectiveTime[0] && effectiveTime[1]) !==
@@ -687,7 +687,7 @@ export default function CreateDiscount() {
                         <span>
                           Giảm{" "}
                           <b className="text-green-600">
-                            {(values?.price * 1).toLocaleString("vi-VI")} ₫
+                            {`${(values?.price * 1).toLocaleString("vi-VI")} đ`}
                           </b>
                         </span>
                       </li>
@@ -704,7 +704,9 @@ export default function CreateDiscount() {
                       <li className={classes.typographyInfo}>
                         Giá trị đơn hàng tối thiểu:{" "}
                         <b className="text-green-600">
-                          {(values?.miniPrice * 1).toLocaleString("vi-VI")} ₫
+                          {`${(values?.miniPrice * 1).toLocaleString(
+                            "vi-VI"
+                          )} đ`}
                         </b>
                       </li>
                       {(effectiveTime[0] && effectiveTime[1]) !== null && (

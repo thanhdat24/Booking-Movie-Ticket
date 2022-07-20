@@ -4,7 +4,7 @@ import { underLineDashed, customScrollbar } from "../../../styles/materialUi";
 const useStyles = makeStyles((theme) => ({
   payMent: (props) => ({
     width: "100%",
-    height: props.isMobile ? "calc(100vh - 130px)" : "105vh",
+    height: "101vh",
     position: "relative",
     boxShadow: "0 0 15px rgb(0 0 0 / 30%)",
     padding: "0 8%",

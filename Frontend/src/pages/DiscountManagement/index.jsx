@@ -278,8 +278,9 @@ export default function DiscountManagement() {
                             <span>Cho tất cả khách hàng</span>
                             <span>
                               {" "}
-                              {">"}= {(miniPrice * 1).toLocaleString("vi-VI")} ₫
-                              giá trị đơn hàng{" "}
+                              {">"}={" "}
+                              {`${(miniPrice * 1).toLocaleString("vi-VI")} đ`}{" "}
+                              giá trị đơn hàng
                             </span>
                             <span>
                               Không giới hạn số lần sử dụng mỗi khách hàng

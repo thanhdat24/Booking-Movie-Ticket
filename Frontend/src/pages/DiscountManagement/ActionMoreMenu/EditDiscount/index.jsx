@@ -23,7 +23,6 @@ export default function DiscountEdit() {
   );
   const classes = useStyles();
 
-  console.log("successDetailDiscount", successDetailDiscount);
   const params = useParams();
   const dispatch = useDispatch();
   useEffect(function () {

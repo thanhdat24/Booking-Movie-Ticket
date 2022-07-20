@@ -336,7 +336,9 @@ export default function Info({ successDetailDiscount }) {
                             <span>
                               Giảm{" "}
                               <b className="text-green-600">
-                                {(values?.price * 1).toLocaleString("vi-VI")} ₫
+                                {`${(values?.price * 1).toLocaleString(
+                                  "vi-VI"
+                                )} đ`}
                               </b>
                             </span>
                           </li>
@@ -353,8 +355,9 @@ export default function Info({ successDetailDiscount }) {
                           <li className={classes.typographyInfo}>
                             Giá trị đơn hàng tối thiểu:{" "}
                             <b className="text-green-600">
-                              {(values?.miniPrice * 1).toLocaleString("vi-VI")}{" "}
-                              ₫
+                              {`${(values?.miniPrice * 1).toLocaleString(
+                                "vi-VI"
+                              )} đ`}
                             </b>
                           </li>
                           {effectiveTime[0] ? (
@@ -535,7 +538,7 @@ export default function Info({ successDetailDiscount }) {
                                           >
                                             <ul className={classes.description}>
                                               <li>
-                                                Giảm Giảm&nbsp;
+                                                Giảm &nbsp;
                                                 {values?.price / 1000}K Đơn hàng
                                                 tối thiểu{" "}
                                                 {values.miniPrice / 1000}K
@@ -658,7 +661,7 @@ export default function Info({ successDetailDiscount }) {
                       <span>
                         Giảm{" "}
                         <b className="text-green-600">
-                          {(values?.price * 1).toLocaleString("vi-VI")} ₫
+                          {`${(values?.price * 1).toLocaleString("vi-VI")} đ`}
                         </b>
                       </span>
                     </li>
@@ -675,7 +678,7 @@ export default function Info({ successDetailDiscount }) {
                     <li className={classes.typographyInfo}>
                       Giá trị đơn hàng tối thiểu:{" "}
                       <b className="text-green-600">
-                        {(values?.miniPrice * 1).toLocaleString("vi-VI")} ₫
+                        {`${(values?.miniPrice * 1).toLocaleString("vi-VI")} đ`}
                       </b>
                     </li>
                     {effectiveTime[0] ? (
