@@ -13,7 +13,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { LoadingButton } from "@mui/lab";
 import { useHistory, useLocation } from "react-router-dom";
-import { forgotPassword, resetAuth } from "../../redux/actions/Auth";
+import { sendOtp, resetAuth } from "../../redux/actions/Auth";
 
 const ContentStyle = styled("div")(({ theme }) => ({
   maxWidth: 480,
@@ -26,8 +26,11 @@ const ContentStyle = styled("div")(({ theme }) => ({
   padding: theme.spacing(12, 0),
 }));
 export default function ResetPassword() {
-  const { loadingResetPassword, responseResetPassword, errorResetPassword } =
-    useSelector((state) => state.AuthReducer);
+  const {
+    loadingResetPassword,
+    responseResetPassword,
+    errorResetPassword,
+  } = useSelector((state) => state.AuthReducer);
   console.log("responseResetPassword", responseResetPassword);
   const dispatch = useDispatch();
   const history = useHistory();
@@ -37,6 +40,11 @@ export default function ResetPassword() {
       dispatch(resetAuth());
     };
   }, []);
+
+  useEffect(() => {
+    if (responseResetPassword) history.push("/new-password");
+  }, [responseResetPassword]);
+
   const ResetSchema = Yup.object().shape({
     email: Yup.string()
       .email("Email phải là một địa chỉ email hợp lệ")
@@ -49,7 +57,7 @@ export default function ResetPassword() {
     },
     validationSchema: ResetSchema,
     onSubmit: (email) => {
-      dispatch(forgotPassword(email));
+      dispatch(sendOtp(email));
     },
   });
 

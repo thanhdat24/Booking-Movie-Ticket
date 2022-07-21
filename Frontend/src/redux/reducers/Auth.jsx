@@ -1,6 +1,9 @@
 import { TOKEN, USER_LOGIN } from "../../constants/config";
 import { getAuth, signOut } from "firebase/auth";
 import {
+  FORGOT_PASSWORD_FAIL,
+  FORGOT_PASSWORD_REQUEST,
+  FORGOT_PASSWORD_SUCCESS,
   GET_USER_FAIL,
   GET_USER_SUCCESS,
   GET_USER_SUCCESS_REQUEST,
@@ -36,6 +39,10 @@ const stateDefault = {
   responseResetPassword: null,
   loadingResetPassword: false,
   errorResetPassword: null,
+
+  responseForgotPassword: null,
+  loadingForgotPassword: false,
+  errorForgotPassword: null,
 
   successUpdateUserCurrent: null,
   loadingUpdateUserCurrent: false,
@@ -119,6 +126,24 @@ export const AuthReducer = (state = stateDefault, action) => {
       };
     }
 
+    case FORGOT_PASSWORD_REQUEST: {
+      return { ...state, loadingForgotPassword: true, errorForgotPassword: null };
+    }
+    case FORGOT_PASSWORD_SUCCESS: {
+      return {
+        ...state,
+        responseForgotPassword: action.payload.data,
+        loadingForgotPassword: false,
+      };
+    }
+    case FORGOT_PASSWORD_FAIL: {
+      return {
+        ...state,
+        errorForgotPassword: action.payload.error,
+        loadingForgotPassword: false,
+      };
+    }
+
     case UPDATE_USER_CURRENT_REQUEST: {
       return {
         ...state,
@@ -186,6 +211,10 @@ export const AuthReducer = (state = stateDefault, action) => {
         responseResetPassword: "",
         loadingResetPassword: false,
         errorResetPassword: null,
+
+        responseForgotPassword: null,
+        loadingForgotPassword: false,
+        errorForgotPassword: null,
       };
     }
     default:

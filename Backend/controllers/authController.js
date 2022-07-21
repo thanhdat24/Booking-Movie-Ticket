@@ -7,7 +7,7 @@ const sendEmail = require('../utils/email');
 const crypto = require('crypto');
 const generator = require('generate-password');
 const gravatarUrl = require('gravatar');
-
+const Otp = require('../models/otpModel');
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -128,25 +128,29 @@ exports.restrictTo = (...roles) => {
   };
 };
 
-exports.forgetPassword = catchAsync(async (req, res, next) => {
-  const passwordReset = generator.generate({
-    length: 10,
+exports.sendOtp = catchAsync(async (req, res, next) => {
+  // 1) Get user based on POSTED email
+  let OTP = generator.generate({
+    length: 6,
     numbers: true,
     uppercase: false,
+    lowercase: false,
   });
-
-  // 1) Get user based on POSTED email
+  console.log('OTP', OTP);
   const user = await User.findOne({ email: req.body.email });
-  if (!user) {
+  if (user) {
+    let newOtp = new Otp({
+      email: req.body.email,
+      otp: OTP,
+    });
+    await newOtp.save();
+  } else {
     return next(new AppError('Xác thực người dùng không thành công.', 404));
   }
 
-  user.password = passwordReset;
-  user.passwordConfirm = passwordReset;
-
   // 2) Generate the random reset token
-  const resetToken = user.createPasswordResetToken();
-  await user.save({ validateBeforeSave: false });
+  // const resetToken = user.createPasswordResetToken();
+  // await user.save({ validateBeforeSave: false });
 
   // 3) Send it to user's email
 
@@ -156,7 +160,7 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
 
   const message = /*html*/ `<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;width:100%!important;height:100%;line-height:1.6em;background-color:#f6f6f6;margin:0"
         bgcolor="#f6f6f6">
-    
+
         <table
             style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;width:100%;background-color:#f6f6f6;margin:0"
             bgcolor="#f6f6f6">
@@ -193,9 +197,7 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
                                                         style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;margin:0">
                                                         <td style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;vertical-align:top;margin:0;padding:0 0 20px"
                                                             valign="top">
-                                                            Bạn đã yêu cầu mật khẩu <span
-                                                                style="text-transform:lowercase"></span> mới.
-                                                            Mật khẩu của bạn là
+                                                            Sau đây là mã xác minh để đặt lại mật khẩu của bạn.
                                                         </td>
                                                     </tr>
                                                     <tr
@@ -204,7 +206,7 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
                                                             valign="top">
                                                             <a
                                                                 style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;color:#fff;text-decoration:none;line-height:2em;font-weight:bold;text-align:center;display:inline-block;border-radius:5px;text-transform:capitalize;background-color:#5fbeaa;margin:0;border-color:#5fbeaa;border-style:solid;border-width:10px 20px"><span
-                                                                    style="text-transform:lowercase">${passwordReset}</span></a>
+                                                                    style="text-transform:lowercase">${OTP}</span></a>
                                                         </td>
                                                     </tr>
                                                     <tr
@@ -236,12 +238,13 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
   try {
     await sendEmail({
       email: user.email,
-      subject: 'MovieApp - Cấp lại mật khẩu',
+      subject: 'Mã xác minh để đặt lại mật khẩu MovieApp của bạn',
       message,
     });
 
     res.status(200).json({
       status: 'success',
+      email: user.email,
       message:
         'Đổi mật khẩu thành công. Vui lòng kiểm tra hộp thư hoặc spam để kích hoạt tài khoản',
     });
@@ -259,6 +262,35 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
   }
 });
 
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+  let otp = await Otp.findOne({ email: req.body.email, otp: req.body.otp });
+  if (otp) {
+    // let currentTime = new Date().getTime();
+    // let diff = otp.expiryIn.getTime() - currentTime;
+    // console.log('currentTime', currentTime);
+    // console.log('diff', diff);
+    // if (diff < 0) {
+    //   return next(new AppError('Token hết hạn.', 404));
+    // }
+    //  else {
+    const user = await User.findOne({ email: req.body.email }).select(
+      '+password'
+    );
+
+    user.password = req.body.password;
+    user.passwordConfirm = req.body.passwordConfirm;
+
+    await user.save();
+    // }
+
+    res.status(200).json({
+      status: 'success',
+      user,
+    });
+  } else {
+    return next(new AppError('Otp không hợp lệ hoặc đã hết hạn!', 404));
+  }
+});
 exports.resetPassword = catchAsync(async (req, res, next) => {
   // 1) Get user based on the token
   const hashedToken = crypto

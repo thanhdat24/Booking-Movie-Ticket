@@ -1,5 +1,8 @@
 import usersApi from "../../api/usersApi";
 import {
+  FORGOT_PASSWORD_FAIL,
+  FORGOT_PASSWORD_REQUEST,
+  FORGOT_PASSWORD_SUCCESS,
   GET_USER_FAIL,
   GET_USER_SUCCESS,
   GET_USER_SUCCESS_REQUEST,
@@ -153,14 +156,14 @@ export const getDetailUser = (_id) => {
   };
 };
 
-;
-export const forgotPassword = (email) => {
+
+export const sendOtp = (email) => {
   return (dispatch) => {
     dispatch({
       type: RESET_PASSWORD_REQUEST,
     });
     usersApi
-      .forgotPassword(email)
+      .sendOtp(email)
       .then((result) => {
         dispatch({
           type: RESET_PASSWORD_SUCCESS,
@@ -179,6 +182,33 @@ export const forgotPassword = (email) => {
       });
   };
 };
+
+export const forgotPassword = (data) => {
+  return (dispatch) => {
+    dispatch({
+      type: FORGOT_PASSWORD_REQUEST,
+    });
+    usersApi
+      .forgotPassword(data)
+      .then((result) => {
+        dispatch({
+          type: FORGOT_PASSWORD_SUCCESS,
+          payload: {
+            data: result.data,
+          },
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: FORGOT_PASSWORD_FAIL,
+          payload: {
+            error: error.response?.data.message,
+          },
+        });
+      });
+  };
+};
+
 
 export const resetUpdate = () => {
   return (dispatch) => {
