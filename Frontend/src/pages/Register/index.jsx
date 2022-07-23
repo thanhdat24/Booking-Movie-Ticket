@@ -37,16 +37,12 @@ const RootStyle = styled("div")(({ theme }) => ({
   },
 }));
 const SectionStyle = styled(Card)(({ theme }) => ({
-  width: "auto%",
+  width: "100%",
+  maxWidth: 580,
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
   margin: theme.spacing(2, 0, 2, 2),
-  height: "auto",
-  boxShadow:
-    "rgb(145 158 171 / 24%) 0px 0px 2px 0px, rgb(145 158 171 / 24%) 0px 16px 32px -4px",
-  borderRadius: "16px",
-  zIndex: 0,
 }));
 
 const ContentStyle = styled("div")(({ theme }) => ({
@@ -130,10 +126,10 @@ export default function Register() {
     setGender(event.target.value);
   };
   return (
-    <RootStyle>
-      <AuthLayout></AuthLayout>
+    <div className="flex">
+      {/* <AuthLayout></AuthLayout> */}
       <SectionStyle>
-        <img src="../img/illustration_register.png" alt="login" />
+        <img src="../img/login.png" alt="login" className="w-full h-full" />
       </SectionStyle>
 
       <Container maxWidth="sm">
@@ -322,6 +318,6 @@ export default function Register() {
           </Typography>
         </ContentStyle>
       </Container>
-    </RootStyle>
+    </div>
   );
 }

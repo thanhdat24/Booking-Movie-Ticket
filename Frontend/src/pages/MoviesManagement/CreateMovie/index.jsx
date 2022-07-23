@@ -386,7 +386,7 @@ export default function CreateMovie() {
                               Kéo và thả ảnh của phim vào đây
                             </h5>
                           )}
-                          {srcImage ? "" : <p class="mb-2">or</p>}
+                          {srcImage ? "" : <p className="mb-2">or</p>}
                           {srcImage ? (
                             ""
                           ) : (

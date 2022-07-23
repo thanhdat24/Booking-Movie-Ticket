@@ -93,7 +93,7 @@ const sidebarConfig = [
   {
     title: "Quản lý khuyến mãi",
     path: ["/admin/discount/list", "/admin/discount/create"],
-    icon: getImage("../../img/admin/discount/icon-coupon.svg"),
+    icon: getImage("../../../img/admin/discount/icon-coupon.svg"),
     children: [
       {
         title: "List",

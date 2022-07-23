@@ -26,6 +26,7 @@ import AuthLayout from "../../layouts/AuthLayout";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/actions/Auth";
 import AuthSocial from "./AuthSocial";
+import { LOADING_BACKTO_HOME } from "../../redux/constants/Lazy";
 
 const SectionStyle = styled(Card)(({ theme }) => ({
   width: "100%",
@@ -55,14 +56,21 @@ export default function Login() {
   const dispatch = useDispatch();
   useEffect(() => {
     // đăng nhập thành công thì quay về trang trước đó
+    console.log("currentUser", currentUser);
+    console.log("location.state", location.state);
     if (currentUser) {
       if (location.state === "/") {
         // nếu trang trước đó là "/" thì phải hiện loading do trang home mất nhiều thời gian tải
-        // dispatch({ type: LOADING_BACKTO_HOME });
+        dispatch({ type: LOADING_BACKTO_HOME });
         setTimeout(() => {
           history.push("/");
         }, 50);
         return undefined;
+      } else if (
+        location.pathname === "/login" &&
+        location.state === undefined
+      ) {
+        history.push("/");
       }
       history.push(location.state);
     }
@@ -71,14 +79,14 @@ export default function Login() {
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
-      .email("Email must be a valid email address")
-      .required("Email is required"),
-    password: Yup.string().required("Password is required"),
+      .email("Email phải là một địa chỉ email hợp lệ!")
+      .required("Vui lòng nhập email!"),
+    password: Yup.string().required("Vui lòng nhập password!"),
   });
   const formik = useFormik({
     initialValues: {
-      email: "admin@gmail.com",
-      password: "Dat123456",
+      email: "",
+      password: "",
       remember: true,
     },
     validationSchema: LoginSchema,
@@ -92,15 +100,11 @@ export default function Login() {
     setShowPassword((show) => !show);
   };
 
-
   return (
     <div className="flex">
-      <AuthLayout></AuthLayout>
+      {/* <AuthLayout></AuthLayout> */}
       <SectionStyle>
-        <Typography variant="h4" sx={{ px: 5, mt: 10, mb: 5 }}>
-          Hi, Welcome Back
-        </Typography>
-        <img src="../img/illustration_login.png" alt="login" />
+        <img src="../img/login.png" alt="login" className="w-full h-full" />
       </SectionStyle>
 
       <Container maxWidth="sm">
