@@ -23,23 +23,23 @@ export default function Info() {
     successUpdateUserCurrent,
     loadingUpdateUserCurrent,
     errorUpdateUserCurrent,
-    successGetDetailUser,
+    currentUserLogin,
     currentUser: { user },
   } = useSelector((state) => state.AuthReducer);
 
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const [isReadyUpdateUserInfo, setIsReadyUpdateUserInfo] = useState(false);
-  const totalPaymentAmount = successGetDetailUser?.bookingHistory?.length;
-  const totalComment = successGetDetailUser?.commentList?.length;
-  const totalPrice = successGetDetailUser?.bookingHistory?.reduce(
+  const totalPaymentAmount = currentUserLogin?.bookingHistory?.length;
+  const totalComment = currentUserLogin?.commentList?.length;
+  const totalPrice = currentUserLogin?.bookingHistory?.reduce(
     (total, ticket) => {
       return total + ticket.totalPrice;
     },
     0
   );
 
-  const commentLike = successGetDetailUser?.commentList?.reduce(
+  const commentLike = currentUserLogin?.commentList?.reduce(
     (total, comment) => {
       return total + comment.likes;
     },
@@ -51,7 +51,7 @@ export default function Info() {
       dispatch(resetUpdate());
     };
   }, []);
-  
+
   const phoneRegExp =
     /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/;
 

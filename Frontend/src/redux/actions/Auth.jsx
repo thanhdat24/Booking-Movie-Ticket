@@ -3,6 +3,9 @@ import {
   FORGOT_PASSWORD_FAIL,
   FORGOT_PASSWORD_REQUEST,
   FORGOT_PASSWORD_SUCCESS,
+  GET_CURRENT_USER_FAIL,
+  GET_CURRENT_USER_REQUEST,
+  GET_CURRENT_USER_SUCCESS,
   GET_USER_FAIL,
   GET_USER_SUCCESS,
   GET_USER_SUCCESS_REQUEST,
@@ -156,6 +159,32 @@ export const getDetailUser = (_id) => {
   };
 };
 
+export const getCurrentUser = () => {
+  return (dispatch) => {
+    dispatch({
+      type: GET_CURRENT_USER_REQUEST,
+    });
+    usersApi
+      .getCurrentUser()
+      .then((result) => {
+        console.log("reslut", result);
+        dispatch({
+          type: GET_CURRENT_USER_SUCCESS,
+          payload: {
+            data: result.data.data,
+          },
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: GET_CURRENT_USER_FAIL,
+          payload: {
+            error: error?.response.data.message,
+          },
+        });
+      });
+  };
+};
 
 export const sendOtp = (email) => {
   return (dispatch) => {
@@ -209,7 +238,6 @@ export const forgotPassword = (data) => {
   };
 };
 
-
 export const resetUpdate = () => {
   return (dispatch) => {
     dispatch({
@@ -231,4 +259,4 @@ export const resetAuth = () => {
       type: RESET_AUTH,
     });
   };
-}
+};

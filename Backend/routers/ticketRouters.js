@@ -17,7 +17,7 @@ router.route('/getTicketRevenue').get(ticketController.getTicketRevenue);
 router.route('/getMovieRevenue').get(ticketController.getMovieRevenue);
 router.route('/getRevenueByDay').get(ticketController.getRevenueByDay);
 ;
-router.use(authController.restrictTo('admin'));
+// router.use(authController.restrictTo('admin'));
 
 router
   .route('/:id')

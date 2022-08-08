@@ -49,8 +49,8 @@ export default function NewPassword() {
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
   const ResetSchema = Yup.object().shape({
     email: Yup.string()
-      .email("Email phải là một địa chỉ email hợp lệ")
-      .required("Email là bắt buộc"),
+      .email("*Email phải là một địa chỉ email hợp lệ")
+      .required("*Email là bắt buộc"),
     code1: Yup.string().required("Code is required"),
     code2: Yup.string().required("Code is required"),
     code3: Yup.string().required("Code is required"),

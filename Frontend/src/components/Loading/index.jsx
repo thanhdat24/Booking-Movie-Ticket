@@ -88,9 +88,12 @@ export default function Loading() {
   const loadingGetDetailUser = useSelector(
     (state) => state.AuthReducer.loadingGetDetailUser
   );
-    const loadingDetailDiscount = useSelector(
-      (state) => state.DiscountReducer.loadingDetailDiscount
-    );
+  const loadingCurrentUserLogin = useSelector(
+    (state) => state.AuthReducer.loadingCurrentUserLogin
+  );
+  const loadingDetailDiscount = useSelector(
+    (state) => state.DiscountReducer.loadingDetailDiscount
+  );
   const loading =
     isLazy ||
     loadingMovieList ||
@@ -98,6 +101,7 @@ export default function Loading() {
     loadingDetailMovie ||
     isLoadingBackToHome ||
     loadingGetDetailUser ||
+    loadingCurrentUserLogin ||
     loadingDetailDiscount;
   const loadingPrevious = useRef(false);
 

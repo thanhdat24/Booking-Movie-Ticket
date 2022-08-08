@@ -231,7 +231,7 @@ export default function Header() {
                   classes={{ root: classes.itemAuth }}
                   onClick={handleLogout}
                 >
-                  <ListItemText primary="Đăng Xuất" />
+                  <ListItemText primary="Đăng xuất" />
                 </ListItem>
               </List>
             ) : (
@@ -244,14 +244,14 @@ export default function Header() {
                   <ListItemIcon classes={{ root: classes.icon }}>
                     <AccountCircleIcon fontSize="large" />
                   </ListItemIcon>
-                  <ListItemText primary="Đăng Nhập" />
+                  <ListItemText primary="Đăng nhập" />
                 </ListItem>
                 <ListItem
                   button
                   classes={{ root: classes.itemAuth }}
                   onClick={handleRegister}
                 >
-                  <ListItemText primary="Đăng Ký" />
+                  <ListItemText primary="Đăng ký" />
                 </ListItem>
               </List>
             )}

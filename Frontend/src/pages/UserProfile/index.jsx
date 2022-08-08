@@ -6,7 +6,11 @@ import { Icon } from "@iconify/react";
 import Info from "./AccountInfo/Info";
 import ChangePassword from "./AccountInfo/ChangePassword";
 import BookingHistory from "./BookingHistory/BookingHistory";
-import { getDetailUser, resetUpdate } from "../../redux/actions/Auth";
+import {
+  getCurrentUser,
+  getDetailUser,
+  resetUpdate,
+} from "../../redux/actions/Auth";
 
 export default function UserProfile() {
   const {
@@ -18,7 +22,7 @@ export default function UserProfile() {
   };
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getDetailUser(user._id));
+    dispatch(getCurrentUser());
     return () => dispatch(resetUpdate());
   }, []);
 

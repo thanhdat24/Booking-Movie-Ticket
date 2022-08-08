@@ -236,7 +236,7 @@ export default function Register() {
                   fullWidth
                   autoComplete="current-password"
                   type={showPassword ? "text" : "password"}
-                  label="Password"
+                  label="Mật khẩu"
                   {...getFieldProps("password")}
                   InputProps={{
                     endAdornment: (
@@ -257,7 +257,7 @@ export default function Register() {
                   fullWidth
                   autoComplete="current-password"
                   type={showPasswordConfirm ? "text" : "password"}
-                  label="Confirm Password"
+                  label="Nhập lại mật khẩu"
                   {...getFieldProps("passwordConfirm")}
                   InputProps={{
                     endAdornment: (

@@ -129,7 +129,7 @@ export default function AdminLayout(props) {
     ticketList: { data },
   } = useSelector((state) => state.BookTicketReducer);
   const dispatch = useDispatch();
-
+  
   useEffect(() => {
     // get list user lần đầu
     if (!data) {

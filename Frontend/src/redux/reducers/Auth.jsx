@@ -4,6 +4,9 @@ import {
   FORGOT_PASSWORD_FAIL,
   FORGOT_PASSWORD_REQUEST,
   FORGOT_PASSWORD_SUCCESS,
+  GET_CURRENT_USER_FAIL,
+  GET_CURRENT_USER_REQUEST,
+  GET_CURRENT_USER_SUCCESS,
   GET_USER_FAIL,
   GET_USER_SUCCESS,
   GET_USER_SUCCESS_REQUEST,
@@ -51,6 +54,10 @@ const stateDefault = {
   loadingGetDetailUser: false,
   successGetDetailUser: null,
   errorGetDetailUser: null,
+
+  currentUserLogin: null,
+  loadingCurrentUserLogin: false,
+  errorCurrentUserLogin: null,
 };
 
 export const AuthReducer = (state = stateDefault, action) => {
@@ -127,7 +134,11 @@ export const AuthReducer = (state = stateDefault, action) => {
     }
 
     case FORGOT_PASSWORD_REQUEST: {
-      return { ...state, loadingForgotPassword: true, errorForgotPassword: null };
+      return {
+        ...state,
+        loadingForgotPassword: true,
+        errorForgotPassword: null,
+      };
     }
     case FORGOT_PASSWORD_SUCCESS: {
       return {
@@ -189,6 +200,24 @@ export const AuthReducer = (state = stateDefault, action) => {
         loadingGetDetailUser: false,
       };
     }
+    case GET_CURRENT_USER_REQUEST: {
+      return { ...state, loadingCurrentUserLogin: true, errorCurrentUserLogin: null };
+    }
+    case GET_CURRENT_USER_SUCCESS: {
+      return {
+        ...state,
+        currentUserLogin: action.payload.data,
+        loadingCurrentUserLogin: false,
+      };
+    }
+    case GET_CURRENT_USER_FAIL: {
+      return {
+        ...state,
+        errorCurrentUserLogin: action.payload.error,
+        loadingCurrentUserLogin: false,
+      };
+    }
+
     case RESET_UPDATE: {
       return {
         ...state,

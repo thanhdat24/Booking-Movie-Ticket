@@ -46,11 +46,11 @@ export default function ChangePassword() {
       resetForm();
     },
   });
-  useEffect(() => {
-    return () => {
-      dispatch(resetUserList());
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     dispatch(resetUserList());
+  //   };
+  // }, []);
   const { errors, touched, handleSubmit, getFieldProps, values } = formik;
 
   useEffect(() => {

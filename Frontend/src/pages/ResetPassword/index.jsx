@@ -47,8 +47,8 @@ export default function ResetPassword() {
 
   const ResetSchema = Yup.object().shape({
     email: Yup.string()
-      .email("Email phải là một địa chỉ email hợp lệ")
-      .required("Email là bắt buộc"),
+      .email("*Email phải là một địa chỉ email hợp lệ")
+      .required("*Email là bắt buộc"),
   });
 
   const formik = useFormik({

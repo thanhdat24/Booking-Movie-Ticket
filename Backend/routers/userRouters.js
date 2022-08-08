@@ -61,15 +61,18 @@ router.patch(
 router.delete('/deleteMe', userController.deleteMe);
 
 // RestrictTo "admin"
-router.use(authController.restrictTo('admin'));
+// router.use(authController.restrictTo('admin'));
 
-router.route('/').get(userController.getAllUsers);
+router
+  .route('/')
+  .get(authController.restrictTo('admin'), userController.getAllUsers);
 
 router
   .route('/:id')
   .get(userController.getDetailUser)
   .patch(
     authController.protect,
+    authController.restrictTo('admin'),
     userController.uploadUserPhoto,
     userController.updateUser
   )

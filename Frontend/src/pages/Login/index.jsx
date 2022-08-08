@@ -80,8 +80,8 @@ export default function Login() {
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
       .email("Email phải là một địa chỉ email hợp lệ!")
-      .required("Vui lòng nhập email!"),
-    password: Yup.string().required("Vui lòng nhập password!"),
+      .required("*Vui lòng nhập email!"),
+    password: Yup.string().required("*Vui lòng nhập mật khẩu!"),
   });
   const formik = useFormik({
     initialValues: {
