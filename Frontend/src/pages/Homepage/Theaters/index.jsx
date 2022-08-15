@@ -11,10 +11,9 @@ import ListTheaterCluster from "./ListTheaterCluster";
 export default function Theaters() {
   const [valueTheaterSystem, setValueTheaterSystem] = React.useState(0);
   const classes = useStyles({ underLine });
-  const {
-    errorTheaterSystemList,
-    showtimeTheaterSystemList,
-  } = useSelector((state) => state.TheaterSystemReducer);
+  const { errorTheaterSystemList, showtimeTheaterSystemList } = useSelector(
+    (state) => state.TheaterSystemReducer
+  );
   if (errorTheaterSystemList) {
     return <div>{errorTheaterSystemList}</div>;
   }
@@ -66,6 +65,7 @@ export default function Theaters() {
           </div>
         ))}
       </div>
+      <Seperate />
     </div>
   );
 }

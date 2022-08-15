@@ -27,15 +27,14 @@ import {
 
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
-import AuthLayout from "../../layouts/AuthLayout";
 import { useDispatch, useSelector } from "react-redux";
 import { register, resetErrorLoginRegister } from "../../redux/actions/Auth";
 
-const RootStyle = styled("div")(({ theme }) => ({
-  [theme.breakpoints.up("md")]: {
-    display: "flex",
-  },
-}));
+// const RootStyle = styled("div")(({ theme }) => ({
+//   [theme.breakpoints.up("md")]: {
+//     display: "flex",
+//   },
+// }));
 const SectionStyle = styled(Card)(({ theme }) => ({
   width: "100%",
   maxWidth: 580,

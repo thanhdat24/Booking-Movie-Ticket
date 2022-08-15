@@ -35,6 +35,7 @@ import { getDiscountsList, resetDiscount } from "../../redux/actions/Discount";
 import moment from "moment";
 import { useStyles } from "./styles";
 import ActionMoreMenu from "./ActionMoreMenu";
+import FilterDiscount from "./FilterDiscount";
 
 const TABLE_HEAD = [
   { id: "code", label: "Mã giảm giá", alignRight: false },
@@ -64,18 +65,18 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function applySortFilter(array, comparator, query) {
+function applySortFilter(array, comparator, queryCode, queryActive) {
   const stabilizedThis = array?.map((el, index) => [el, index]);
   stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
-  if (query) {
-    return filter(
-      array,
-      (_ticket) => _ticket._id.toLowerCase().indexOf(query.toLowerCase()) !== -1
-    );
+  if (queryCode) {
+    return filter(array, (discount) => discount.code.indexOf(queryCode) !== -1);
+  }
+  if (queryActive !== "Tất cả") {
+    return filter(array, (discount) => discount.activeCode === queryActive);
   }
   return stabilizedThis?.map((el) => el[0]);
 }
@@ -101,7 +102,8 @@ export default function DiscountManagement() {
   const [order, setOrder] = useState("asc");
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState("name");
-  const [filterNameMovie, setFilterNameMovie] = useState("");
+  const [filterName, setFilterName] = useState("");
+  const [filterDiscount, setFilterDiscount] = useState("Tất cả");
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const dispatch = useDispatch();
 
@@ -158,16 +160,20 @@ export default function DiscountManagement() {
   };
 
   const handleFilterByName = (event) => {
-    setFilterNameMovie(event.target.value);
+    setFilterName(event.target.value);
   };
 
+  const handleFilterByDiscount = (event) => {
+    setFilterDiscount(event.target.value);
+  };
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - discountList?.length) : 0;
 
   const filteredMovies = applySortFilter(
     discountList,
     getComparator(order, orderBy),
-    filterNameMovie
+    filterName,
+    filterDiscount
   );
 
   const isUserNotFound = discountList?.length === 0;
@@ -218,6 +224,12 @@ export default function DiscountManagement() {
           </Button>
         </Stack>
         <Card>
+          <FilterDiscount
+            filterName={filterName}
+            onFilterName={handleFilterByName}
+            filterDiscount={filterDiscount}
+            onFilterDiscount={handleFilterByDiscount}
+          />
           <TableContainer
             sx={{ minWidth: 800, fontSize: "13px !important" }}
             className="text-xs"

@@ -397,7 +397,7 @@ export default function CenteredTabs({
           <div className={classes.inputRoot} onClick={handleClickComment}>
             <span className={classes.avatarReviewer}>
               <img
-                src={currentUser ? currentUser?.user.photo : UNKNOWN_USER}
+                src={currentUser ? currentUser?.user?.photo : UNKNOWN_USER}
                 alt="avatar"
                 className={classes.avatarImg}
               />
@@ -432,14 +432,14 @@ export default function CenteredTabs({
                   <div className={classes.left}>
                     <span className={classes.avatar}>
                       <img
-                        src={item?.userId.photo}
+                        src={item?.userId?.photo}
                         alt="avatar"
                         className={classes.avatarImg}
                       />
                     </span>
                     <span className={classes.liveUser}>
                       <p className={classes.userName}>
-                        {item?.userId.fullName}
+                        {item?.userId?.fullName}
                       </p>
                       <p className={classes.timePost}>
                         {moment(item?.createdAt).fromNow()}
