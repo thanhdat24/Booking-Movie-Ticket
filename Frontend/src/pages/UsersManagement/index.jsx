@@ -15,6 +15,8 @@ import {
   TablePagination,
   Breadcrumbs,
   Link,
+  Tab,
+  Box,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 
@@ -31,6 +33,7 @@ import UserListToolbar from "../../components/user/UserListToolbar";
 import UserMoreMenu from "../../components/user/UserMoreMenu";
 
 import Label from "../../components/Label";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 // ----------------------------------------------------------------------
 
@@ -67,24 +70,27 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function applySortFilter(array, comparator, query) {
+function applySortFilter(array, comparator, queryName, queryRole) {
   const stabilizedThis = array?.map((el, index) => [el, index]);
   stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
-  if (query) {
-    return filter(
-      array,
-      (_user) =>
-        _user.fullName.toLowerCase().indexOf(query.toLowerCase()) !== -1
-    );
+  if (queryName) {
+    return filter(array, (_user) => _user.fullName.indexOf(queryName) !== -1);
+  }
+  if (queryRole !== "all") {
+    return filter(array, (_user) => _user.role === queryRole);
   }
   return stabilizedThis?.map((el) => el[0]);
 }
 
 export default function UserEdit() {
+  const [value, setValue] = React.useState("1");
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { usersList, successDelete, errorDelete, successUpdateUser } =
@@ -97,6 +103,8 @@ export default function UserEdit() {
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState("name");
   const [filterName, setFilterName] = useState("");
+  const [filterRole, setFilterRole] = useState("all");
+
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
@@ -106,7 +114,7 @@ export default function UserEdit() {
     }
     return () => dispatch(resetUserList());
   }, []);
-  
+
   useEffect(() => {
     if (successDelete || successUpdateUser || successUpdateUserCurrent) {
       dispatch(getUsersList());
@@ -169,13 +177,19 @@ export default function UserEdit() {
     setFilterName(event.target.value);
   };
 
+  const handleFilterByRole = (event) => {
+    setFilterRole(event.target.value);
+    console.log("role", event.target.value);
+  };
+
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - usersList?.result) : 0;
 
   const filteredUsers = applySortFilter(
     usersList?.data,
     getComparator(order, orderBy),
-    filterName
+    filterName,
+    filterRole
   );
 
   const isUserNotFound = usersList?.result === 0;
@@ -197,7 +211,8 @@ export default function UserEdit() {
       color="text.primary"
       sx={{ "&:hover": { color: "#212B36" } }}
     >
-      Ng  ười dùng    </Link>,
+      Người dùng{" "}
+    </Link>,
     <Typography key="3" color="inherit">
       Danh sách
     </Typography>,
@@ -233,106 +248,373 @@ export default function UserEdit() {
         </Button>
       </Stack>
       <Card>
-        <UserListToolbar
-          numSelected={selected.length}
-          filterName={filterName}
-          onFilterName={handleFilterByName}
-        />
-
-        <TableContainer sx={{ minWidth: 800 }}>
-          <Table>
-            <UserListHead
-              order={order}
-              orderBy={orderBy}
-              headLabel={TABLE_HEAD}
-              rowCount={usersList?.result}
+        <TabContext value={value}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <TabList
+              sx={{
+                backgroundColor: "#f4f6f8",
+                color: "#637381",
+                padding: "0 10px",
+              }}
+              onChange={handleChange}
+              aria-label="lab API tabs example"
+            >
+              <Tab sx={{ flexDirection: "row" }} label="Tất cả" value="1" />
+              <Tab
+                sx={{ flexDirection: "row" }}
+                label="Acitve"
+                value="2"
+              />{" "}
+              <Tab sx={{ flexDirection: "row" }} label="Banned" value="3" />
+            </TabList>
+          </Box>
+          <TabPanel
+            value="1"
+            sx={{ "&.MuiTabPanel-root": { paddingTop: "0 !important" } }}
+          >
+            {/* List ALL  */}
+            <UserListToolbar
               numSelected={selected.length}
-              onRequestSort={handleRequestSort}
-              onSelectAllClick={handleSelectAllClick}
+              filterName={filterName}
+              onFilterName={handleFilterByName}
+              filterRole={filterRole}
+              onFilterRole={handleFilterByRole}
             />
-            <TableBody>
-              {filteredUsers
-                ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
-                  const {
-                    _id,
-                    fullName,
-                    role,
-                    photo,
-                    email,
-                    phoneNumber,
-                    active,
-                  } = row;
-                  const isItemSelected = selected.indexOf(fullName) !== -1;
 
-                  return (
-                    <TableRow
-                      hover
-                      key={_id}
-                      tabIndex={-1}
-                      _id="checkbox"
-                      selected={isItemSelected}
-                      aria-checked={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          onChange={(event) => handleClick(event, fullName)}
-                        />
-                      </TableCell>
-                      <TableCell component="th" scope="row" padding="none">
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                          <Avatar alt={fullName} src={photo} />
-                          <Typography variant="subtitle2" noWrap>
-                            {fullName}
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell align="left">{email}</TableCell>
-                      <TableCell align="left">{phoneNumber}</TableCell>
-                      <TableCell align="left">{role}</TableCell>
-                      <TableCell align="left">
-                        <Label
-                          variant="ghost"
-                          color={(!active && "error") || "success"}
+            <TableContainer sx={{ minWidth: 800 }}>
+              <Table>
+                <UserListHead
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  rowCount={usersList?.result}
+                  numSelected={selected.length}
+                  onRequestSort={handleRequestSort}
+                  onSelectAllClick={handleSelectAllClick}
+                />
+                <TableBody>
+                  {filteredUsers
+                    ?.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
+                    .map((row) => {
+                      const {
+                        _id,
+                        fullName,
+                        role,
+                        photo,
+                        email,
+                        phoneNumber,
+                        active,
+                      } = row;
+                      const isItemSelected = selected.indexOf(fullName) !== -1;
+
+                      return (
+                        <TableRow
+                          hover
+                          key={_id}
+                          tabIndex={-1}
+                          _id="checkbox"
+                          selected={isItemSelected}
+                          aria-checked={isItemSelected}
                         >
-                          {changeActive(active)}
-                        </Label>
-                      </TableCell>
+                          <TableCell padding="checkbox">
+                            <Checkbox
+                              checked={isItemSelected}
+                              onChange={(event) => handleClick(event, fullName)}
+                            />
+                          </TableCell>
+                          <TableCell component="th" scope="row" padding="none">
+                            <Stack
+                              direction="row"
+                              alignItems="center"
+                              spacing={2}
+                            >
+                              <Avatar alt={fullName} src={photo} />
+                              <Typography variant="subtitle2" noWrap>
+                                {fullName}
+                              </Typography>
+                            </Stack>
+                          </TableCell>
+                          <TableCell align="left">{email}</TableCell>
+                          <TableCell align="left">{phoneNumber}</TableCell>
+                          <TableCell align="left">{role}</TableCell>
+                          <TableCell align="left">
+                            <Label
+                              variant="ghost"
+                              color={(!active && "error") || "success"}
+                            >
+                              {changeActive(active)}
+                            </Label>
+                          </TableCell>
 
-                      <TableCell align="right">
-                        <UserMoreMenu userId={_id} />
+                          <TableCell align="right">
+                            <UserMoreMenu userId={_id} />
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 53 * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+                {isUserNotFound && (
+                  <TableBody>
+                    <TableRow>
+                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                        {/* <SearchNotFound searchQuery={filterName} /> */}
                       </TableCell>
                     </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-            {isUserNotFound && (
-              <TableBody>
-                <TableRow>
-                  <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                    {/* <SearchNotFound searchQuery={filterName} /> */}
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            )}
-          </Table>
-        </TableContainer>
+                  </TableBody>
+                )}
+              </Table>
+            </TableContainer>
 
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={usersList?.result}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={usersList?.result}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </TabPanel>
+          <TabPanel
+            value="2"
+            sx={{ "&.MuiTabPanel-root": { paddingTop: "0 !important" } }}
+          >
+            {/* List Active */}
+            <UserListToolbar
+              numSelected={selected.length}
+              filterName={filterName}
+              onFilterName={handleFilterByName}
+              filterRole={filterRole}
+              onFilterRole={handleFilterByRole}
+            />
+
+            <TableContainer sx={{ minWidth: 800 }}>
+              <Table>
+                <UserListHead
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  rowCount={usersList?.result}
+                  numSelected={selected.length}
+                  onRequestSort={handleRequestSort}
+                  onSelectAllClick={handleSelectAllClick}
+                />
+                <TableBody>
+                  {filteredUsers
+                    ?.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
+                    .filter((row) => row.active)
+                    .map((row) => {
+                      const {
+                        _id,
+                        fullName,
+                        role,
+                        photo,
+                        email,
+                        phoneNumber,
+                        active,
+                      } = row;
+                      const isItemSelected = selected.indexOf(fullName) !== -1;
+
+                      return (
+                        <TableRow
+                          hover
+                          key={_id}
+                          tabIndex={-1}
+                          _id="checkbox"
+                          selected={isItemSelected}
+                          aria-checked={isItemSelected}
+                        >
+                          <TableCell padding="checkbox">
+                            <Checkbox
+                              checked={isItemSelected}
+                              onChange={(event) => handleClick(event, fullName)}
+                            />
+                          </TableCell>
+                          <TableCell component="th" scope="row" padding="none">
+                            <Stack
+                              direction="row"
+                              alignItems="center"
+                              spacing={2}
+                            >
+                              <Avatar alt={fullName} src={photo} />
+                              <Typography variant="subtitle2" noWrap>
+                                {fullName}
+                              </Typography>
+                            </Stack>
+                          </TableCell>
+                          <TableCell align="left">{email}</TableCell>
+                          <TableCell align="left">{phoneNumber}</TableCell>
+                          <TableCell align="left">{role}</TableCell>
+                          <TableCell align="left">
+                            <Label
+                              variant="ghost"
+                              color={(!active && "error") || "success"}
+                            >
+                              {changeActive(active)}
+                            </Label>
+                          </TableCell>
+
+                          <TableCell align="right">
+                            <UserMoreMenu userId={_id} />
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 53 * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+                {isUserNotFound && (
+                  <TableBody>
+                    <TableRow>
+                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                        {/* <SearchNotFound searchQuery={filterName} /> */}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                )}
+              </Table>
+            </TableContainer>
+
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={usersList?.result}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </TabPanel>
+          <TabPanel
+            value="3"
+            sx={{ "&.MuiTabPanel-root": { paddingTop: "0 !important" } }}
+          >
+            {" "}
+            {/* List Banned */}
+            <UserListToolbar
+              numSelected={selected.length}
+              filterName={filterName}
+              onFilterName={handleFilterByName}
+              filterRole={filterRole}
+              onFilterRole={handleFilterByRole}
+            />
+            <TableContainer sx={{ minWidth: 800 }}>
+              <Table>
+                <UserListHead
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  rowCount={usersList?.result}
+                  numSelected={selected.length}
+                  onRequestSort={handleRequestSort}
+                  onSelectAllClick={handleSelectAllClick}
+                />
+                <TableBody>
+                  {filteredUsers
+                    ?.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
+                    .filter((row) => !row.active)
+                    .map((row) => {
+                      const {
+                        _id,
+                        fullName,
+                        role,
+                        photo,
+                        email,
+                        phoneNumber,
+                        active,
+                      } = row;
+                      const isItemSelected = selected.indexOf(fullName) !== -1;
+
+                      return (
+                        <TableRow
+                          hover
+                          key={_id}
+                          tabIndex={-1}
+                          _id="checkbox"
+                          selected={isItemSelected}
+                          aria-checked={isItemSelected}
+                        >
+                          <TableCell padding="checkbox">
+                            <Checkbox
+                              checked={isItemSelected}
+                              onChange={(event) => handleClick(event, fullName)}
+                            />
+                          </TableCell>
+                          <TableCell component="th" scope="row" padding="none">
+                            <Stack
+                              direction="row"
+                              alignItems="center"
+                              spacing={2}
+                            >
+                              <Avatar alt={fullName} src={photo} />
+                              <Typography variant="subtitle2" noWrap>
+                                {fullName}
+                              </Typography>
+                            </Stack>
+                          </TableCell>
+                          <TableCell align="left">{email}</TableCell>
+                          <TableCell align="left">{phoneNumber}</TableCell>
+                          <TableCell align="left">{role}</TableCell>
+                          <TableCell align="left">
+                            <Label
+                              variant="ghost"
+                              color={(!active && "error") || "success"}
+                            >
+                              {changeActive(active)}
+                            </Label>
+                          </TableCell>
+
+                          <TableCell align="right">
+                            <UserMoreMenu userId={_id} />
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 53 * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+                {isUserNotFound && (
+                  <TableBody>
+                    <TableRow>
+                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                        {/* <SearchNotFound searchQuery={filterName} /> */}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                )}
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={usersList?.result}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </TabPanel>
+        </TabContext>
       </Card>
     </Container>
   );

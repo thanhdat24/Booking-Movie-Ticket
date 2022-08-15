@@ -18,6 +18,7 @@ import {
   REGISTER_REQUEST,
   REGISTER_SUCCESS,
   RESET_AUTH,
+  RESET_CURRENT_USER,
   RESET_PASSWORD_FAIL,
   RESET_PASSWORD_REQUEST,
   RESET_PASSWORD_SUCCESS,
@@ -201,7 +202,11 @@ export const AuthReducer = (state = stateDefault, action) => {
       };
     }
     case GET_CURRENT_USER_REQUEST: {
-      return { ...state, loadingCurrentUserLogin: true, errorCurrentUserLogin: null };
+      return {
+        ...state,
+        loadingCurrentUserLogin: true,
+        errorCurrentUserLogin: null,
+      };
     }
     case GET_CURRENT_USER_SUCCESS: {
       return {
@@ -217,7 +222,12 @@ export const AuthReducer = (state = stateDefault, action) => {
         loadingCurrentUserLogin: false,
       };
     }
-
+    case RESET_CURRENT_USER: {
+      return {
+        ...state,
+        successGetDetailUser: "",
+      };
+    }
     case RESET_UPDATE: {
       return {
         ...state,

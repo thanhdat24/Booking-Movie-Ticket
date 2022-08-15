@@ -18,7 +18,7 @@ import { getDetailUser } from "../../redux/actions/Auth";
 
 // ----------------------------------------------------------------------
 
-export default function UserMoreMenu({ userId }) {
+export default function UserMoreMenu({ userId, row }) {
   const history = useHistory();
   const { loadingDelete } = useSelector((state) => state.UserManagement);
   const { successGetDetailUser } = useSelector((state) => state.AuthReducer);
@@ -35,14 +35,10 @@ export default function UserMoreMenu({ userId }) {
     dispatch(deleteUser(_id));
   };
 
-  const handleEditDetail = (_id) => {
-    if (!successGetDetailUser) {
-    }
-    dispatch(getDetailUser(_id));
-
+  const handleEditDetail = () => {
     setTimeout(() => {
       history.push(`/admin/users/edit/${userId}`);
-    }, 1300);
+    });
   };
   // useEffect(() => {
   //   if (history.push("/admin/users/list")) {
@@ -84,9 +80,8 @@ export default function UserMoreMenu({ userId }) {
           component={RouterLink}
           // to={{ pathname: `/admin/users/edit/${userId}` }}
           sx={{
-           
             color: "rgb(33, 43, 54)",
-          
+
             "&:hover": { color: "rgb(33, 43, 54)" },
           }}
           onClick={(e) => handleEditDetail(userId)}

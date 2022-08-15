@@ -49,7 +49,6 @@ export default function UsersManagement() {
         justifyContent="space-between"
         mb={5}
         mt={7.5}
-
       >
         <Stack spacing={2}>
           <Typography variant="h4" gutterBottom>
@@ -78,7 +77,7 @@ export default function UsersManagement() {
                     icon="ic:baseline-account-box"
                   />
                 }
-                label="General"
+                label="Thông tin chung"
                 value="1"
               />
               <Tab
@@ -95,7 +94,7 @@ export default function UsersManagement() {
                     icon="el:key"
                   />
                 }
-                label="Change Password"
+                label="Đổi mật khẩu"
                 value="2"
               />
             </TabList>

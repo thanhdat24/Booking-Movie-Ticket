@@ -37,16 +37,27 @@ function changeActive(active) {
   }
 }
 
-export default function Info() {
+export default function Info({ successGetDetailUser }) {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { currentUser, successGetDetailUser } = useSelector(
-    (state) => state.AuthReducer
-  );
   const { successUpdateUser, loadingUpdateUser, errorUpdateUser } = useSelector(
     (state) => state.UserManagement
   );
   const { enqueueSnackbar } = useSnackbar();
+  const [valueRole, setValueRole] = useState(successGetDetailUser?.role);
+  const [srcImage, setSrcImage] = useState(successGetDetailUser?.photo);
+  console.log("successGetDetailUser", successGetDetailUser);
+  console.log("srcImage", srcImage);
+
+  const handleChangeRole = (event) => {
+    setValueRole(event.target.value);
+  };
+  const [gender, setGender] = useState(successGetDetailUser?.gender);
+  console.log("gender", gender);
+
+  const handleChangeGender = (event) => {
+    setGender(event.target.value);
+  };
   const phoneRegExp =
     /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/;
 
@@ -67,22 +78,24 @@ export default function Info() {
       }),
   });
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
       fullName: successGetDetailUser?.fullName,
       email: successGetDetailUser?.email,
       phoneNumber: successGetDetailUser?.phoneNumber,
-      gender: successGetDetailUser?.gender,
+      gender: gender ? gender : successGetDetailUser?.gender,
       dateOfBirth: moment(successGetDetailUser?.dateOfBirth).format(
         "YYYY-MM-DD"
       ),
-      role: successGetDetailUser?.role,
+      role: valueRole ? valueRole : successGetDetailUser?.role,
       active: successGetDetailUser?.active,
-      photo: successGetDetailUser?.photo,
+      photo: srcImage ? srcImage : successGetDetailUser?.photo,
       remember: true,
     },
 
     validationSchema: UpdateSchema,
     onSubmit: (user) => {
+      console.log("user", user);
       if (loadingUpdateUser) {
         return;
       }
@@ -98,15 +111,7 @@ export default function Info() {
     setFieldValue,
     values,
   } = formik;
-  const [gender, setGender] = useState(10);
-  const [valueRole, setValueRole] = useState(successGetDetailUser?.role);
 
-  const handleChangeRole = (event) => {
-    setValueRole(event.target.value);
-  };
-  const handleChangeGender = (event) => {
-    setGender(event.target.value);
-  };
   const handleChangeActive = (event, checked) => {
     setFieldValue("active", checked ? true : false);
   };
@@ -131,7 +136,6 @@ export default function Info() {
     };
   }, []);
 
-  const [srcImage, setSrcImage] = useState(successGetDetailUser?.photo);
   const handleChangeFile = (e) => {
     let file = e.target.files[0];
     var reader = new FileReader();
@@ -202,7 +206,9 @@ export default function Info() {
                       <span className="overflow-hidden z-10 w-full h-full block">
                         <span className=" w-full h-full bg-cover inline-block">
                           <img
-                            src={srcImage}
+                            src={
+                              srcImage ? srcImage : successGetDetailUser?.photo
+                            }
                             alt="avatar"
                             className="w-full h-full object-cover"
                           />
@@ -244,6 +250,9 @@ export default function Info() {
                   <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
                     <TextField
                       fullWidth
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                       autoComplete="fullName"
                       type="text"
                       label="Họ tên"
@@ -253,6 +262,9 @@ export default function Info() {
                     />{" "}
                     <TextField
                       fullWidth
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                       disabled
                       autoComplete="email"
                       type="email"
@@ -265,6 +277,9 @@ export default function Info() {
                   <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
                     <TextField
                       fullWidth
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                       label="Số điện thoại"
                       {...getFieldProps("phoneNumber")}
                       error={Boolean(touched.phoneNumber && errors.phoneNumber)}
@@ -272,6 +287,9 @@ export default function Info() {
                     />
                     <FormControl
                       fullWidth
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                       error={Boolean(touched.gender && errors.gender)}
                     >
                       <InputLabel id="select-gender">Giới Tính</InputLabel>
@@ -282,10 +300,12 @@ export default function Info() {
                         }}
                         labelId="select-gender"
                         id="select-gender"
-                        value={gender}
+                        value={
+                          gender ? gender : `${successGetDetailUser?.gender}`
+                        }
                         label="Giới Tính"
                         onChange={handleChangeGender}
-                        {...getFieldProps("gender")}
+                        // {...getFieldProps("gender")}
                       >
                         <MenuItem value={`Nam`}>Nam</MenuItem>
                         <MenuItem value={`Nữ`}>Nữ</MenuItem>
@@ -308,6 +328,9 @@ export default function Info() {
                       label="Ngày tháng năm sinh"
                       type="date"
                       fullWidth
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                       {...getFieldProps("dateOfBirth")}
                       InputLabelProps={{
                         shrink: true,
@@ -323,9 +346,16 @@ export default function Info() {
                         row
                         aria-labelledby="demo-row-radio-buttons-group-label"
                         name="row-radio-buttons-group"
-                        value={valueRole}
+                        value={
+                          valueRole
+                            ? valueRole
+                            : `${successGetDetailUser?.role}`
+                        }
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
                         onChange={handleChangeRole}
-                        {...getFieldProps("role")}
+                        // {...getFieldProps("role")}
                       >
                         <FormControlLabel
                           value={`admin`}

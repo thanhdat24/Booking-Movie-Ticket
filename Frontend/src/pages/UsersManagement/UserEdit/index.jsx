@@ -9,8 +9,21 @@ import {
   Stack,
 } from "@mui/material";
 import Info from "./Info";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getDetailUser } from "../../../redux/actions/Auth";
+import { RESET_CURRENT_USER } from "../../../redux/constants/Auth";
 
 export default function UserEdit() {
+  const { successGetDetailUser } = useSelector((state) => state.AuthReducer);
+  const params = useParams();
+  const dispatch = useDispatch();
+  useEffect(function () {
+    dispatch(getDetailUser(params.userId));
+    return () => {
+      dispatch({ type: RESET_CURRENT_USER });
+    };
+  }, []);
   const breadcrumbs = [
     <Link
       underline="hover"
@@ -55,7 +68,7 @@ export default function UserEdit() {
         </Stack>
       </Stack>
       <Box sx={{ width: "100%", typography: "body1" }}>
-        <Info />
+        <Info successGetDetailUser={successGetDetailUser} />
       </Box>
     </Container>
   );
