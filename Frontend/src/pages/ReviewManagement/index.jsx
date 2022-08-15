@@ -17,6 +17,7 @@ import {
   Box,
   Tooltip,
   Rating,
+  Tab,
 } from "@mui/material";
 
 import { filter } from "lodash";
@@ -32,6 +33,7 @@ import DeleteReview from "./DeleteReview";
 import { useSnackbar } from "notistack";
 import { useHistory } from "react-router-dom";
 import formatDate from "../../utils/formatDate";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 const TABLE_HEAD = [
   { id: "movieId", label: "Tên phim", alignRight: false },
@@ -79,6 +81,10 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function ReviewManagement() {
+  const [value, setValue] = React.useState("1");
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   const {
     commentList,
     successUpdateActiveReview,
@@ -148,7 +154,7 @@ export default function ReviewManagement() {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - commentList?.length) : 0;
 
-  const filteredMovies = applySortFilter(
+  const filteredReivew = applySortFilter(
     commentList,
     getComparator(order, orderBy),
     filterNameMovie
@@ -192,120 +198,417 @@ export default function ReviewManagement() {
           </Stack>
         </Stack>
         <Card>
-          <TableContainer sx={{ minWidth: 800 }}>
-            <Table>
-              <TicketListHead
-                order={order}
-                orderBy={orderBy}
-                headLabel={TABLE_HEAD}
-                rowCount={commentList?.length}
-                numSelected={selected.length}
-                onRequestSort={handleRequestSort}
-                // onSelectAllClick={handleSelectAllClick}
-              />
-              <TableBody>
-                {filteredMovies
-                  ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {
-                    const {
-                      _id,
-                      movieId,
-                      userId,
-                      createdAt,
-                      review,
-                      rating,
-                      active,
-                    } = row;
-                    return (
-                      <TableRow hover key={_id} tabIndex={-1} name="checkbox">
-                        <TableCell align="left">{movieId.name}</TableCell>
-                        <TableCell align="left">
-                          <Tooltip
-                            placement="right"
-                            id="test"
-                            title={
-                              <img src={movieId.photo} width={170} alt="" />
-                            }
+          <TabContext value={value}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <TabList
+                sx={{
+                  backgroundColor: "#f4f6f8",
+                  color: "#637381",
+                  padding: "0 10px",
+                }}
+                onChange={handleChange}
+                aria-label="lab API tabs example"
+              >
+                <Tab sx={{ flexDirection: "row" }} label="Tất cả" value="1" />
+                <Tab sx={{ flexDirection: "row" }} label="Đã duyệt" value="2" />
+                <Tab
+                  sx={{ flexDirection: "row" }}
+                  label="Chưa duyệt"
+                  value="3"
+                />
+              </TabList>
+            </Box>
+            <TabPanel
+              value="1"
+              sx={{ "&.MuiTabPanel-root": { paddingTop: "10px !important" } }}
+            >
+              <TableContainer sx={{ minWidth: 800 }}>
+                <Table>
+                  <TicketListHead
+                    order={order}
+                    orderBy={orderBy}
+                    headLabel={TABLE_HEAD}
+                    rowCount={commentList?.length}
+                    numSelected={selected.length}
+                    onRequestSort={handleRequestSort}
+                    // onSelectAllClick={handleSelectAllClick}
+                  />
+                  <TableBody>
+                    {filteredReivew
+                      ?.slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row, index) => {
+                        const {
+                          _id,
+                          movieId,
+                          userId,
+                          createdAt,
+                          review,
+                          rating,
+                          active,
+                        } = row;
+                        return (
+                          <TableRow
+                            hover
+                            key={_id}
+                            tabIndex={-1}
+                            name="checkbox"
                           >
-                            <Box
-                              sx={{
-                                display: "inline-block",
-                                width: 64,
-                                height: 84,
-                                objectFit: "cover",
-                                position: "relative",
-                                "&:hover > div": {
-                                  opacity: 1,
-                                },
-                                "& > div > img": {
-                                  verticalAlign: "top",
-                                },
-                              }}
-                            >
-                              <img
-                                className="w-full h-full rounded"
-                                src={movieId.photo}
-                                alt="poster movie"
-                                aria-label="test"
+                            <TableCell align="left">{movieId.name}</TableCell>
+                            <TableCell align="left">
+                              <Tooltip
+                                placement="right"
+                                id="test"
+                                title={
+                                  <img src={movieId.photo} width={170} alt="" />
+                                }
+                              >
+                                <Box
+                                  sx={{
+                                    display: "inline-block",
+                                    width: 64,
+                                    height: 84,
+                                    objectFit: "cover",
+                                    position: "relative",
+                                    "&:hover > div": {
+                                      opacity: 1,
+                                    },
+                                    "& > div > img": {
+                                      verticalAlign: "top",
+                                    },
+                                  }}
+                                >
+                                  <img
+                                    className="w-full h-full rounded"
+                                    src={movieId.photo}
+                                    alt="poster movie"
+                                    aria-label="test"
+                                  />
+                                </Box>
+                              </Tooltip>
+                            </TableCell>
+                            <TableCell align="left">
+                              {userId.fullName}
+                            </TableCell>
+                            <TableCell align="left">{review}</TableCell>
+                            <TableCell align="left">
+                              <Rating
+                                value={rating}
+                                precision={0.5}
+                                readOnly
+                                sx={{ fontSize: 20 }}
                               />
-                            </Box>
-                          </Tooltip>
-                        </TableCell>
-                        <TableCell align="left">{userId.fullName}</TableCell>
-                        <TableCell align="left">{review}</TableCell>
-                        <TableCell align="left">
-                          <Rating
-                            value={rating}
-                            precision={0.5}
-                            readOnly
-                            sx={{ fontSize: 20 }}
-                          />
-                        </TableCell>
-                        <TableCell align="left">
-                          {new Date(createdAt).toLocaleDateString()},{" "}
-                          {new Date(createdAt).toLocaleTimeString("en-US", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </TableCell>
-                        <TableCell align="left">
-                          <ActiveReview active={active} id={_id} />
-                        </TableCell>
-                        <TableCell align="center">
-                          <DeleteReview id={_id} />
-                        </TableCell>
+                            </TableCell>
+                            <TableCell align="left">
+                              {new Date(createdAt).toLocaleDateString()},{" "}
+                              {new Date(createdAt).toLocaleTimeString("en-US", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </TableCell>
+                            <TableCell align="left">
+                              <ActiveReview active={active} id={_id} />
+                            </TableCell>
+                            <TableCell align="center">
+                              <DeleteReview id={_id} />
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    {emptyRows > 0 && (
+                      <TableRow style={{ height: 53 * emptyRows }}>
+                        <TableCell colSpan={6} />
                       </TableRow>
-                    );
-                  })}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: 53 * emptyRows }}>
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
-              {isUserNotFound && (
-                <TableBody>
-                  <TableRow>
-                    <TableCell
-                      align="center"
-                      colSpan={6}
-                      sx={{ py: 3 }}
-                    ></TableCell>
-                  </TableRow>
-                </TableBody>
-              )}
-            </Table>
-          </TableContainer>
+                    )}
+                  </TableBody>
+                  {isUserNotFound && (
+                    <TableBody>
+                      <TableRow>
+                        <TableCell
+                          align="center"
+                          colSpan={6}
+                          sx={{ py: 3 }}
+                        ></TableCell>
+                      </TableRow>
+                    </TableBody>
+                  )}
+                </Table>
+              </TableContainer>
 
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={commentList?.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={commentList?.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </TabPanel>
+            <TabPanel
+              value="2"
+              sx={{ "&.MuiTabPanel-root": { paddingTop: "10px !important" } }}
+            >
+              <TableContainer sx={{ minWidth: 800 }}>
+                <Table>
+                  <TicketListHead
+                    order={order}
+                    orderBy={orderBy}
+                    headLabel={TABLE_HEAD}
+                    rowCount={commentList?.length}
+                    numSelected={selected.length}
+                    onRequestSort={handleRequestSort}
+                    // onSelectAllClick={handleSelectAllClick}
+                  />
+                  <TableBody>
+                    {filteredReivew
+                      ?.slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .filter((row) => row.active)
+                      .map((row, index) => {
+                        const {
+                          _id,
+                          movieId,
+                          userId,
+                          createdAt,
+                          review,
+                          rating,
+                          active,
+                        } = row;
+                        return (
+                          <TableRow
+                            hover
+                            key={_id}
+                            tabIndex={-1}
+                            name="checkbox"
+                          >
+                            <TableCell align="left">{movieId.name}</TableCell>
+                            <TableCell align="left">
+                              <Tooltip
+                                placement="right"
+                                id="test"
+                                title={
+                                  <img src={movieId.photo} width={170} alt="" />
+                                }
+                              >
+                                <Box
+                                  sx={{
+                                    display: "inline-block",
+                                    width: 64,
+                                    height: 84,
+                                    objectFit: "cover",
+                                    position: "relative",
+                                    "&:hover > div": {
+                                      opacity: 1,
+                                    },
+                                    "& > div > img": {
+                                      verticalAlign: "top",
+                                    },
+                                  }}
+                                >
+                                  <img
+                                    className="w-full h-full rounded"
+                                    src={movieId.photo}
+                                    alt="poster movie"
+                                    aria-label="test"
+                                  />
+                                </Box>
+                              </Tooltip>
+                            </TableCell>
+                            <TableCell align="left">
+                              {userId.fullName}
+                            </TableCell>
+                            <TableCell align="left">{review}</TableCell>
+                            <TableCell align="left">
+                              <Rating
+                                value={rating}
+                                precision={0.5}
+                                readOnly
+                                sx={{ fontSize: 20 }}
+                              />
+                            </TableCell>
+                            <TableCell align="left">
+                              {new Date(createdAt).toLocaleDateString()},{" "}
+                              {new Date(createdAt).toLocaleTimeString("en-US", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </TableCell>
+                            <TableCell align="left">
+                              <ActiveReview active={active} id={_id} />
+                            </TableCell>
+                            <TableCell align="center">
+                              <DeleteReview id={_id} />
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    {emptyRows > 0 && (
+                      <TableRow style={{ height: 53 * emptyRows }}>
+                        <TableCell colSpan={6} />
+                      </TableRow>
+                    )}
+                  </TableBody>
+                  {isUserNotFound && (
+                    <TableBody>
+                      <TableRow>
+                        <TableCell
+                          align="center"
+                          colSpan={6}
+                          sx={{ py: 3 }}
+                        ></TableCell>
+                      </TableRow>
+                    </TableBody>
+                  )}
+                </Table>
+              </TableContainer>
+
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={commentList?.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </TabPanel>
+
+            <TabPanel
+              value="3"
+              sx={{ "&.MuiTabPanel-root": { paddingTop: "10px !important" } }}
+            >
+              <TableContainer sx={{ minWidth: 800 }}>
+                <Table>
+                  <TicketListHead
+                    order={order}
+                    orderBy={orderBy}
+                    headLabel={TABLE_HEAD}
+                    rowCount={commentList?.length}
+                    numSelected={selected.length}
+                    onRequestSort={handleRequestSort}
+                    // onSelectAllClick={handleSelectAllClick}
+                  />
+                  <TableBody>
+                    {filteredReivew
+                      ?.slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .filter((row) => !row.active)
+                      .map((row, index) => {
+                        const {
+                          _id,
+                          movieId,
+                          userId,
+                          createdAt,
+                          review,
+                          rating,
+                          active,
+                        } = row;
+                        return (
+                          <TableRow
+                            hover
+                            key={_id}
+                            tabIndex={-1}
+                            name="checkbox"
+                          >
+                            <TableCell align="left">{movieId.name}</TableCell>
+                            <TableCell align="left">
+                              <Tooltip
+                                placement="right"
+                                id="test"
+                                title={
+                                  <img src={movieId.photo} width={170} alt="" />
+                                }
+                              >
+                                <Box
+                                  sx={{
+                                    display: "inline-block",
+                                    width: 64,
+                                    height: 84,
+                                    objectFit: "cover",
+                                    position: "relative",
+                                    "&:hover > div": {
+                                      opacity: 1,
+                                    },
+                                    "& > div > img": {
+                                      verticalAlign: "top",
+                                    },
+                                  }}
+                                >
+                                  <img
+                                    className="w-full h-full rounded"
+                                    src={movieId.photo}
+                                    alt="poster movie"
+                                    aria-label="test"
+                                  />
+                                </Box>
+                              </Tooltip>
+                            </TableCell>
+                            <TableCell align="left">
+                              {userId.fullName}
+                            </TableCell>
+                            <TableCell align="left">{review}</TableCell>
+                            <TableCell align="left">
+                              <Rating
+                                value={rating}
+                                precision={0.5}
+                                readOnly
+                                sx={{ fontSize: 20 }}
+                              />
+                            </TableCell>
+                            <TableCell align="left">
+                              {new Date(createdAt).toLocaleDateString()},{" "}
+                              {new Date(createdAt).toLocaleTimeString("en-US", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </TableCell>
+                            <TableCell align="left">
+                              <ActiveReview active={active} id={_id} />
+                            </TableCell>
+                            <TableCell align="center">
+                              <DeleteReview id={_id} />
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    {emptyRows > 0 && (
+                      <TableRow style={{ height: 53 * emptyRows }}>
+                        <TableCell colSpan={6} />
+                      </TableRow>
+                    )}
+                  </TableBody>
+                  {isUserNotFound && (
+                    <TableBody>
+                      <TableRow>
+                        <TableCell
+                          align="center"
+                          colSpan={6}
+                          sx={{ py: 3 }}
+                        ></TableCell>
+                      </TableRow>
+                    </TableBody>
+                  )}
+                </Table>
+              </TableContainer>
+
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={commentList?.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </TabPanel>
+          </TabContext>
         </Card>
       </Container>
     </>
