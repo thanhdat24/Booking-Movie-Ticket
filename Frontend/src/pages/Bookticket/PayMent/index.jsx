@@ -25,6 +25,9 @@ import { useSnackbar } from "notistack";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import moment from "moment";
 import Paypal from "./paypal";
+import paymentApi from "../../../api/paymentApi";
+import { paymentMoMo } from "../../../redux/actions/Payment";
+import MoMo from "./momo";
 
 const makeObjError = (name, value, dataSubmit) => {
   // kiểm tra và set lỗi rỗng
@@ -71,16 +74,57 @@ export default function PayMent(props) {
     isSelectedSeat,
     listSeatSelected,
   } = useSelector((state) => state.BookTicketReducer);
+
   const {
     discountList: { data: discountList },
   } = useSelector((state) => state.DiscountReducer);
   const { enqueueSnackbar } = useSnackbar();
-
   const [open, setOpen] = React.useState(false);
   let [discountIsChoose, setDiscountIsChoose] = React.useState("");
   const handleClickOpen = () => {
     setOpen(true);
   };
+  const [successMoMo, setSuccessMomMo] = useState(false);
+  const createPaymentMoMo = JSON.parse(
+    localStorage.getItem("createPaymentMoMo")
+  );
+
+  useEffect(() => {
+    if (createPaymentMoMo !== null) {
+      async function queryPayment() {
+        const { data } = await paymentApi.queryPaymentMoMo({
+          partnerCode: createPaymentMoMo?.partnerCode,
+          requestId: createPaymentMoMo?.requestId,
+          orderId: createPaymentMoMo?.orderId,
+          lang: "vi",
+          signature: "",
+        });
+        console.log("data", data);
+        if (data?.resultCode === 0) {
+          setSuccessMomMo(true);
+        }
+        localStorage.setItem("queryPaymentMoMo", JSON.stringify(data));
+      }
+      queryPayment();
+    }
+  }, [createPaymentMoMo]);
+
+  useEffect(() => {
+    if (successMoMo) {
+      let item = JSON.parse(localStorage.getItem("itemBooking"));
+      console.log("item456", item);
+      console.log("idShowtime456", item.idShowtime);
+      console.log("seatCodes456", item.seatCodes);
+      console.log("discount456", item.discount);
+      dispatch(
+        postCreateTicket({
+          idShowtime: item.idShowtime,
+          seatCodes: item.seatCodes,
+          discount: item.discount,
+        })
+      );
+    }
+  }, [successMoMo]);
   const handleClose = () => {
     setOpen(false);
   };
@@ -160,6 +204,14 @@ export default function PayMent(props) {
         });
       }
     }, 500);
+
+    if (dataSubmit.values.paymentMethod === "ZaloPay" || dataSubmit.values.paymentMethod === "Ví Moca" || dataSubmit.values.paymentMethod ==="Visa, Master, JCB" || dataSubmit.values.paymentMethod === "ATM nội địa") {
+      let item = JSON.parse(localStorage.getItem("itemBooking"));
+      let item1 = { ...item, status: false };
+      console.log("item1", item1);
+      localStorage.setItem("itemBooking", JSON.stringify(item1));
+    }
+
     return () => clearTimeout(variClear.current);
   }, [dataSubmit, isSelectedSeat]);
 
@@ -354,6 +406,7 @@ export default function PayMent(props) {
       pointerEvents: "auto",
     },
   }));
+
 
   return (
     <aside className={classes.payMent}>
@@ -613,14 +666,42 @@ export default function PayMent(props) {
               />
               <label>Thanh toán qua PayPal</label>
             </div>
+
+            {/* PAYPAL  */}
+            <div className={classes.formPaymentItem}>
+              <input
+                className={classes.input}
+                type="radio"
+                name="paymentMethod"
+                value="Ví MoMo"
+                onChange={onChange}
+                checked={dataSubmit.values.paymentMethod === "Ví MoMo"}
+              />
+              <img
+                className={classes.img}
+                src="/img/bookticket/momo.png"
+                alt="momo"
+              />
+              <label>Thanh toán bằng ví MoMo</label>
+            </div>
           </div>
         </div>
 
         {/* đặt vé */}
-        {paymentMethod === "PayPal" ? (
-          <div className={`${classes.formPaymentPayPal} `}>
-            <Paypal seatCodes={seatCodes} />
-          </div>
+        {paymentMethod === "PayPal" || paymentMethod === "Ví MoMo" ? (
+          paymentMethod === "Ví MoMo" ? (
+            <div className="flex justify-center">
+              <MoMo
+                idShowtime={idShowtime}
+                amount={amount}
+                successMoMo={successMoMo}
+              />
+            </div>
+          ) : (
+            <div className={`${classes.formPaymentPayPal} `}>
+              <Paypal />
+            </div>
+          )
         ) : (
           <div className={classes.bottomSection}>
             <button

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -19,7 +19,7 @@ export default function Modal(props) {
     successBookingTicket,
     errorBookTicket,
     timeOut,
-    alertOver10
+    alertOver10,
   } = useSelector((state) => state.BookTicketReducer);
   const dispatch = useDispatch();
   const history = useHistory();
@@ -27,9 +27,18 @@ export default function Modal(props) {
   const classes = useStyles();
   const isBookTicket = successBookingTicket || errorBookTicket ? true : false;
   const handleReBooking = () => {
-    if (successBookingTicket) {
+    if (
+      successBookingTicket ||
+      errorBookTicket ||
+      queryPaymentMoMo?.resultCode === 1006 ||
+      queryPaymentMoMo?.resultCode === 0
+    ) {
       dispatch(getListSeat(params.idShowtime));
     }
+    localStorage.removeItem("createPaymentMoMo");
+    localStorage.removeItem("queryPaymentMoMo");
+    localStorage.removeItem("itemBooking");
+
     dispatch({ type: RESET_DATA_BOOKTICKET });
   };
   const handleTimeOut = () => {
@@ -46,9 +55,13 @@ export default function Modal(props) {
     history.push("/");
   };
 
+
+  const queryPaymentMoMo = JSON.parse(localStorage.getItem("queryPaymentMoMo"));
+
+
   return (
     <Dialog
-      open={timeOut || isBookTicket || alertOver10}
+      open={timeOut || isBookTicket || alertOver10 || queryPaymentMoMo}
       classes={{ paper: classes.modal }}
       maxWidth="md"
     >
@@ -84,16 +97,21 @@ export default function Modal(props) {
             </Button>
           </div>
         )}
-      {isBookTicket && ( // chỉ open modal khi là desktop và đã đạt vé
+      {(isBookTicket || queryPaymentMoMo) && ( // chỉ open modal khi là desktop và đã đạt vé
         <>
-          <ResultBookticket socket={props.socket} />
+          <ResultBookticket
+            socket={props.socket}
+            queryPaymentMoMo={queryPaymentMoMo}
+          />
           <div className={classes.spaceEvenly}>
             <Button
               classes={{ root: classes.btnResult }}
               onClick={handleReBooking}
             >
-              {successBookingTicket && "Mua thêm vé phim này"}
-              {errorBookTicket && "Thử mua lại"}
+              {(successBookingTicket || queryPaymentMoMo?.resultCode === 0) &&
+                "Mua thêm vé phim này"}
+              {(errorBookTicket || queryPaymentMoMo?.resultCode === 1006) &&
+                "Thử mua lại"}
             </Button>
             <Button
               classes={{ root: classes.btnResult }}

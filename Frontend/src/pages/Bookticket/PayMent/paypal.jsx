@@ -4,12 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { postCreateTicket } from "../../../redux/actions/BookTicket";
 import formatDate, { calculateTimeout } from "../../../utils/formatDate";
 
-export default function Paypal(props) {
+export default function Paypal() {
   const {
     seatCodes,
     idShowtime,
     discount,
     danhSachPhongVe: { data },
+    paymentMethod,
+    listSeatSelected,
   } = useSelector((state) => state.BookTicketReducer);
   const dispatch = useDispatch();
   const [error, setError] = useState(null);
@@ -17,14 +19,22 @@ export default function Paypal(props) {
     alert(error);
   }
   let itemBooking = {
-    discount: (discount * 0.00004).toFixed(2),
+    discountPayPal: (discount * 0.00004).toFixed(2),
+    discount: discount,
     amountTicket: seatCodes.length,
-    ticketPrice: (data.ticketPrice * 0.00004).toFixed(2),
+    listSeatSelected,
+    ticketPricePayPal: (data.ticketPrice * 0.00004).toFixed(2),
+    ticketPrice: data.ticketPrice,
+    paymentMethod,
     data,
+    status: true,
   };
   const [successPayPal, setSuccessPayPal] = useState(false);
   useEffect(() => {
     if (successPayPal) {
+      console.log("idShowtime456", idShowtime);
+      console.log("seatCodes456", seatCodes);
+      console.log("discount456", discount);
       dispatch(postCreateTicket({ idShowtime, seatCodes, discount }));
     }
   }, [successPayPal]);
@@ -42,15 +52,20 @@ export default function Paypal(props) {
                 amount: {
                   currency_code: "USD",
 
-                  value: item.ticketPrice * item.amountTicket - item.discount,
+                  value:
+                    item.ticketPricePayPal * item.amountTicket -
+                    item.discountPayPal,
                   breakdown: {
                     item_total: {
                       currency_code: "USD",
-                      value: item.ticketPrice * item.amountTicket,
+                      value: item.ticketPricePayPal * item.amountTicket,
                     },
                     // shipping: { currency_code: "USD", value: 1 },
                     // tax_total: { currency_code: "USD", value: "1.4" },
-                    discount: { currency_code: "USD", value: item.discount },
+                    discount: {
+                      currency_code: "USD",
+                      value: item.discountPayPal,
+                    },
                   },
                 },
                 items: [
@@ -62,7 +77,7 @@ export default function Paypal(props) {
                     }`,
                     unit_amount: {
                       currency_code: "USD",
-                      value: item.ticketPrice,
+                      value: item.ticketPricePayPal,
                     },
                     // tax: {
                     //   currency_code: "USD",
@@ -75,8 +90,7 @@ export default function Paypal(props) {
                 ],
                 shipping: {
                   address: {
-                    address_line_1:
-                      "Khu II, Đ. 3/2, Xuân Khánh, Ninh Kiều",
+                    address_line_1: "Khu II, Đ. 3/2, Xuân Khánh, Ninh Kiều",
                     address_line_2: "KTX Đại học cần thơ",
                     admin_area_2: "Cần Thơ",
                     admin_area_1: "Ô Môn",

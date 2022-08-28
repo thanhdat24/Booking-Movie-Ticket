@@ -332,9 +332,6 @@ export default function Info({ successGetDetailUser }) {
                         shrink: true,
                       }}
                       {...getFieldProps("dateOfBirth")}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
                       error={Boolean(touched.dateOfBirth && errors.dateOfBirth)}
                       helperText={touched.dateOfBirth && errors.dateOfBirth}
                     />

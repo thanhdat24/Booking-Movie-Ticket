@@ -11,6 +11,7 @@ import { TheaterSystemReducer } from "./reducers/TheaterSystem";
 import { ReviewReducer } from "./reducers/Review";
 import LazyReducer from "./reducers/Lazy";
 import { DiscountReducer } from "./reducers/Discount";
+import { PaymentReducer } from "./reducers/Payment";
 
 const rootReducer = combineReducers({
   UserManagement,
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   ReviewReducer,
   LazyReducer,
   DiscountReducer,
+  PaymentReducer,
 });
 
 export const store = createStore(rootReducer, applyMiddleware(thunk));

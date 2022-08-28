@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { colorTheater } from "../../../constants/theaterData";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import useStyles from "./style";
 import formatDate, { calculateTimeout } from "../../../utils/formatDate";
 
-export default function SuccessBooking(props) {
+export default function SuccessBooking({ queryPaymentMoMo }) {
   const {
     amount,
     email,
@@ -19,10 +19,12 @@ export default function SuccessBooking(props) {
     errorBookTicket,
   } = useSelector((state) => state.BookTicketReducer);
   const { currentUser } = useSelector((state) => state.AuthReducer);
+  const dispatch = useDispatch();
   const classes = useStyles({
     data,
     color: colorTheater[data?.theaterClusterName.slice(0, 3).toUpperCase()],
   });
+  let item = JSON.parse(localStorage.getItem("itemBooking"));
 
   return (
     <div className={classes.resultBookticket}>
@@ -51,7 +53,11 @@ export default function SuccessBooking(props) {
               </tr>
               <tr>
                 <td valign="top">Ghế:</td>
-                <td>{listSeatSelected?.join(", ")}</td>
+                <td>
+                  {item?.status
+                    ? item.listSeatSelected?.join(", ")
+                    : listSeatSelected?.join(", ")}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -59,7 +65,15 @@ export default function SuccessBooking(props) {
       </div>
       <div>
         <div>
-          <h3 className={classes.infoResult_label}>Thông tin đặt vé</h3>
+          <h3 className={classes.infoResult_label}>
+            {queryPaymentMoMo?.resultCode === 1006 ? (
+              <span className="text-red-500 font-bold text-3xl">
+                THANH TOÁN THẤT BẠI
+              </span>
+            ) : (
+              "Thông tin đặt vé"
+            )}
+          </h3>
           <table className={`${classes.table} table`}>
             <tbody>
               <tr>
@@ -77,15 +91,17 @@ export default function SuccessBooking(props) {
               <tr>
                 <td valign="top">Trạng thái:</td>
                 <td>
-                  {successBookingTicket && (
+                  {(successBookingTicket ||
+                    queryPaymentMoMo?.resultCode === 0) && (
                     <span>
                       Đặt vé thành công qua{" "}
                       <span className={classes.paymentColor}>
-                        {paymentMethod}
+                        {item?.status ? item.paymentMethod : paymentMethod}
                       </span>
                     </span>
                   )}
-                  {errorBookTicket && (
+                  {(errorBookTicket ||
+                    queryPaymentMoMo?.resultCode === 1006) && (
                     <span>
                       Đặt vé thất bại:{" "}
                       <span className={classes.errorColor}>
@@ -98,20 +114,28 @@ export default function SuccessBooking(props) {
               <tr>
                 <td valign="top">Khuyến mãi:</td>
                 <td valign="top">
-                  <b>{`${(discount * 1).toLocaleString("vi-VI")} đ`}</b>
+                  <b>{`${
+                    item?.status
+                      ? (item.discount*1).toLocaleString("vi-VI")
+                      : (discount * 1).toLocaleString("vi-VI")
+                  } đ`}</b>
                 </td>
               </tr>
               <tr>
                 <td valign="top">Tổng tiền:</td>
                 <td valign="top">
                   <span className="text-lg">
-                    <b>{`${(amount - discount).toLocaleString("vi-VI")} đ`}</b>
+                    <b>{`${
+                      item?.status
+                        ? item.ticketPrice.toLocaleString("vi-VI")
+                        : (amount - discount).toLocaleString("vi-VI")
+                    } đ`}</b>
                   </span>
                 </td>
               </tr>
             </tbody>
           </table>
-          {successBookingTicket && (
+          {(successBookingTicket || queryPaymentMoMo?.resultCode === 0) && (
             <p className={classes.noteresult}>
               Kiểm tra lại vé đã mua trong thông tin tài khoản của bạn !
             </p>

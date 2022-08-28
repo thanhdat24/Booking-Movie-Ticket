@@ -262,7 +262,7 @@ export default function UserEdit() {
               <Tab sx={{ flexDirection: "row" }} label="Tất cả" value="1" />
               <Tab
                 sx={{ flexDirection: "row" }}
-                label="Acitve"
+                label="Active"
                 value="2"
               />{" "}
               <Tab sx={{ flexDirection: "row" }} label="Banned" value="3" />
