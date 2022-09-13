@@ -39,7 +39,7 @@ showTimesSchema.pre(/^find/, function (next) {
     .populate({
       path: 'idMovie',
       select:
-        'name photo releaseDate duration nowShowing comingSoon _id trailer description genre',
+        'name photo banner releaseDate duration nowShowing comingSoon _id trailer description genre',
     })
     .populate({
       path: 'idTheaterSystem',

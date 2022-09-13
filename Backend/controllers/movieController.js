@@ -3,6 +3,7 @@ const TheaterSystem = require('../models/theaterSystemModel');
 const factory = require('../controllers/handlerFactory');
 const multer = require('multer');
 const _ = require('lodash');
+const moment = require('moment');
 
 const catchAsync = require('../utils/catchAsync');
 
@@ -56,8 +57,8 @@ exports.getMovieShowtimeInfo = catchAsync(async (req, res, next) => {
               description: item.idMovie.description,
               nowShowing: item.idMovie.nowShowing,
               comingSoon: item.idMovie.comingSoon,
-              duration: item.duration,
               photo: item.idMovie.photo,
+              banner: item.idMovie.banner,
               genre: item.idMovie.genre,
               showtimes: item.idMovie.showtimes,
               duration: item.idMovie.duration,
@@ -143,7 +144,48 @@ exports.deleteMovie = catchAsync(async (req, res, next) => {
   }
 });
 
-exports.getAllMovie = factory.getAll(Movie, { path: 'showtimes' });
+exports.getAllMovie = catchAsync(async (req, res, next) => {
+  try {
+    let query = Movie.find();
+    // console.log('query', query);
+
+    let result = await query;
+    let currentDay = moment().format('YYYY-MM-DDTHH:mm:SS');
+    // console.log('currentDay', currentDay);
+    result.map(async (movie) => {
+      if (
+        moment(movie.releaseDate).format('YYYY-MM-DDTHH:mm:SS') > currentDay
+      ) {
+        movie.comingSoon = true;
+        movie.nowShowing = false;
+        await Movie.findByIdAndUpdate(movie._id, {
+          comingSoon: true,
+          nowShowing: false,
+        });
+      } else if (
+        moment(movie.releaseDate).format('YYYY-MM-DDTHH:mm:SS') < currentDay
+      ) {
+        movie.nowShowing = true;
+        movie.comingSoon = false;
+
+        await Movie.findByIdAndUpdate(movie._id, {
+          nowShowing: true,
+          comingSoon: false,
+        });
+      }
+    });
+
+    res.status(200).json({
+      status: 'success',
+      data: result,
+      result: result.length,
+    });
+  } catch (err) {
+    res.status(400).json({ message: err });
+  }
+});
+
+// exports.getAllMovie = factory.getAll(Movie, { path: 'showtimes' });
 exports.createMovie = factory.createOne(Movie);
 exports.getDetailMovie = factory.getOne(Movie, { path: 'showtimes' });
 exports.updateMovie = factory.updateOne(Movie);

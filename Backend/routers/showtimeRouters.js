@@ -14,15 +14,24 @@ router.route('/').get(showTimeController.getAllShowTime);
 
 router
   .route('/')
-  .post(authController.restrictTo('admin'), showTimeController.createShowTime);
+  .post(
+    authController.protect,
+    authController.restrictTo('admin'),
+    showTimeController.createShowTime
+  );
 
 // router.use(authController.restrictTo('admin'));
 
 router
   .route('/:id')
   .get(showTimeController.getDetailShowTime)
-  .patch(authController.restrictTo('admin'), showTimeController.updateShowTime)
+  .patch(
+    authController.protect,
+    authController.restrictTo('admin'),
+    showTimeController.updateShowTime
+  )
   .delete(
+    authController.protect,
     authController.restrictTo('admin'),
     showTimeController.deleteShowTime
   );

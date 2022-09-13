@@ -1,6 +1,7 @@
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const APIFeatures = require('../utils/apiFeatures');
+const cloudinary = require('../utils/cloudinary');
 
 const filterObj = (obj, ...allowedField) => {
   const newObj = {};
@@ -26,9 +27,24 @@ exports.deleteOne = (Model) =>
 
 exports.updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    const path = req.file?.path.replace(/\\/g, '/').substring('public'.length);
-    const urlImage = `http://localhost:8080${path}`;
-    if (req.file) req.body.photo = urlImage;
+    if (req.body.photo) {
+      const uploadedResponse = await cloudinary.uploader.upload(
+        req.body.photo,
+        {
+          upload_preset: 'image_movie',
+        }
+      );
+      req.body.photo = uploadedResponse.secure_url;
+    }
+    if (req.body.banner) {
+      const uploadedResponse = await cloudinary.uploader.upload(
+        req.body.banner,
+        {
+          upload_preset: 'image_movie',
+        }
+      );
+      req.body.banner = uploadedResponse.secure_url;
+    }
     const _id = req.params.id;
     const doc = await Model.findByIdAndUpdate(_id, req.body, {
       new: true,
@@ -45,11 +61,41 @@ exports.updateOne = (Model) =>
     });
   });
 
+// exports.createOne = (Model) =>
+//   catchAsync(async (req, res, next) => {
+//     const path = req.file?.path.replace(/\\/g, '/').substring('public'.length);
+//     const urlImage = `http://localhost:8080${path}`;
+//     if (req.file) req.body.photo = urlImage;
+
+//     const doc = await Model.create(req.body);
+
+//     res.status(201).json({
+//       status: 'success',
+//       result: doc.length,
+//       data: doc,
+//     });
+//   });
+
 exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    const path = req.file?.path.replace(/\\/g, '/').substring('public'.length);
-    const urlImage = `http://localhost:8080${path}`;
-    if (req.file) req.body.photo = urlImage;
+    if (req.body.photo) {
+      const uploadedResponse = await cloudinary.uploader.upload(
+        req.body.photo,
+        {
+          upload_preset: 'image_movie',
+        }
+      );
+      req.body.photo = uploadedResponse.secure_url;
+    }
+    if (req.body.banner) {
+      const uploadedResponse = await cloudinary.uploader.upload(
+        req.body.banner,
+        {
+          upload_preset: 'image_movie',
+        }
+      );
+      req.body.banner = uploadedResponse.secure_url;
+    }
 
     const doc = await Model.create(req.body);
 
@@ -59,6 +105,7 @@ exports.createOne = (Model) =>
       data: doc,
     });
   });
+
 exports.createOneTheaterSystem = (Model) =>
   catchAsync(async (req, res, next) => {
     const path = req.file?.path.replace(/\\/g, '/').substring('public'.length);

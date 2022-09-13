@@ -14,6 +14,10 @@ const movieSchema = new mongoose.Schema(
       type: String,
       required: [true, 'A movie must have a photo'],
     },
+    banner: {
+      type: String,
+      required: true,
+    },
     description: {
       type: String,
       required: [true, 'A movie must have a description'],
