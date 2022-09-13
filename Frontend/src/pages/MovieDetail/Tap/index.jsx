@@ -322,7 +322,7 @@ export default function CenteredTabs({
       <TabPanel
         value={valueTab}
         index={location.state?.comingMovie ? "hide" : 0}
-        className="pb-4"
+        className="pb-4 pt-6"
       >
         {<LichChieu data={data} />}
       </TabPanel>
@@ -335,7 +335,7 @@ export default function CenteredTabs({
                 Ngày công chiếu
               </p>
               <p className={`float-left ${classes.contentInfo}`}>
-                {formatDate(data?.releaseDate?.slice(0, 10)).YyMmDd}
+                {formatDate(data?.releaseDate?.slice(0, 10)).dDMmYy}
               </p>
             </div>
             <div className="row mb-2">
@@ -388,11 +388,7 @@ export default function CenteredTabs({
         </div>
       </TabPanel>
 
-      <TabPanel
-        value={valueTab}
-        index={location.state?.comingMovie ? 1 : 2}
-        className={classes.noname}
-      >
+      <TabPanel value={valueTab} index={location.state?.comingMovie ? 1 : 2}>
         <div className={classes.danhGia}>
           <div className={classes.inputRoot} onClick={handleClickComment}>
             <span className={classes.avatarReviewer}>

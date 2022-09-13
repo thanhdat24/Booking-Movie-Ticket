@@ -35,6 +35,7 @@ import MovieMoreMenu from "../../components/movie/MovieMoreMenu";
 import Label from "../../components/Label";
 import { getMovieList, resetMoviesManagement } from "../../redux/actions/Movie";
 import ThumbnailYoutube from "./ThumbnailYoutube";
+import formatDate from "../../utils/formatDate";
 
 // ----------------------------------------------------------------------
 
@@ -277,14 +278,8 @@ export default function MoviesManagement() {
                       selected={isItemSelected}
                       aria-checked={isItemSelected}
                     >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          onChange={(event) => handleClick(event, name)}
-                        />
-                      </TableCell>
                       <TableCell component="th" scope="row" padding="none">
-                        <Stack direction="row" alignItems="center" spacing={2}>
+                        <Stack direction="row" alignItems="center" spacing={2} ml={2}>
                           <Typography variant="subtitle2" noWrap>
                             {name}
                           </Typography>
@@ -349,10 +344,16 @@ export default function MoviesManagement() {
                       </TableCell>
                       <TableCell align="left">{duration} phút</TableCell>
                       <TableCell align="left">
-                        {releaseDate?.slice(0, 10)}
+                        {formatDate(releaseDate?.slice(0, 10)).dDMmYy}
                       </TableCell>
                       <TableCell align="left">
-                        {nowShowing ? "Đang chiếu" : "Sắp chiếu"}
+                        <Label
+                          variant="ghost"
+                          color={nowShowing ? "success" : "info"}
+                        >
+                          {nowShowing ? "Đang chiếu" : "Sắp chiếu"}
+                        </Label>
+                        {/* {nowShowing ? "Đang chiếu" : "Sắp chiếu"} */}
                       </TableCell>
                       <TableCell align="right">
                         <MovieMoreMenu idMovie={_id} />

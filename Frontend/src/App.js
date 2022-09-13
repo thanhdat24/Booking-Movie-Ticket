@@ -13,6 +13,7 @@ import palette from "./theme/palette";
 import typography from "./theme/typography";
 import shadows, { customShadows } from "./theme/shadows";
 import componentsOverride from "./theme/overrides";
+import MoviesManagement from "./pages/MoviesManagement";
 
 import Loading from "./components/Loading/index";
 import TriggerLoadingLazy from "./components/TriggerLoadingLazy/index";
@@ -53,8 +54,7 @@ const CreateShowtimes = lazy(() =>
 const ShowtimeEdit = lazy(() =>
   import("./pages/ShowtimesManagement/ShowtimeEdit")
 );
-
-const MoviesManagement = lazy(() => import("./pages/MoviesManagement"));
+// const MoviesManagement = lazy(() => import("./pages/MoviesManagement"));s
 const TheaterManagement = lazy(() => import("./pages/TheaterManagement"));
 const ShowtimesManagement = lazy(() => import("./pages/ShowtimesManagement"));
 const MovieEdit = lazy(() => import("./pages/MoviesManagement/MovieEdit"));

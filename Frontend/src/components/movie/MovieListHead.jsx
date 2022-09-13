@@ -40,13 +40,6 @@ export default function UserListHead({
       sx={{ backgroundColor: "#f4f6f8", color: "#637381", padding: "0 10px" }}
     >
       <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-          />
-        </TableCell>
         {headLabel.map((headCell) => (
           <TableCell
             key={headCell.id}

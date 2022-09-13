@@ -290,7 +290,11 @@ export default function SearchStickets() {
     <div className={classes.search} id="searchTickets">
       <FormControl focused={false} className={classes.itemFirst}>
         <Autocomplete
-          options={movieList?.data ? movieList?.data : [{}]}
+          options={
+            movieList?.data?.filter((item) => item.nowShowing)
+              ? movieList?.data?.filter((item) => item.nowShowing)
+              : [{}]
+          }
           getOptionLabel={(option) => (option.name ? option.name : option)}
           style={{ width: 300 }}
           renderInput={(params) => (

@@ -31,7 +31,7 @@ export default function MovieEdit() {
     <Link
       underline="hover"
       key="1"
-      color="text.primary"
+      color="text.primary"fv
       href="/admin/dashboard"
       sx={{ "&:hover": { color: "#212B36" } }}
     >

@@ -10,6 +10,7 @@ import {
   FormControlLabel,
   FormGroup,
   FormControl,
+  Typography,
 } from "@mui/material";
 import * as Yup from "yup";
 
@@ -27,8 +28,10 @@ import {
 import moment from "moment";
 import { useSnackbar } from "notistack";
 import { useHistory, useParams } from "react-router-dom";
+import OptionClick from "../../../components/Option/OptionClick";
 
 export default function Info({ successDetailMovie }) {
+  console.log("successDetailMovie", successDetailMovie);
   const params = useParams();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -43,13 +46,6 @@ export default function Info({ successDetailMovie }) {
     name: Yup.string().required("*Tên phim không được bỏ trống !"),
     trailer: Yup.string().required("*Trailer không được bỏ trống !"),
     description: Yup.string().required("*Nội dung không được bỏ trống !"),
-
-    releaseDate: Yup.date()
-      .required("*Thời gian chiếu không được bỏ trống!")
-      .test("checkDate", "Ngày chiếu phải lớn hơn ngày hôm nay", (value) => {
-        var today = new Date();
-        return value > today;
-      }),
   });
   const formik = useFormik({
     enableReinitialize: true,
@@ -61,8 +57,6 @@ export default function Info({ successDetailMovie }) {
       genre: successDetailMovie?.genre,
       releaseDate: moment(successDetailMovie?.releaseDate).format("YYYY-MM-DD"),
       remember: true,
-      nowShowing: successDetailMovie?.nowShowing,
-      comingSoon: successDetailMovie?.comingSoon,
     },
 
     validationSchema: UpdateSchema,
@@ -84,6 +78,7 @@ export default function Info({ successDetailMovie }) {
   } = formik;
 
   const [srcImage, setSrcImage] = useState("");
+  const [srcBanner, setSrcBanner] = useState("");
   const handleChangeFile = (e) => {
     let file = e.target.files[0];
     var reader = new FileReader();
@@ -91,9 +86,21 @@ export default function Info({ successDetailMovie }) {
     reader.onload = function (e) {
       // sau khi thực hiên xong lênh trên thì set giá trị có được
       setSrcImage(e.target.result);
+      formik.setFieldValue("photo", file);
     };
     // Đem dữ liệu file lưu vào formik
-    formik.setFieldValue("photo", file);
+  };
+
+  const handleChangeBanner = (e) => {
+    let file = e.target.files[0];
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function (e) {
+      // sau khi thực hiên xong lênh trên thì set giá trị có được
+      // Đem dữ liệu file lưu vào formik
+      setSrcBanner(e.target.result);
+      formik.setFieldValue("banner", e.target.result);
+    };
   };
 
   useEffect(() => {
@@ -132,6 +139,7 @@ export default function Info({ successDetailMovie }) {
             container
             rowSpacing={1}
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            mb={9}
           >
             <Grid item xs={8}>
               <Card
@@ -168,6 +176,7 @@ export default function Info({ successDetailMovie }) {
                   <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
                     <TextField
                       id="date"
+                      disabled={successDetailMovie?.nowShowing && true}
                       label="Ngày khởi chiếu"
                       type="date"
                       sx={{ width: "100%" }}
@@ -214,60 +223,54 @@ export default function Info({ successDetailMovie }) {
                     error={Boolean(touched.trailer && errors.trailer)}
                     helperText={touched.trailer && errors.trailer}
                   />
-                  <FormControl component="fieldset">
-                    <FormGroup aria-label="position" row>
-                      <FormControlLabel
-                        sx={{ marginRight: "2rem" }}
-                        control={
-                          <Switch
-                            checked={values.nowShowing}
-                            onChange={handleChangeNowShowing}
-                            name="nowShowing"
-                            value={values.nowShowing}
-                          />
-                        }
-                        labelPlacement="start"
-                        label="Đang chiếu"
-                      />
-
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={values.comingSoon}
-                            onChange={handleChangeComingSoon}
-                            name="comingSoon"
-                            value={values.comingSoon}
-                          />
-                        }
-                        labelPlacement="start"
-                        label="Sắp chiếu"
-                      />
-                    </FormGroup>
-                  </FormControl>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-end",
+                </Stack>
+              </Card>
+              <Card
+                sx={{
+                  borderRadius: " 16px",
+                  zIndex: 0,
+                  padding: "24px 0 ",
+                  marginTop: "20px",
+                }}
+              >
+                <div className="mb-3 text-lg font-semibold text-center uppercase text-green-600">
+                  Banner phim
+                </div>
+                <hr />
+                <div className="text-center">
+                  <div
+                    className="w-full h-full border-1 border-dashed border-gray-200 inline-flex"
+                    style={{
+                      backgroundColor: "rgb(244, 246, 248)",
                     }}
                   >
-                    <LoadingButton
-                      size="large"
-                      type="submit"
-                      variant="contained"
-                      loading={loadingUpdateMovie}
-                      sx={{
-                        padding: "6px 9px",
-                        fontWeight: "700",
-                        lineHeight: "1.71429",
-                        fontSize: "0.8rem",
-                        textTransform: "capitalize",
-                      }}
-                    >
-                      Lưu thay đổi
-                    </LoadingButton>
-                  </Box>
-                </Stack>
+                    <label className="w-full h-full outline-none overflow-hidden items-center justify-center relative cursor-pointer py-12 ">
+                      <input
+                        type="file"
+                        id="poster"
+                        name="poster"
+                        hidden
+                        multiple
+                        onChange={handleChangeBanner}
+                      />
+                      <div className="flex items-center justify-center w-full">
+                        <Box sx={{ width: "95%", height: "400px" }}>
+                          <img
+                            accept="image/*"
+                            multiple
+                            src={
+                              srcBanner === ""
+                                ? successDetailMovie?.banner
+                                : srcBanner
+                            }
+                            alt="avatar"
+                            className="w-full h-auto inline-flex object-cover rounded-2xl"
+                          />
+                        </Box>
+                      </div>
+                    </label>
+                  </div>
+                </div>
               </Card>
             </Grid>
             <Grid item xs={4}>
@@ -303,18 +306,15 @@ export default function Info({ successDetailMovie }) {
                     </label>
                   </div>
                 </div>
-                {/* <span className="overflow-hidden z-50 w-full h-full block">
-                      <span className=" w-36 h-36 bg-cover inline-block">
-                        <img
-                          src={srcImage}
-                          alt="avatar"
-                          className="w-full h-full object-cover"
-                        />
-                      </span>
-                    </span> */}
               </Card>
             </Grid>
           </Grid>
+          <OptionClick
+            onClickHistory="/admin/movies/list"
+            disabledButton={true}
+            loadingButton={loadingUpdateMovie}
+            title="Chỉnh sửa"
+          />
         </Form>
       </Formik>
     </Fragment>

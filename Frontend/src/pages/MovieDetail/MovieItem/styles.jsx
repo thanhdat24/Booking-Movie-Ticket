@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
   },
   top: {
     width: "100%",
-    height: "41vw",
+    height: "33vw",
     position: "relative",
   },
 
@@ -20,8 +20,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundImage: (props) => `url(${props.bannerImg})`,
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
-    backgroundPosition: "center",
-    filter: "blur(15px)",
   },
   gradient: {
     position: "absolute",
@@ -29,7 +27,9 @@ const useStyles = makeStyles((theme) => ({
     left: 0,
     bottom: 0,
     right: 0,
-    background: "linear-gradient(to top, rgb(10, 32, 41), transparent 100%)",
+    zIndex: 2,
+    background:
+      "linear-gradient(to right,rgba(0,0,0,1)150px,rgba(0,0,0,.6)100%)",
   },
   topInfo: {
     position: "absolute",
@@ -38,21 +38,25 @@ const useStyles = makeStyles((theme) => ({
     transform: "translate(-50%,-50%)",
     width: "100%",
     height: 320,
-    maxWidth: 870,
+    maxWidth: 1175,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     color: "#e9e9e9",
+    zIndex: 10,
   },
   imgTrailer: {
-    width: "25%",
-    height: "100%",
+    width: "22%",
+    height: "116%",
     position: "relative",
-    backgroundImage: (props) => `url(${props.bannerImg})`,
+    backgroundImage: (props) => `url(${props.movieImg})`,
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
     backgroundSize: "cover",
     "&:hover > div ": { opacity: 1 },
+  },
+  movieTitle: {
+    color: "#FFFFFF99",
   },
   img: {
     width: "100%",
@@ -60,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
   shortInfo: {
     width: "59%",
-    padding: "0px 15px",
+    padding: "0px 40px",
   },
   movieName: {
     fontSize: 24,

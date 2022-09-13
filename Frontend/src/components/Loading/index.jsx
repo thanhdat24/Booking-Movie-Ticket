@@ -76,9 +76,6 @@ export default function Loading() {
   const isLoadingBackToHome = useSelector(
     (state) => state.LazyReducer.isLoadingBackToHome
   );
-  const loadingMovieList = useSelector(
-    (state) => state.MovieReducer.loadingMovieList
-  );
   const loadingGetListSeat = useSelector(
     (state) => state.BookTicketReducer.loadingGetListSeat
   );
@@ -96,7 +93,6 @@ export default function Loading() {
   );
   const loading =
     isLazy ||
-    loadingMovieList ||
     loadingGetListSeat ||
     loadingDetailMovie ||
     isLoadingBackToHome ||

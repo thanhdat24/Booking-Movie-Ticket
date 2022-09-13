@@ -90,6 +90,7 @@ export default function CreateDiscount() {
   const handleChangePublic = (event, checked) => {
     setFieldValue("activePublic", checked ? true : false);
   };
+  
   const handleAlertCreate = () => {
     if (isReadyCreateDiscount) setOpen(true);
   };
@@ -637,6 +638,7 @@ export default function CreateDiscount() {
                   </Card>
                 </Grid>
               </Grid>
+
               <Box className={classes.formActionBar}>
                 <Box className={classes.ActionWrapper}>
                   <Button

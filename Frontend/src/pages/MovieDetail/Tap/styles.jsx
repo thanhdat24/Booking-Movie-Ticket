@@ -6,10 +6,12 @@ const useStyles = makeStyles((theme) => ({
     width: "100% !important",
     maxWidth: 870,
     margin: "auto !important",
+    paddingTop: "20px",
   },
   appBarRoot: {
     backgroundColor: "transparent !important",
     boxShadow: "none !important",
+
   },
   indicator: {
     backgroundColor: "transparent !important",

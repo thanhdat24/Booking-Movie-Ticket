@@ -205,7 +205,12 @@ export default function PayMent(props) {
       }
     }, 500);
 
-    if (dataSubmit.values.paymentMethod === "ZaloPay" || dataSubmit.values.paymentMethod === "Ví Moca" || dataSubmit.values.paymentMethod ==="Visa, Master, JCB" || dataSubmit.values.paymentMethod === "ATM nội địa") {
+    if (
+      dataSubmit.values.paymentMethod === "ZaloPay" ||
+      dataSubmit.values.paymentMethod === "Ví Moca" ||
+      dataSubmit.values.paymentMethod === "Visa, Master, JCB" ||
+      dataSubmit.values.paymentMethod === "ATM nội địa"
+    ) {
       let item = JSON.parse(localStorage.getItem("itemBooking"));
       let item1 = { ...item, status: false };
       console.log("item1", item1);
@@ -406,7 +411,6 @@ export default function PayMent(props) {
       pointerEvents: "auto",
     },
   }));
-
 
   return (
     <aside className={classes.payMent}>
@@ -687,6 +691,21 @@ export default function PayMent(props) {
           </div>
         </div>
 
+        {/* notice */}
+        <div className={classes.notice}>
+          <img
+            className={classes.imgNotice}
+            src="/img/bookticket/exclamation.png"
+            alt="notice"
+          />
+          <span>Vé đã mua không thể đổi hoặc hoàn tiền</span>
+          <p>
+            Mã vé sẽ được gửi qua tin nhắn{" "}
+            <span className={classes.contactColor}>ZMS</span> (tin nhắn Zalo) và{" "}
+            <span className={classes.contactColor}>Email</span> đã nhập.
+          </p>
+        </div>
+
         {/* đặt vé */}
         {paymentMethod === "PayPal" || paymentMethod === "Ví MoMo" ? (
           paymentMethod === "Ví MoMo" ? (
@@ -699,7 +718,11 @@ export default function PayMent(props) {
             </div>
           ) : (
             <div className={`${classes.formPaymentPayPal} `}>
-              <Paypal />
+              <div className={classes.bottomSection}>
+                <div className="fixed bottom-11 right-0 w-1/4 h-4">
+                  <Paypal />
+                </div>
+              </div>
             </div>
           )
         ) : (
@@ -723,21 +746,6 @@ export default function PayMent(props) {
             <p className={classes.txtDatVe}>Đặt Vé</p>
           </button>
         </div> */}
-      </div>
-
-      {/* notice */}
-      <div className={classes.notice}>
-        <img
-          className={classes.imgNotice}
-          src="/img/bookticket/exclamation.png"
-          alt="notice"
-        />
-        <span>Vé đã mua không thể đổi hoặc hoàn tiền</span>
-        <p>
-          Mã vé sẽ được gửi qua tin nhắn{" "}
-          <span className={classes.contactColor}>ZMS</span> (tin nhắn Zalo) và{" "}
-          <span className={classes.contactColor}>Email</span> đã nhập.
-        </p>
       </div>
 
       <Dialog onClose={handleClose} open={open} maxWidth="md">

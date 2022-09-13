@@ -6,21 +6,15 @@ import { useHistory } from "react-router-dom";
 import ResultBookticket from "../ResultBookticket";
 import useStyles from "./style";
 import { Button, Dialog } from "@mui/material";
-import {
-  getListSeat,
-} from "../../../redux/actions/BookTicket";
+import { getListSeat } from "../../../redux/actions/BookTicket";
 import {
   RESET_ALERT_OVER10,
   RESET_DATA_BOOKTICKET,
 } from "../../../redux/constants/BookTicket";
 
 export default function Modal(props) {
-  const {
-    successBookingTicket,
-    errorBookTicket,
-    timeOut,
-    alertOver10,
-  } = useSelector((state) => state.BookTicketReducer);
+  const { successBookingTicket, errorBookTicket, timeOut, alertOver10 } =
+    useSelector((state) => state.BookTicketReducer);
   const dispatch = useDispatch();
   const history = useHistory();
   const params = useParams();
@@ -55,9 +49,7 @@ export default function Modal(props) {
     history.push("/");
   };
 
-
   const queryPaymentMoMo = JSON.parse(localStorage.getItem("queryPaymentMoMo"));
-
 
   return (
     <Dialog
@@ -69,10 +61,10 @@ export default function Modal(props) {
         !isBookTicket && ( // không thông báo hết giờ khi đã có kết quả đặt vé
           <div className={classes.padding}>
             <p>
-              Đã hết thời gian giữ ghế. Vui lòng thực hiện đơn hàng trong thời
-              hạn 5 phút.
+              Giữ ghế chỉ có 10 phút thôi, bạn đã chậm tay mất rồi. Vui lòng
+              chọn lại ghế bạn thích nha.
               <span className={classes.txtClick} onClick={handleTimeOut}>
-                Đặt vé lại
+                &nbsp;Đặt vé lại
               </span>
             </p>
           </div>

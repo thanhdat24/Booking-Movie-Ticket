@@ -112,7 +112,7 @@ export default function ShowtimesManagement() {
   useEffect(() => {
     // get list user lần đầu
     // if (!showtimesList.result) {
-    dispatch(getAllShowTimes());
+      dispatch(getAllShowTimes());
     // }
   }, []);
 

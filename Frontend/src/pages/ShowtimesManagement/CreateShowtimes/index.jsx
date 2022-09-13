@@ -404,14 +404,16 @@ export default function CreateShowtimes() {
                         >
                           Chọn Phim
                         </MenuItem>
-                        {movieList.data?.map((movie) => (
-                          <MenuItem
-                            value={movie._id} // giá trị sẽ được đẩy lên
-                            key={movie._id}
-                          >
-                            {movie.name}
-                          </MenuItem>
-                        ))}
+                        {movieList.data
+                          ?.filter((item) => item.nowShowing)
+                          .map((movie) => (
+                            <MenuItem
+                              value={movie._id} // giá trị sẽ được đẩy lên
+                              key={movie._id}
+                            >
+                              {movie.name}
+                            </MenuItem>
+                          ))}
                       </Select>
                     </FormControl>
                     <FormControl fullWidth>

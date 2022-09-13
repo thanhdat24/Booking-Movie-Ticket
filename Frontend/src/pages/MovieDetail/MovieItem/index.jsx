@@ -20,7 +20,8 @@ export default function MovieItem({ successDetailMovie: data }) {
   const onIncreaseQuantityComment = (value) => {
     setQuantityComment(value);
   };
-  const classes = useStyles({ bannerImg: data?.photo });
+  console.log("data", data);
+  const classes = useStyles({ bannerImg: data?.banner, movieImg: data?.photo });
   const [imageNotFound, setImageNotFound] = useState(false);
   let location = useLocation();
   const totalReviewer = commentList?.length;
@@ -56,13 +57,45 @@ export default function MovieItem({ successDetailMovie: data }) {
             {imageNotFound && <div className={classes.withOutImage}></div>}
           </div>
           <div className={classes.shortInfo}>
-            <p>{formatDate(data?.releaseDate?.slice(0, 10)).YyMmDd}</p>
-
-            <p className={classes.movieName}>
-              <span className={classes.c18}>C18</span>
+            <span className={classes.c18}>C18</span>
+            <h1 className="mt-2 text-3xl font-bold text-white md:text-3xl">
               {data?.name}
-            </p>
-            {data?.idTheater ? (
+            </h1>
+            <ul className="flex flex-wrap items-center text-white text-opacity-60">
+              <li className={classes.movieTitle}> {data?.name}</li>
+              <li className="mx-2 text-base font-normal">·</li>
+              <li className={classes.movieTitle}>2022</li>
+              <li className="mx-2 text-base font-normal">·</li>
+              <li className={classes.movieTitle}>{data?.duration} phút</li>
+            </ul>
+            <h3 className="text-xl mt-3 font-bold text-white text-opacity-90">
+              Nội dung
+            </h3>
+            <div
+              className={`${classes.movieTitle} mt-2 text-sm leading-relaxed  text-opacity-70`}
+            >
+              {data?.description}
+            </div>
+            <div className="mt-3 text-sm">
+              <div className="mb-2 flex flex-nowrap space-x-4 md:space-x-5">
+                <div>
+                  <div className={classes.movieTitle}>Ngày chiếu</div>
+                  <div className=" mt-1 font-bold text-white">
+                    {formatDate(data?.releaseDate?.slice(0, 10)).dDMmYy}
+                  </div>
+                </div>
+                <div>
+                  <div className={classes.movieTitle}>Thể loại</div>
+                  <div className=" mt-1 font-bold text-white">{data?.genre}</div>
+                </div>
+                <div>
+                  <div className={classes.movieTitle}>Quốc gia</div>
+                  <div className=" mt-1 font-bold text-white">Mỹ</div>
+                </div>
+              </div>
+            </div>
+
+            {/* {data?.idTheater ? (
               <p>
                 {`${data?.duration ?? "120"} phút - ${
                   data ? data?.idTheater[0]?.type : ""
@@ -73,7 +106,7 @@ export default function MovieItem({ successDetailMovie: data }) {
                 {`${data?.duration ?? "120"} phút -  2D/Digital
                 `}
               </p>
-            )}
+            )} */}
 
             <button className={classes.btnMuaVe} onClick={handleBtnMuaVe}>
               {location.state?.comingMovie ? "Thông tin phim" : "Mua vé"}
@@ -90,14 +123,14 @@ export default function MovieItem({ successDetailMovie: data }) {
                 size="100%"
                 value={100}
                 className={classes.behined}
-                 color="success" 
+                color="success"
               />
               <CircularProgress
                 variant="determinate"
                 size="100%"
                 value={10 * 10}
                 className={classes.fabProgress}
-                 color="success" 
+                color="success"
               />
             </div>
             <div className={classes.rateStar}>

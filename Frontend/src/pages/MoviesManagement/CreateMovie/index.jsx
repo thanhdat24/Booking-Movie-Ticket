@@ -28,16 +28,11 @@ import {
   addMovieUploadImg,
   resetMoviesManagement,
 } from "../../../redux/actions/Movie";
+import OptionClick from "../../../components/Option/OptionClick";
 
 export default function CreateMovie() {
-  // const [dataSubmit, setDataSubmit] = useState({
-  //   nowShowing: false,
-  //   comingSoon: false,
-  // });
-
   const dispatch = useDispatch();
   const history = useHistory();
-
   const { successAddMovie, loadingAddMovie, errorAddMovie } = useSelector(
     (state) => state.MovieReducer
   );
@@ -66,6 +61,7 @@ export default function CreateMovie() {
       releaseDate: moment("").format("YYYY-MM-DD"),
       photo: "",
       genre: "",
+      banner: "",
       remember: true,
       nowShowing: false,
       comingSoon: false,
@@ -73,9 +69,10 @@ export default function CreateMovie() {
 
     validationSchema: UpdateSchema,
     onSubmit: (movie) => {
-      if (loadingAddMovie || !isReadyTaoLichChieu) {
+      if (loadingAddMovie || !isReadyAddMovie) {
         return;
       }
+      console.log("movie", movie);
       dispatch(addMovieUploadImg(movie));
     },
   });
@@ -89,7 +86,7 @@ export default function CreateMovie() {
     setFieldValue,
   } = formik;
 
-  const [isReadyTaoLichChieu, setIsReadyTaoLichChieu] = useState(false);
+  const [isReadyAddMovie, setIsReadyAddMovie] = useState(false);
   useEffect(() => {
     if (
       values.name &&
@@ -99,10 +96,10 @@ export default function CreateMovie() {
       values.releaseDate &&
       values.photo &&
       values.genre &&
-      (values.nowShowing || values.comingSoon)
+      values.banner
     )
-      setIsReadyTaoLichChieu(true);
-    else setIsReadyTaoLichChieu(false);
+      setIsReadyAddMovie(true);
+    else setIsReadyAddMovie(false);
   }, [
     values.name,
     values.trailer,
@@ -111,15 +108,8 @@ export default function CreateMovie() {
     values.releaseDate,
     values.photo,
     values.genre,
-    values.nowShowing,
-    values.comingSoon,
+    values.banner,
   ]);
-  const handleChangeNowShowing = (event, checked) => {
-    setFieldValue("nowShowing", checked ? true : false);
-  };
-  const handleChangeComingSoon = (event, checked) => {
-    setFieldValue("comingSoon", checked ? true : false);
-  };
   const breadcrumbs = [
     <Link
       underline="hover"
@@ -144,16 +134,29 @@ export default function CreateMovie() {
     </Typography>,
   ];
   const [srcImage, setSrcImage] = useState(null);
+  const [srcBanner, setSrcBanner] = useState(null);
   const handleChangeFile = (e) => {
     let file = e.target.files[0];
     var reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = function (e) {
       // sau khi thực hiên xong lênh trên thì set giá trị có được
+      // Đem dữ liệu file lưu vào formik
       setSrcImage(e.target.result);
+      formik.setFieldValue("photo", e.target.result);
     };
-    // Đem dữ liệu file lưu vào formik
-    formik.setFieldValue("photo", file);
+  };
+
+  const handleChangeBanner = (e) => {
+    let file = e.target.files[0];
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function (e) {
+      // sau khi thực hiên xong lênh trên thì set giá trị có được
+      // Đem dữ liệu file lưu vào formik
+      setSrcBanner(e.target.result);
+      formik.setFieldValue("banner", e.target.result);
+    };
   };
 
   useEffect(() => {
@@ -205,6 +208,7 @@ export default function CreateMovie() {
                 container
                 rowSpacing={1}
                 columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                mb={9}
               >
                 <Grid item xs={8}>
                   <Card
@@ -214,7 +218,7 @@ export default function CreateMovie() {
                       padding: "24px",
                     }}
                   >
-                    <div className="mb-4 text-lg font-semibold">
+                    <div className="mb-4 text-lg font-semibold text-center uppercase text-green-600">
                       Thông tin phim
                     </div>
                     <Stack spacing={3}>
@@ -281,7 +285,7 @@ export default function CreateMovie() {
                         error={Boolean(touched.trailer && errors.trailer)}
                         helperText={touched.trailer && errors.trailer}
                       />
-                      <FormControl component="fieldset">
+                      {/* <FormControl component="fieldset">
                         <FormGroup aria-label="position" row>
                           <FormControlLabel
                             sx={{ marginRight: "2rem" }}
@@ -310,33 +314,77 @@ export default function CreateMovie() {
                             label="Sắp chiếu"
                           />
                         </FormGroup>
-                      </FormControl>
-
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "flex-end",
+                      </FormControl> */}
+                    </Stack>
+                  </Card>
+                  <Card
+                    sx={{
+                      borderRadius: " 16px",
+                      zIndex: 0,
+                      padding: "24px 0 ",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <div className="mb-3 text-lg font-semibold text-center uppercase text-green-600">
+                      Banner phim
+                    </div>
+                    <hr />
+                    <div className="text-center">
+                      <div
+                        className="w-full h-full border-1 border-dashed border-gray-200 inline-flex"
+                        style={{
+                          backgroundColor: "rgb(244, 246, 248)",
                         }}
                       >
-                        <LoadingButton
-                          size="large"
-                          type="submit"
-                          variant="contained"
-                          loading={loadingAddMovie}
-                          disabled={!isReadyTaoLichChieu}
-                          sx={{
-                            padding: "6px 9px",
-                            fontWeight: "700",
-                            lineHeight: "1.71429",
-                            fontSize: "0.8rem",
-                            textTransform: "capitalize",
-                          }}
-                        >
-                          Lưu thay đổi
-                        </LoadingButton>
-                      </Box>
-                    </Stack>
+                        <label className="w-full h-full outline-none overflow-hidden items-center justify-center relative cursor-pointer py-12 ">
+                          <input
+                            type="file"
+                            id="poster"
+                            name="poster"
+                            hidden
+                            multiple
+                            onChange={handleChangeBanner}
+                          />
+                          <div className="flex items-center justify-center w-full">
+                            {srcBanner ? (
+                              <Box sx={{ width: "95%", height: "400px" }}>
+                                <img
+                                  accept="image/*"
+                                  multiple
+                                  src={srcBanner}
+                                  alt="avatar"
+                                  className="w-full h-auto inline-flex object-cover rounded-2xl"
+                                />
+                              </Box>
+                            ) : (
+                              <Box sx={{ width: "220px" }}>
+                                <img
+                                  accept="image/*"
+                                  multiple
+                                  src="/img/export-23.svg"
+                                  alt="avatar"
+                                  className="inline-flex w-64"
+                                />
+                              </Box>
+                            )}
+
+                            {srcBanner ? (
+                              ""
+                            ) : (
+                              <Box sx={{ padding: "24px" }}>
+                                <Typography
+                                  variant="h5"
+                                  gutterBottom
+                                  component="h5"
+                                >
+                                  Kéo thả hoặc chọn tệp
+                                </Typography>
+                              </Box>
+                            )}
+                          </div>
+                        </label>
+                      </div>
+                    </div>
                   </Card>
                 </Grid>
                 <Grid item xs={4}>
@@ -347,7 +395,7 @@ export default function CreateMovie() {
                       padding: " 26px 24px",
                     }}
                   >
-                    <div className="mb-4 text-lg font-semibold">
+                    <div className="mb-4 text-lg font-semibold text-center uppercase text-green-600">
                       Hình ảnh phim
                     </div>
                     <hr />
@@ -383,7 +431,7 @@ export default function CreateMovie() {
                             ""
                           ) : (
                             <h5 className="mt-3">
-                              Kéo và thả ảnh của phim vào đây
+                              Nhấn hoặc kéo thả hình ảnh vào đây để tải lên
                             </h5>
                           )}
                           {srcImage ? "" : <p className="mb-2">or</p>}
@@ -413,6 +461,12 @@ export default function CreateMovie() {
                   </Card>
                 </Grid>
               </Grid>
+              <OptionClick
+                onClickHistory="/admin/movies/list"
+                disabledButton={isReadyAddMovie}
+                loadingButton={loadingAddMovie}
+                title="Tạo mới"
+              />
             </Form>
           </Formik>
         </Fragment>
