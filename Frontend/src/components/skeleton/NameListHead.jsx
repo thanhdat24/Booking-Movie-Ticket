@@ -9,10 +9,11 @@ import {
   TableHead,
   TableSortLabel,
 } from "@mui/material";
+import { isExists } from "date-fns";
 
 // ----------------------------------------------------------------------
 
-TheaterListHead.propTypes = {
+NameListHead.propTypes = {
   order: PropTypes.oneOf(["asc", "desc"]),
   orderBy: PropTypes.string,
   rowCount: PropTypes.number,
@@ -20,9 +21,10 @@ TheaterListHead.propTypes = {
   numSelected: PropTypes.number,
   onRequestSort: PropTypes.func,
   onSelectAllClick: PropTypes.func,
+  isExistsCheckBox: PropTypes.bool,
 };
 
-export default function TheaterListHead({
+export default function NameListHead({
   order,
   orderBy,
   rowCount,
@@ -30,6 +32,7 @@ export default function TheaterListHead({
   numSelected,
   onRequestSort,
   onSelectAllClick,
+  isExistsCheckBox,
 }) {
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -40,13 +43,16 @@ export default function TheaterListHead({
       sx={{ backgroundColor: "#f4f6f8", color: "#637381", padding: "0 10px" }}
     >
       <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-          />
-        </TableCell>
+        {isExistsCheckBox && (
+          <TableCell padding="checkbox">
+            <Checkbox
+              indeterminate={numSelected > 0 && numSelected < rowCount}
+              checked={rowCount > 0 && numSelected === rowCount}
+              onChange={onSelectAllClick}
+            />
+          </TableCell>
+        )}
+
         {headLabel.map((headCell) => (
           <TableCell
             key={headCell.id}

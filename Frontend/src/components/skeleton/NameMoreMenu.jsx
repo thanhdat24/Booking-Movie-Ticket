@@ -18,7 +18,7 @@ import { getDetailUser } from "../../redux/actions/Auth";
 
 // ----------------------------------------------------------------------
 
-export default function UserMoreMenu({ userId, row }) {
+export default function NameMoreMenu({ userId, row }) {
   const history = useHistory();
   const { loadingDelete } = useSelector((state) => state.UserManagement);
   const { successGetDetailUser } = useSelector((state) => state.AuthReducer);

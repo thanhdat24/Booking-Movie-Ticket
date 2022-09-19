@@ -25,12 +25,12 @@ import { filter } from "lodash";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import plusFill from "@iconify/icons-eva/plus-fill";
-// import UserListToolbar from "../../components/user";
+// import NameListToolbar from "../../components/user";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsersList, resetUserList } from "../../redux/actions/Users";
-import UserListHead from "../../components/user/UserListHead";
-import UserListToolbar from "../../components/user/UserListToolbar";
-import UserMoreMenu from "../../components/user/UserMoreMenu";
+import NameListHead from "../../components/skeleton/NameListHead";
+import NameListToolbar from "../../components/skeleton/NameListToolbar";
+import NameMoreMenu from "../../components/skeleton/NameMoreMenu";
 
 import Label from "../../components/Label";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
@@ -70,7 +70,7 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function applySortFilter(array, comparator, queryName, queryRole) {
+function applySortFilter(array, comparator, queryName, queryStatus) {
   const stabilizedThis = array?.map((el, index) => [el, index]);
   stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -80,8 +80,8 @@ function applySortFilter(array, comparator, queryName, queryRole) {
   if (queryName) {
     return filter(array, (_user) => _user.fullName.indexOf(queryName) !== -1);
   }
-  if (queryRole !== "all") {
-    return filter(array, (_user) => _user.role === queryRole);
+  if (queryStatus !== "all") {
+    return filter(array, (_user) => _user.role === queryStatus);
   }
   return stabilizedThis?.map((el) => el[0]);
 }
@@ -273,17 +273,25 @@ export default function UserEdit() {
             sx={{ "&.MuiTabPanel-root": { paddingTop: "0 !important" } }}
           >
             {/* List ALL  */}
-            <UserListToolbar
+            <NameListToolbar
               numSelected={selected.length}
               filterName={filterName}
+              cusTomSearch={true}
+              searchLabelName={"Tìm người dùng..."}
+              filterLabelName={"Quyền"}
               onFilterName={handleFilterByName}
-              filterRole={filterRole}
-              onFilterRole={handleFilterByRole}
+              valueFilterStatus={filterRole}
+              onChangeFilterStatus={handleFilterByRole}
+              labelFilterStatus={"Quyền"}
+              filterList={[
+                { name: "Quản trị", value: "admin" },
+                { name: "Người dùng", value: "user" },
+              ]}
             />
 
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
-                <UserListHead
+                <NameListHead
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
@@ -291,6 +299,7 @@ export default function UserEdit() {
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
+                  isExistsCheckBox
                 />
                 <TableBody>
                   {filteredUsers
@@ -350,7 +359,7 @@ export default function UserEdit() {
                           </TableCell>
 
                           <TableCell align="right">
-                            <UserMoreMenu userId={_id} />
+                            <NameMoreMenu userId={_id} />
                           </TableCell>
                         </TableRow>
                       );
@@ -388,7 +397,7 @@ export default function UserEdit() {
             sx={{ "&.MuiTabPanel-root": { paddingTop: "0 !important" } }}
           >
             {/* List Active */}
-            <UserListToolbar
+            <NameListToolbar
               numSelected={selected.length}
               filterName={filterName}
               onFilterName={handleFilterByName}
@@ -398,7 +407,7 @@ export default function UserEdit() {
 
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
-                <UserListHead
+                <NameListHead
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
@@ -406,6 +415,7 @@ export default function UserEdit() {
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
+                  isExistsCheckBox
                 />
                 <TableBody>
                   {filteredUsers
@@ -466,7 +476,7 @@ export default function UserEdit() {
                           </TableCell>
 
                           <TableCell align="right">
-                            <UserMoreMenu userId={_id} />
+                            <NameMoreMenu userId={_id} />
                           </TableCell>
                         </TableRow>
                       );
@@ -505,7 +515,7 @@ export default function UserEdit() {
           >
             {" "}
             {/* List Banned */}
-            <UserListToolbar
+            <NameListToolbar
               numSelected={selected.length}
               filterName={filterName}
               onFilterName={handleFilterByName}
@@ -514,7 +524,7 @@ export default function UserEdit() {
             />
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
-                <UserListHead
+                <NameListHead
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
@@ -522,6 +532,7 @@ export default function UserEdit() {
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
+                  isExistsCheckBox
                 />
                 <TableBody>
                   {filteredUsers
@@ -582,7 +593,7 @@ export default function UserEdit() {
                           </TableCell>
 
                           <TableCell align="right">
-                            <UserMoreMenu userId={_id} />
+                            <NameMoreMenu userId={_id} />
                           </TableCell>
                         </TableRow>
                       );

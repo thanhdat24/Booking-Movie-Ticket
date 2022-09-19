@@ -29,9 +29,9 @@ import {
   getTheaterList,
   resetCreateTheater,
 } from "../../redux/actions/Theater";
-import TheaterMoreMenu from "../../components/theater/TheaterMoreMenu";
-import TheaterListHead from "../../components/theater/TheaterListHead";
-import TheaterListToolbar from "../../components/theater/TheaterListToolbar";
+import NameMoreMenu from "../../components/skeleton/NameMoreMenu";
+import NameListHead from "../../components/skeleton/NameListHead";
+import NameListToolbar from "../../components/skeleton/NameListToolbar";
 
 // ----------------------------------------------------------------------
 
@@ -87,6 +87,7 @@ export default function TheaterManagement() {
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState("name");
   const [filterName, setFilterName] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
   const { enqueueSnackbar } = useSnackbar();
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const {
@@ -98,7 +99,7 @@ export default function TheaterManagement() {
 
   useEffect(() => {
     // get list user lần đầu
-      dispatch(getTheaterList());
+    dispatch(getTheaterList());
     // return () => dispatch(resetUserList());
   }, []);
 
@@ -165,6 +166,10 @@ export default function TheaterManagement() {
     setFilterName(event.target.value);
   };
 
+  const handleFilterByTheaterCluster = (event) => {
+    setFilterStatus(event.target.value);
+  };
+
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - theaterList?.result) : 0;
 
@@ -221,15 +226,15 @@ export default function TheaterManagement() {
         </Button>
       </Stack>
       <Card>
-        <TheaterListToolbar
+        <NameListToolbar
           numSelected={selected.length}
-          filterName={filterName}
+          searchLabelName={"Tìm rạp..."}
           onFilterName={handleFilterByName}
         />
 
         <TableContainer sx={{ minWidth: 800 }}>
           <Table>
-            <TheaterListHead
+            <NameListHead
               order={order}
               orderBy={orderBy}
               headLabel={TABLE_HEAD}
@@ -237,6 +242,7 @@ export default function TheaterManagement() {
               numSelected={selected.length}
               onRequestSort={handleRequestSort}
               onSelectAllClick={handleSelectAllClick}
+              isExistsCheckBox={false}
             />
             <TableBody>
               {filteredTheater
@@ -254,12 +260,6 @@ export default function TheaterManagement() {
                       selected={isItemSelected}
                       aria-checked={isItemSelected}
                     >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          onChange={(event) => handleClick(event, name)}
-                        />
-                      </TableCell>
                       <TableCell align="left">{name}</TableCell>
                       <TableCell align="left">
                         <img
@@ -280,7 +280,7 @@ export default function TheaterManagement() {
                       <TableCell align="left">{seatsTotal}</TableCell>
 
                       <TableCell align="right">
-                        <TheaterMoreMenu theaterId={_id} />
+                        <NameMoreMenu theaterId={_id} />
                       </TableCell>
                     </TableRow>
                   );

@@ -31,35 +31,51 @@ const RootStyle = styled(Toolbar)(({ theme }) => ({
   padding: theme.spacing(0, 1, 0, 3),
 }));
 
-const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
-  width: "100%",
-  // transition: theme.transitions.create(["box-shadow", "width"], {
-  //   easing: theme.transitions.easing.easeInOut,
-  //   duration: theme.transitions.duration.shorter,
-  // }),
-  // "&.Mui-focused": { width: 320, boxShadow: theme.customShadows.z8 },
-  // "& fieldset": {
-  //   borderWidth: `1px !important`,
-  //   borderColor: `${theme.palette.grey[500_32]} !important`,
-  // },
+const SearchStyle = styled(OutlinedInput)(({ cusTomSearch, theme }) => ({
+  ...(cusTomSearch
+    ? {
+        width: "100%",
+      }
+    : {
+        width: 240,
+        transition: theme.transitions.create(["box-shadow", "width"], {
+          easing: theme.transitions.easing.easeInOut,
+          duration: theme.transitions.duration.shorter,
+        }),
+        "&.Mui-focused": { width: 320, boxShadow: theme.customShadows.z8 },
+        "& fieldset": {
+          borderWidth: `1px !important`,
+          borderColor: `${theme.palette.grey[500_32]} !important`,
+        },
+      }),
 }));
 
 // ----------------------------------------------------------------------
 
-UserListToolbar.propTypes = {
+NameListToolbar.propTypes = {
   numSelected: PropTypes.number,
   filterName: PropTypes.string,
+  cusTomSearch: PropTypes.bool,
   onFilterName: PropTypes.func,
-  filterRole: PropTypes.string,
-  onFilterRole: PropTypes.func,
+  filterLabelName: PropTypes.string,
+  searchLabelName: PropTypes.string,
+  filterList: PropTypes.string,
+  valueFilterStatus: PropTypes.string,
+  onChangeFilterStatus: PropTypes.func,
+  labelFilterStatus: PropTypes.string,
 };
 
-export default function UserListToolbar({
+export default function NameListToolbar({
   numSelected,
   filterName,
   onFilterName,
-  filterRole,
-  onFilterRole,
+  valueFilterStatus,
+  onChangeFilterStatus,
+  filterLabelName,
+  filterList,
+  searchLabelName,
+  cusTomSearch,
+  labelFilterStatus,
 }) {
   return (
     <RootStyle
@@ -75,30 +91,37 @@ export default function UserListToolbar({
         <Typography component="div" variant="subtitle1">
           {numSelected} selected
         </Typography>
-      ) : (
+      ) : cusTomSearch ? (
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 2 }}>
           <Grid item xs={3}>
             <FormControl fullWidth>
-              <InputLabel id="select-role">Quyền</InputLabel>
+              <InputLabel id="select-role">{filterLabelName}</InputLabel>
               <Select
                 labelId="select-role"
                 id="select-role"
-                value={filterRole}
-                onChange={onFilterRole}
-                label="Quyền"
+                value={valueFilterStatus}
+                onChange={onChangeFilterStatus}
+                label={labelFilterStatus}
               >
                 <MenuItem value={`all`}>Tất cả</MenuItem>
-                <MenuItem value={`user`}>User</MenuItem>
-                <MenuItem value={`admin`}>Admin</MenuItem>
+
+                {filterList?.map((item) =>
+                  item.name ? (
+                    <MenuItem value={item.value}>{item.name}</MenuItem>
+                  ) : (
+                    ""
+                  )
+                )}
               </Select>
             </FormControl>
           </Grid>
           <Grid item xs={9}>
             <SearchStyle
+              cusTomSearch={true}
               value={filterName}
               onChange={onFilterName}
-              placeholder="Tìm người dùng..."
               label="    "
+              placeholder={searchLabelName}
               startAdornment={
                 <InputAdornment position="start">
                   <Box
@@ -111,6 +134,22 @@ export default function UserListToolbar({
             />
           </Grid>
         </Grid>
+      ) : (
+        <SearchStyle
+          value={filterName}
+          onChange={onFilterName}
+          label="    "
+          placeholder={searchLabelName}
+          startAdornment={
+            <InputAdornment position="start">
+              <Box
+                component={Icon}
+                icon={searchFill}
+                sx={{ color: "text.disabled" }}
+              />
+            </InputAdornment>
+          }
+        />
       )}
 
       {numSelected > 0 && (

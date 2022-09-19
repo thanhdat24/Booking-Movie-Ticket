@@ -4,7 +4,6 @@ import {
   Table,
   Stack,
   Button,
-  Checkbox,
   TableRow,
   TableBody,
   TableCell,
@@ -27,15 +26,13 @@ import { Icon } from "@iconify/react";
 import { useState } from "react";
 import plusFill from "@iconify/icons-eva/plus-fill";
 import { useDispatch, useSelector } from "react-redux";
-import { getmovieList, resetUserList } from "../../redux/actions/Users";
-import MovieListHead from "../../components/movie/MovieListHead";
-import MovieListToolbar from "../../components/movie/MovieListToolbar";
-import MovieMoreMenu from "../../components/movie/MovieMoreMenu";
-
 import Label from "../../components/Label";
 import { getMovieList, resetMoviesManagement } from "../../redux/actions/Movie";
 import ThumbnailYoutube from "./ThumbnailYoutube";
 import formatDate from "../../utils/formatDate";
+import NameListHead from "../../components/skeleton/NameListHead";
+import NameListToolbar from "../../components/skeleton/NameListToolbar";
+import NameMoreMenu from "../../components/skeleton/NameMoreMenu";
 
 // ----------------------------------------------------------------------
 
@@ -69,19 +66,23 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function applySortFilter(array, comparator, query) {
+function applySortFilter(array, comparator, queryName, queryStatus) {
+  console.log("queryStatus", queryStatus);
+  console.log("array", array);
   const stabilizedThis = array?.map((el, index) => [el, index]);
   stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
-  if (query) {
-    return filter(
-      array,
-      (_movie) => _movie.name.toLowerCase().indexOf(query.toLowerCase()) !== -1
-    );
+  if (queryName) {
+    return filter(array, (movie) => movie.name.indexOf(queryName) !== -1);
   }
+  if (queryStatus !== "all") {
+    return filter(array, (movie) => movie.nowShowing === queryStatus);
+  }
+  console.log("array", array);
+
   return stabilizedThis?.map((el) => el[0]);
 }
 
@@ -108,6 +109,8 @@ export default function MoviesManagement() {
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState("name");
   const [filterNameMovie, setFilterNameMovie] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
+
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const { successAddMovie } = useSelector((state) => state.MovieReducer);
   useEffect(() => {
@@ -178,13 +181,18 @@ export default function MoviesManagement() {
     setFilterNameMovie(event.target.value);
   };
 
+  const handleFilterByStatus = (event) => {
+    setFilterStatus(event.target.value);
+  };
+
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - movieList?.result) : 0;
 
   const filteredMovies = applySortFilter(
     movieList?.data,
     getComparator(order, orderBy),
-    filterNameMovie
+    filterNameMovie,
+    filterStatus
   );
   const isUserNotFound = movieList?.result === 0;
   const breadcrumbs = [
@@ -236,15 +244,24 @@ export default function MoviesManagement() {
       </Stack>
 
       <Card>
-        <MovieListToolbar
+        <NameListToolbar
           numSelected={selected.length}
-          filterNameMovie={filterNameMovie}
+          cusTomSearch={true}
+          searchLabelName={"Tìm phim..."}
+          filterLabelName={"Trạng thái"}
           onFilterName={handleFilterByName}
+          valueFilterStatus={filterStatus}
+          onChangeFilterStatus={handleFilterByStatus}
+          labelFilterStatus={"Trạng thái"}
+          filterList={[
+            { name: "Đang chiếu", value: true },
+            { name: "Sắp chiếu", value: false },
+          ]}
         />
 
         <TableContainer sx={{ minWidth: 800 }}>
           <Table>
-            <MovieListHead
+            <NameListHead
               order={order}
               orderBy={orderBy}
               headLabel={TABLE_HEAD}
@@ -252,6 +269,7 @@ export default function MoviesManagement() {
               numSelected={selected.length}
               onRequestSort={handleRequestSort}
               onSelectAllClick={handleSelectAllClick}
+              isExistsCheckBox={false}
             />
             <TableBody>
               {filteredMovies
@@ -279,7 +297,12 @@ export default function MoviesManagement() {
                       aria-checked={isItemSelected}
                     >
                       <TableCell component="th" scope="row" padding="none">
-                        <Stack direction="row" alignItems="center" spacing={2} ml={2}>
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          spacing={2}
+                          ml={2}
+                        >
                           <Typography variant="subtitle2" noWrap>
                             {name}
                           </Typography>
@@ -356,7 +379,7 @@ export default function MoviesManagement() {
                         {/* {nowShowing ? "Đang chiếu" : "Sắp chiếu"} */}
                       </TableCell>
                       <TableCell align="right">
-                        <MovieMoreMenu idMovie={_id} />
+                        <NameMoreMenu idMovie={_id} />
                       </TableCell>
                     </TableRow>
                   );
