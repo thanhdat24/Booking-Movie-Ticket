@@ -7,7 +7,6 @@ const theaterSchema = new mongoose.Schema(
     idTheaterCluster: {
       type: mongoose.Schema.ObjectId,
       ref: 'TheaterCluster',
-      required: 'Rạp phải thuộc về một rạp',
     },
   },
   {

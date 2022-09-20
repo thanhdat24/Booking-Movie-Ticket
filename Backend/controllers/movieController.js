@@ -186,7 +186,12 @@ exports.getAllMovie = catchAsync(async (req, res, next) => {
 });
 
 // exports.getAllMovie = factory.getAll(Movie, { path: 'showtimes' });
-exports.createMovie = factory.createOne(Movie);
+exports.createMovie = factory.createOne(
+  Movie,
+  'image_movie',
+  'photo',
+  'banner'
+);
 exports.getDetailMovie = factory.getOne(Movie, { path: 'showtimes' });
 exports.updateMovie = factory.updateOne(Movie);
 // exports.deleteMovie = factory.deleteOne(Movie);

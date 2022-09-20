@@ -76,25 +76,30 @@ exports.updateOne = (Model) =>
 //     });
 //   });
 
-exports.createOne = (Model) =>
+exports.createOne = (Model, uploadCloudName, imageModelName, bannerModelName) =>
   catchAsync(async (req, res, next) => {
-    if (req.body.photo) {
-      const uploadedResponse = await cloudinary.uploader.upload(
-        req.body.photo,
-        {
-          upload_preset: 'image_movie',
-        }
-      );
-      req.body.photo = uploadedResponse.secure_url;
+    if (imageModelName && imageModelName === 'photo') {
+      if (req.body.photo) {
+        const uploadedResponse = await cloudinary.uploader.upload(
+          req.body.photo,
+          {
+            upload_preset: uploadCloudName,
+          }
+        );
+        req.body.photo = uploadedResponse.secure_url;
+      }
     }
-    if (req.body.banner) {
-      const uploadedResponse = await cloudinary.uploader.upload(
-        req.body.banner,
-        {
-          upload_preset: 'image_movie',
-        }
-      );
-      req.body.banner = uploadedResponse.secure_url;
+
+    if (bannerModelName && bannerModelName === 'banner') {
+      if (req.body.banner) {
+        const uploadedResponse = await cloudinary.uploader.upload(
+          req.body.banner,
+          {
+            upload_preset: uploadCloudName,
+          }
+        );
+        req.body.banner = uploadedResponse.secure_url;
+      }
     }
 
     const doc = await Model.create(req.body);

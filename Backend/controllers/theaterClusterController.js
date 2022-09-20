@@ -84,24 +84,29 @@ exports.getMovieInfoTheaterCluster = catchAsync(async (req, res, next) => {
   }
 });
 
-exports.createTheaterCluster = catchAsync(async (req, res, next) => {
-  const { name, address, idTheaterSystem } = req.body;
+// exports.createTheaterCluster = catchAsync(async (req, res, next) => {
+//   const { name, address, idTheaterSystem } = req.body;
 
-  const newTheaterCluster = new TheaterCluster({
-    name,
-    address,
-    idTheaterSystem,
-  });
-  newTheaterCluster.save();
+//   const newTheaterCluster = new TheaterCluster({
+//     name,
+//     address,
+//     idTheaterSystem,
+//   });
+//   newTheaterCluster.save();
 
-  res.status(200).json({
-    status: 'success',
-    data: newTheaterCluster,
-  });
-});
+//   res.status(200).json({
+//     status: 'success',
+//     data: newTheaterCluster,
+//   });
+// });
 
 exports.getAllTheaterCluster = factory.getAll(TheaterCluster);
-// exports.createTheaterCluster = factory.createOne(TheaterCluster);
+exports.createTheaterCluster = factory.createOne(
+  TheaterCluster,
+  'image_theater_cluster',
+  'photo',
+  ''
+);
 exports.getDetailTheaterCluster = factory.getOne(TheaterCluster, {
   path: 'theaterList',
 });
