@@ -27,7 +27,7 @@ import { useState } from "react";
 import plusFill from "@iconify/icons-eva/plus-fill";
 // import NameListToolbar from "../../components/user";
 import { useDispatch, useSelector } from "react-redux";
-import { getUsersList, resetUserList } from "../../redux/actions/Users";
+import { deleteUser, getUsersList, resetUserList } from "../../redux/actions/Users";
 import NameListHead from "../../components/skeleton/NameListHead";
 import NameListToolbar from "../../components/skeleton/NameListToolbar";
 import NameMoreMenu from "../../components/skeleton/NameMoreMenu";
@@ -93,8 +93,13 @@ export default function UserEdit() {
   };
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const { usersList, successDelete, errorDelete, successUpdateUser } =
-    useSelector((state) => state.UserManagement);
+  const {
+    usersList,
+    successDelete,
+    errorDelete,
+    successUpdateUser,
+    loadingDelete,
+  } = useSelector((state) => state.UserManagement);
   const { successUpdateUserCurrent } = useSelector(
     (state) => state.AuthReducer
   );
@@ -359,7 +364,12 @@ export default function UserEdit() {
                           </TableCell>
 
                           <TableCell align="right">
-                            <NameMoreMenu userId={_id} />
+                            <NameMoreMenu
+                              id={_id}
+                              loadingDelete={loadingDelete}
+                              actionName={deleteUser}
+                              editURL={"/admin/users/edit/"}
+                            />
                           </TableCell>
                         </TableRow>
                       );
@@ -476,7 +486,12 @@ export default function UserEdit() {
                           </TableCell>
 
                           <TableCell align="right">
-                            <NameMoreMenu userId={_id} />
+                            <NameMoreMenu
+                              id={_id}
+                              loadingDelete={loadingDelete}
+                              actionName={deleteUser}
+                              editURL={"/admin/users/edit/"}
+                            />
                           </TableCell>
                         </TableRow>
                       );
@@ -593,7 +608,12 @@ export default function UserEdit() {
                           </TableCell>
 
                           <TableCell align="right">
-                            <NameMoreMenu userId={_id} />
+                            <NameMoreMenu
+                              id={_id}
+                              loadingDelete={loadingDelete}
+                              actionName={deleteUser}
+                              editURL={"/admin/users/edit/"}
+                            />
                           </TableCell>
                         </TableRow>
                       );

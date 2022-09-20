@@ -14,6 +14,19 @@ const theatersClusterApi = {
     const path = `/v1/theatercluster/getMovieInfoTheaterCluster/${movieId}`;
     return axiosClient.get(path);
   },
+  postCreateTheaterCluster: (data) => {
+    const path = `/v1/theatercluster`;
+    return axiosClient.post(path, data);
+  },
+
+  deleteTheaterCluster: (_id) => {
+    const path = `/v1/theatercluster/${_id}`;
+    return axiosClient.delete(path);
+  },
+  updateTheaterCluster: (theaterCluster, _id) => {
+    const path = `/v1/theatercluster/${_id}`;
+    return axiosClient.patch(path, theaterCluster);
+  },
 };
 
 export default theatersClusterApi;

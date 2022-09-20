@@ -60,6 +60,7 @@ export default function CreateTheater() {
       if (loadingCreateTheater || !setIsReadyCreateTheater) {
         return;
       }
+      console.log("theater",  theater);
       dispatch(createTheater(theater));
     },
   });

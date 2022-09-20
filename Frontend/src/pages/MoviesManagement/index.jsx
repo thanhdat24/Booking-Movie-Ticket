@@ -27,7 +27,11 @@ import { useState } from "react";
 import plusFill from "@iconify/icons-eva/plus-fill";
 import { useDispatch, useSelector } from "react-redux";
 import Label from "../../components/Label";
-import { getMovieList, resetMoviesManagement } from "../../redux/actions/Movie";
+import {
+  deleteMovie,
+  getMovieList,
+  resetMoviesManagement,
+} from "../../redux/actions/Movie";
 import ThumbnailYoutube from "./ThumbnailYoutube";
 import formatDate from "../../utils/formatDate";
 import NameListHead from "../../components/skeleton/NameListHead";
@@ -99,8 +103,12 @@ const CustomTooltip = styled(({ className, ...props }) => (
 }));
 export default function MoviesManagement() {
   const dispatch = useDispatch();
-  const { successDeleteMovie, errorDeleteMovie, successUpdateMovie } =
-    useSelector((state) => state.MovieReducer);
+  const {
+    successDeleteMovie,
+    errorDeleteMovie,
+    successUpdateMovie,
+    loadingDeleteMovie,
+  } = useSelector((state) => state.MovieReducer);
   const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
   const { movieList } = useSelector((state) => state.MovieReducer);
@@ -379,7 +387,12 @@ export default function MoviesManagement() {
                         {/* {nowShowing ? "Đang chiếu" : "Sắp chiếu"} */}
                       </TableCell>
                       <TableCell align="right">
-                        <NameMoreMenu idMovie={_id} />
+                        <NameMoreMenu
+                          id={_id}
+                          loadingDelete={loadingDeleteMovie}
+                          actionName={deleteMovie}
+                          editURL={"/admin/movies/edit/"}
+                        />
                       </TableCell>
                     </TableRow>
                   );

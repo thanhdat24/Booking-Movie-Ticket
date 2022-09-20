@@ -35,15 +35,12 @@ import {
 } from "../../../redux/actions/Movie";
 import theatersSystemApi from "../../../api/theatersSystemApi";
 import theatersClusterApi from "../../../api/theatersClusterApi";
-export default function Info() {
+export default function Info({ successDetailShowtime }) {
   const param = useParams();
-  const {
-    loadingUpdateShowtime,
-    successDetailShowtime,
-    successUpdateShowtime,
-    errorUpdateShowtime,
-  } = useSelector((state) => state.BookTicketReducer);
+  const { loadingUpdateShowtime, successUpdateShowtime, errorUpdateShowtime } =
+    useSelector((state) => state.BookTicketReducer);
   const dispatch = useDispatch();
+  console.log("successDetailShowtime", successDetailShowtime);
   const history = useHistory();
   const { movieList } = useSelector((state) => state.MovieReducer);
   var formatDateShow = moment(successDetailShowtime?.dateShow)
@@ -73,6 +70,7 @@ export default function Info() {
       ticketPrice: false,
     },
   });
+  console.log("data", data);
   const [isReadyCapNhatLichChieu, setIsReadyCapNhatLichChieu] = useState(false);
   useEffect(() => {
     if (
@@ -183,13 +181,13 @@ export default function Info() {
         theater: isOpenTheater,
       },
     }));
-      theatersSystemApi.getTheaterSystemList(e.target.value).then((result) => {
-        setData((data) => ({
-          ...data,
-          theaterSystemRender: result.data,
-          startRequest: false,
-        }));
-      });
+    theatersSystemApi.getTheaterSystemList(e.target.value).then((result) => {
+      setData((data) => ({
+        ...data,
+        theaterSystemRender: result.data,
+        startRequest: false,
+      }));
+    });
   };
   const handleSelectTheaterSystem = async (e) => {
     setData((data) => ({

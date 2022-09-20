@@ -3,6 +3,7 @@ import {
   Card,
   Table,
   Stack,
+  Avatar,
   Button,
   Checkbox,
   TableRow,
@@ -16,42 +17,32 @@ import {
   Link,
   Tooltip,
   Zoom,
-  IconButton,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 
-import { Link as RouterLink, NavLink, useHistory } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { filter } from "lodash";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import plusFill from "@iconify/icons-eva/plus-fill";
+// import UserListToolbar from "../../components/user";
 import { useDispatch, useSelector } from "react-redux";
-
-import { getAllShowTimes } from "../../redux/actions/Theater";
-import moment from "moment";
-import {
-  deleteShowTimes,
-  resetCreateShowtime,
-} from "../../redux/actions/BookTicket";
 import NameMoreMenu from "../../components/skeleton/NameMoreMenu";
 import NameListHead from "../../components/skeleton/NameListHead";
 import NameListToolbar from "../../components/skeleton/NameListToolbar";
+import {
+  deleteTheaterCluster,
+  getTheaterClusterList,
+  resetCreateTheaterCluster,
+} from "../../redux/actions/TheaterCluster";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: "idMovie", label: "Phim", alignRight: false },
-  { id: "TheaterSystem", label: "Hệ thống rạp", alignRight: false },
-  { id: "NameTheaterCluster", label: "Tên cụm rạp", alignRight: false },
-  { id: "Address", label: "Địa chỉ", alignRight: false },
-  { id: "idTheater", label: "Rạp", alignRight: false },
-
-  {
-    id: "dateShow",
-    label: "Ngày chiếu giờ chiếu",
-    alignRight: false,
-  },
-  { id: "ticketPrice", label: "Giá vé (vnđ)", alignRight: false },
+  { id: "name", label: "Tên cụm rạp", alignRight: false },
+  { id: "photo", label: "Hình ảnh", alignRight: false },
+  { id: "address", label: "Địa chỉ", alignRight: false },
+  { id: "idTheaterSystem", label: "Hệ thống rạp", alignRight: false },
   { id: "" },
 ];
 
@@ -66,7 +57,6 @@ function descendingComparator(a, b, orderBy) {
   }
   return 0;
 }
-
 function getComparator(order, orderBy) {
   return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
@@ -83,60 +73,62 @@ function applySortFilter(array, comparator, query) {
   if (query) {
     return filter(
       array,
-      (_movie) =>
-        _movie.idMovie?.name.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      (_theater) =>
+        _theater.name.toLowerCase().indexOf(query.toLowerCase()) !== -1
     );
   }
   return stabilizedThis?.map((el) => el[0]);
 }
 
-export default function ShowtimesManagement() {
+export default function TheaterClusterManagement() {
   const dispatch = useDispatch();
-  const { showtimesList } = useSelector((state) => state.TheaterReducer);
-
-  const { enqueueSnackbar } = useSnackbar();
-  const history = useHistory();
-
+  const {
+    theaterClusterList,
+    loadingDeleteTheaterCluster,
+    successDeleteTheaterCluster,
+    successCreateTheaterCluster,
+    errorDeleteTheaterCluster,
+    successUpdateTheaterCluster,
+  } = useSelector((state) => state.TheaterClusterReducer);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState("name");
-  const [filterNameMovie, setFilterNameMovie] = useState("");
+  const [filterName, setFilterName] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
+  const { enqueueSnackbar } = useSnackbar();
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const {
-    successCreateShowtime,
-    successDeleteShowtime,
-    errorDeleteShowtime,
-    successUpdateShowtime,
-    loadingCreateShowtime,
-  } = useSelector((state) => state.BookTicketReducer);
+
   useEffect(() => {
     // get list user lần đầu
-    // if (!showtimesList.result) {
-    dispatch(getAllShowTimes());
-    // }
+    dispatch(getTheaterClusterList());
+    // return () => dispatch(resetUserList());
   }, []);
 
   useEffect(() => {
     if (
-      successCreateShowtime ||
-      successDeleteShowtime ||
-      successUpdateShowtime
+      successCreateTheaterCluster ||
+      successDeleteTheaterCluster ||
+      successUpdateTheaterCluster
     ) {
-      dispatch(getAllShowTimes());
+      dispatch(getTheaterClusterList());
     }
-    return () => dispatch(resetCreateShowtime());
-  }, [successCreateShowtime, successDeleteShowtime, successUpdateShowtime]);
+    return () => dispatch(resetCreateTheaterCluster());
+  }, [
+    successCreateTheaterCluster,
+    successDeleteTheaterCluster,
+    successUpdateTheaterCluster,
+  ]);
 
   useEffect(() => {
-    if (successDeleteShowtime) {
-      enqueueSnackbar(successDeleteShowtime, { variant: "success" });
+    if (successDeleteTheaterCluster) {
+      enqueueSnackbar(successDeleteTheaterCluster, { variant: "success" });
       return;
     }
-    if (errorDeleteShowtime) {
-      enqueueSnackbar(errorDeleteShowtime, { variant: "error" });
+    if (errorDeleteTheaterCluster) {
+      enqueueSnackbar(errorDeleteTheaterCluster, { variant: "error" });
     }
-  }, [successDeleteShowtime, errorDeleteShowtime]);
+  }, [successDeleteTheaterCluster, errorDeleteTheaterCluster]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -146,7 +138,7 @@ export default function ShowtimesManagement() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = showtimesList?.data.map((n) => n.name);
+      const newSelecteds = theaterClusterList?.data.map((n) => n.fullName);
       setSelected(newSelecteds);
       return;
     }
@@ -170,6 +162,7 @@ export default function ShowtimesManagement() {
     }
     setSelected(newSelected);
   };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -180,35 +173,40 @@ export default function ShowtimesManagement() {
   };
 
   const handleFilterByName = (event) => {
-    setFilterNameMovie(event.target.value);
+    setFilterName(event.target.value);
+  };
+
+  const handleFilterByTheaterCluster = (event) => {
+    setFilterStatus(event.target.value);
   };
 
   const emptyRows =
     page > 0
-      ? Math.max(0, (1 + page) * rowsPerPage - showtimesList?.result)
+      ? Math.max(0, (1 + page) * rowsPerPage - theaterClusterList?.result)
       : 0;
 
-  const filteredMovies = applySortFilter(
-    showtimesList?.data,
+  const filteredTheater = applySortFilter(
+    theaterClusterList?.data,
     getComparator(order, orderBy),
-    filterNameMovie
+    filterName
   );
-  const isUserNotFound = showtimesList?.result === 0;
+
+  const isUserNotFound = theaterClusterList?.result === 0;
+
   const breadcrumbs = [
     <Link
       underline="hover"
       key="1"
-      color="text.primary"
       href="/admin/dashboard"
+      color="text.primary"
       sx={{ "&:hover": { color: "#212B36" } }}
     >
       Trang chủ
     </Link>,
-    <Typography key="3" color="inherit">
+    <Typography key="2" color="inherit">
       Danh sách
     </Typography>,
   ];
-
   return (
     <Container
       sx={{ paddingRight: "0px !important", paddingLeft: "0px !important" }}
@@ -222,7 +220,7 @@ export default function ShowtimesManagement() {
       >
         <Stack spacing={2}>
           <Typography variant="h4" gutterBottom>
-            Danh sách lịch chiếu
+            Danh sách cụm rạp
           </Typography>
           <Breadcrumbs separator="›" aria-label="breadcrumb">
             {breadcrumbs}
@@ -232,19 +230,17 @@ export default function ShowtimesManagement() {
         <Button
           variant="contained"
           component={RouterLink}
-          to="#"
-          startIcon={<Icon icon={plusFill} />}
+          to="/admin/theater-cluster/create"
           sx={{ "&:hover": { color: "#fff" } }}
-          onClick={() => history.push("/admin/showtimes/create")}
+          startIcon={<Icon icon={plusFill} />}
         >
-          Thêm lịch chiếu
+          Thêm Cụm Rạp
         </Button>
       </Stack>
-
       <Card>
         <NameListToolbar
           numSelected={selected.length}
-          searchLabelName={"Tìm lịch chiếu..."}
+          searchLabelName={"Tìm cum rạp..."}
           onFilterName={handleFilterByName}
         />
 
@@ -254,21 +250,18 @@ export default function ShowtimesManagement() {
               order={order}
               orderBy={orderBy}
               headLabel={TABLE_HEAD}
-              rowCount={showtimesList?.result}
+              rowCount={theaterClusterList?.result}
               numSelected={selected.length}
               onRequestSort={handleRequestSort}
               onSelectAllClick={handleSelectAllClick}
+              isExistsCheckBox={false}
             />
             <TableBody>
-              {filteredMovies
+              {filteredTheater
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
-                  const { _id, idMovie, ticketPrice, idTheater, dateShow } =
-                    row;
-                  var formatDateShow = moment(dateShow)
-                    .add(0, "hours")
-                    .format("DD-MM-YYYY, hh:mm A");
-                  const isItemSelected = selected.indexOf(_id) !== -1;
+                  const { _id, name, photo, address, idTheaterSystem } = row;
+                  const isItemSelected = selected.indexOf(name) !== -1;
 
                   return (
                     <TableRow
@@ -279,51 +272,33 @@ export default function ShowtimesManagement() {
                       selected={isItemSelected}
                       aria-checked={isItemSelected}
                     >
-                      <TableCell component="th" scope="row">
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                          <Typography variant="subtitle2" noWrap>
-                            {idMovie?.name}
-                          </Typography>
-                        </Stack>
+                      <TableCell align="left">{name}</TableCell>
+                      <TableCell align="left">
+                        <img
+                          className="max-w-2xl h-14 rounded"
+                          src={photo}
+                          alt="logo"
+                        />
                       </TableCell>
+                      <TableCell align="left">{address}</TableCell>
                       <TableCell align="left">
                         <Tooltip
                           TransitionComponent={Zoom}
-                          title={
-                            idTheater?.idTheaterCluster.idTheaterSystem.name
-                          }
+                          title={idTheaterSystem.name}
                         >
                           <img
                             className="max-w-xl h-14 rounded"
-                            src={
-                              idTheater?.idTheaterCluster.idTheaterSystem.logo
-                            }
+                            src={idTheaterSystem.logo}
                             alt="logo"
                           />
                         </Tooltip>
                       </TableCell>
-                      <TableCell align="left">
-                        {idTheater?.idTheaterCluster.name}
-                      </TableCell>
-                      <TableCell align="left">
-                        {idTheater?.idTheaterCluster.address}
-                      </TableCell>
-
-                      <TableCell align="left" className="whitespace-nowrap">
-                        {idTheater?.name}
-                      </TableCell>
-                      <TableCell align="left" className="whitespace-nowrap">
-                        {formatDateShow}
-                      </TableCell>
-                      <TableCell align="left">
-                        {ticketPrice.toLocaleString("vi-VI")}
-                      </TableCell>
                       <TableCell align="right">
                         <NameMoreMenu
                           id={_id}
-                          loadingDelete={loadingCreateShowtime}
-                          actionName={deleteShowTimes}
-                          editURL={"/admin/showtimes/edit/"}
+                          loadingDelete={loadingDeleteTheaterCluster}
+                          actionName={deleteTheaterCluster}
+                          editURL={"/admin/theater-cluster/edit/"}
                         />
                       </TableCell>
                     </TableRow>
@@ -338,11 +313,9 @@ export default function ShowtimesManagement() {
             {isUserNotFound && (
               <TableBody>
                 <TableRow>
-                  <TableCell
-                    align="center"
-                    colSpan={6}
-                    sx={{ py: 3 }}
-                  ></TableCell>
+                  <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                    {/* <SearchNotFound searchQuery={filterName} /> */}
+                  </TableCell>
                 </TableRow>
               </TableBody>
             )}
@@ -352,7 +325,7 @@ export default function ShowtimesManagement() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={showtimesList?.result || 0}
+          count={theaterClusterList?.result || 0}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

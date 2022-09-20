@@ -8,31 +8,40 @@ import {
   Tab,
   Stack,
 } from "@mui/material";
-import Info from "./Info";
-import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getDetailShowtimes } from "../../../redux/actions/BookTicket";
-import { RESET_SHOWTIME_DETAIL } from "../../../redux/constants/BookTicket";
+import { useDispatch, useSelector } from "react-redux";
 
-export default function ShowtimeEdit() {
-  const { successDetailShowtime } = useSelector(
-    (state) => state.BookTicketReducer
+import { getDetailTheaterCluster } from "../../../redux/actions/TheaterCluster";
+import { RESET_THEATER_CLUSTER_DETAIL } from "../../../redux/constants/TheaterCluster";
+import Info from "./Info";
+import { getTheaterSystemList } from "../../../redux/actions/TheaterSystem";
+
+export default function EditTheaterCluster() {
+  const { successDetailTheaterCluster } = useSelector(
+    (state) => state.TheaterClusterReducer
+  );
+  const { theaterSystemList } = useSelector(
+    (state) => state.TheaterSystemReducer
   );
   const params = useParams();
   const dispatch = useDispatch();
   useEffect(function () {
-    dispatch(getDetailShowtimes(params.showtimeId));
+    dispatch(getDetailTheaterCluster(params.theaterClusterId));
     return () => {
-      dispatch({ type: RESET_SHOWTIME_DETAIL });
+      dispatch({ type: RESET_THEATER_CLUSTER_DETAIL });
     };
   }, []);
-  // console.log("successDetailShowtime", successDetailShowtime);
+  useEffect(() => {
+    dispatch(getTheaterSystemList());
+  }, []);
+
   const breadcrumbs = [
     <Link
       underline="hover"
       key="1"
-      href="/admin/dashboard"
       color="text.primary"
+      fv
+      href="/admin/dashboard"
       sx={{ "&:hover": { color: "#212B36" } }}
     >
       Trang chủ
@@ -40,14 +49,14 @@ export default function ShowtimeEdit() {
     <Link
       underline="hover"
       key="2"
-      href="/admin/showtimes/list"
       color="text.primary"
+      href="/admin/movies/list"
       sx={{ "&:hover": { color: "#212B36" } }}
     >
-      Lịch chiếu
+      Cụm rạp
     </Link>,
     <Typography key="3" color="inherit">
-      Chỉnh sửa lịch chiếu
+      Chỉnh sửa cụm rạp
     </Typography>,
   ];
   return (
@@ -63,7 +72,7 @@ export default function ShowtimeEdit() {
       >
         <Stack spacing={2}>
           <Typography variant="h4" gutterBottom>
-            Chỉnh sửa lịch chiếu
+            Chỉnh sửa cụm rạp
           </Typography>
           <Breadcrumbs separator="›" aria-label="breadcrumb">
             {breadcrumbs}
@@ -71,8 +80,8 @@ export default function ShowtimeEdit() {
         </Stack>
       </Stack>
       <Box sx={{ width: "100%", typography: "body1" }}>
-        {successDetailShowtime !== "" && (
-          <Info successDetailShowtime={successDetailShowtime} />
+        {successDetailTheaterCluster && theaterSystemList && (
+          <Info successDetailTheaterCluster={successDetailTheaterCluster} />
         )}
       </Box>
     </Container>

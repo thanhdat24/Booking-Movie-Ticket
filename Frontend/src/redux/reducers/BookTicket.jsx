@@ -31,6 +31,7 @@ import {
   RESET_ALERT_OVER10,
   RESET_CREATE_SHOWTIME,
   RESET_DATA_BOOKTICKET,
+  RESET_SHOWTIME_DETAIL,
   SET_ALERT_OVER10,
   SET_DATA_PAYMENT,
   SET_READY_PAYMENT,
@@ -214,6 +215,15 @@ export const BookTicketReducer = (state = stateDefault, action) => {
       return {
         ...state,
         alertOver10: false,
+      };
+    }
+
+    case RESET_SHOWTIME_DETAIL: {
+      return {
+        ...state,
+        successDetailShowtime: "",
+        loadingDetailShowtime: false,
+        errorDetailShowtime: null,
       };
     }
     case SET_ALERT_OVER10: {

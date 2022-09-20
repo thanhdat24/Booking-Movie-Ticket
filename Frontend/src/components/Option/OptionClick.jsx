@@ -12,7 +12,12 @@ Option.propTypes = {
   title: PropTypes.string,
 };
 
-export default function OptionClick({ onClickHistory, disabledButton, loadingButton, title }) {
+export default function OptionClick({
+  onClickHistory,
+  disabledButton,
+  loadingButton,
+  title,
+}) {
   const classes = useStyles();
   const history = useHistory();
   return (

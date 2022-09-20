@@ -26,6 +26,7 @@ import plusFill from "@iconify/icons-eva/plus-fill";
 // import UserListToolbar from "../../components/user";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  deleteTheater,
   getTheaterList,
   resetCreateTheater,
 } from "../../redux/actions/Theater";
@@ -37,9 +38,9 @@ import NameListToolbar from "../../components/skeleton/NameListToolbar";
 
 const TABLE_HEAD = [
   { id: "name", label: "Tên rạp", alignRight: false },
-  { id: "idTheaterCluster", label: "Hệ thống rạp", alignRight: false },
-  { id: "idTheaterCluster", label: "Tên cụm rạp", alignRight: false },
-  { id: "idTheaterCluster", label: "Địa Chỉ", alignRight: false },
+  { id: "theaterSystem", label: "Hệ thống rạp", alignRight: false },
+  { id: "nameTheaterCluster", label: "Tên cụm rạp", alignRight: false },
+  { id: "address", label: "Địa Chỉ", alignRight: false },
   // { id: "type", label: "Loại Rạp", alignRight: false },
   { id: "seatsTotal", label: "Số lượng ghế", alignRight: false },
   { id: "" },
@@ -81,7 +82,9 @@ function applySortFilter(array, comparator, query) {
 
 export default function TheaterManagement() {
   const dispatch = useDispatch();
-  const { theaterList } = useSelector((state) => state.TheaterReducer);
+  const { theaterList, loadingDeleteTheater } = useSelector(
+    (state) => state.TheaterReducer
+  );
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
   const [selected, setSelected] = useState([]);
@@ -280,7 +283,12 @@ export default function TheaterManagement() {
                       <TableCell align="left">{seatsTotal}</TableCell>
 
                       <TableCell align="right">
-                        <NameMoreMenu theaterId={_id} />
+                        <NameMoreMenu
+                          id={_id}
+                          loadingDelete={loadingDeleteTheater}
+                          actionName={deleteTheater}
+                          editURL={"/admin/theater/edit/"}
+                        />
                       </TableCell>
                     </TableRow>
                   );
@@ -306,7 +314,7 @@ export default function TheaterManagement() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={theaterList?.result}
+          count={theaterList?.result || 0}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

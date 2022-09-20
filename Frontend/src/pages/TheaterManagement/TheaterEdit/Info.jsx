@@ -24,7 +24,10 @@ import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { useSnackbar } from "notistack";
 import { useHistory } from "react-router-dom";
-import { resetCreateTheater, updateTheater } from "../../../redux/actions/Theater";
+import {
+  resetCreateTheater,
+  updateTheater,
+} from "../../../redux/actions/Theater";
 
 export default function Info() {
   const dispatch = useDispatch();

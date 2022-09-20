@@ -34,9 +34,9 @@ const stateDefault = {
   successCreateTheater: null,
   errorCreateTheater: null,
 
-  successDeletTheater: "",
-  loadingDeletTheater: false,
-  errorDeletTheater: null,
+  successDeleteTheater: "",
+  loadingDeleteTheater: false,
+  errorDeleteTheater: null,
 
   successDetailTheater: "",
   loadingDetailTheater: false,

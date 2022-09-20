@@ -64,6 +64,23 @@ const sidebarConfig = [
     icon: getIcon("ic:baseline-theaters"),
   },
   {
+    title: "Quản lý cụm rạp",
+    path: ["/admin/theater-cluster/list", "/admin/theater-cluster/create"],
+    children: [
+      {
+        title: "List",
+        path: "/admin/theater-cluster/list",
+        icon: getIcon("ci:dot-02-s"),
+      },
+      {
+        title: "Create",
+        path: "/admin/theater-cluster/create",
+        icon: getIcon("ci:dot-02-s"),
+      },
+    ],
+    icon: getIcon("ic:baseline-theaters"),
+  },
+  {
     title: "Quản lý lịch chiếu phim",
     path: ["/admin/showtimes/list", "/admin/showtimes/create"],
     children: [

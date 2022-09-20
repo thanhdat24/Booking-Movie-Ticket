@@ -79,6 +79,9 @@ export default function Loading() {
   const loadingGetListSeat = useSelector(
     (state) => state.BookTicketReducer.loadingGetListSeat
   );
+  const loadingDetailShowtime = useSelector(
+    (state) => state.BookTicketReducer.loadingDetailShowtime
+  );
   const loadingDetailMovie = useSelector(
     (state) => state.MovieReducer.loadingDetailMovie
   );
@@ -98,7 +101,8 @@ export default function Loading() {
     isLoadingBackToHome ||
     loadingGetDetailUser ||
     loadingCurrentUserLogin ||
-    loadingDetailDiscount;
+    loadingDetailDiscount ||
+    loadingDetailShowtime;
   const loadingPrevious = useRef(false);
 
   const [controlEffect, setControlEffect] = useState({

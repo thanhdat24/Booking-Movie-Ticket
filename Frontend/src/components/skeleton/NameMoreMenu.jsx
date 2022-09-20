@@ -18,35 +18,32 @@ import { getDetailUser } from "../../redux/actions/Auth";
 
 // ----------------------------------------------------------------------
 
-export default function NameMoreMenu({ userId, row }) {
+export default function NameMoreMenu({
+  id,
+  loadingDelete,
+  actionName,
+  editURL,
+}) {
   const history = useHistory();
-  const { loadingDelete } = useSelector((state) => state.UserManagement);
-  const { successGetDetailUser } = useSelector((state) => state.AuthReducer);
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
 
   // xóa một user
-  const handleDeleteOne = (_id) => {
+  const handleDeleteOne = (id) => {
     if (loadingDelete) {
       // nếu click xóa liên tục một user
       return;
     }
-    dispatch(deleteUser(_id));
+    dispatch(actionName(id));
   };
 
   const handleEditDetail = () => {
     setTimeout(() => {
-      history.push(`/admin/users/edit/${userId}`);
+      history.push(`${editURL}${id}`);
     });
   };
-  // useEffect(() => {
-  //   if (history.push("/admin/users/list")) {
-  //     return () => {
-  //       dispatch(resetUpdate());
-  //     };
-  //   }
-  // }, []);
+
   return (
     <>
       <IconButton ref={ref} onClick={() => setIsOpen(true)}>
@@ -65,7 +62,7 @@ export default function NameMoreMenu({ userId, row }) {
       >
         <MenuItem
           sx={{ color: "rgb(255, 72, 66);" }}
-          onClick={(e) => handleDeleteOne(userId)}
+          onClick={(e) => handleDeleteOne(id)}
         >
           <ListItemIcon>
             <Icon icon={trash2Outline} width={24} height={24} />
@@ -78,13 +75,13 @@ export default function NameMoreMenu({ userId, row }) {
 
         <MenuItem
           component={RouterLink}
-          // to={{ pathname: `/admin/users/edit/${userId}` }}
+          // to={{ pathname: `/admin/users/edit/${id}` }}
           sx={{
             color: "rgb(33, 43, 54)",
 
             "&:hover": { color: "rgb(33, 43, 54)" },
           }}
-          onClick={(e) => handleEditDetail(userId)}
+          onClick={(e) => handleEditDetail(id)}
         >
           <ListItemIcon>
             <Icon icon={editFill} width={24} height={24} />

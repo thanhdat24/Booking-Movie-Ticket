@@ -91,6 +91,7 @@ export const getDetailShowtimes = (_id) => {
         type: GET_SHOWTIME_REQUEST,
       });
       const result = await bookingApi.getDetailShowtimes(_id);
+      console.log("result", result);
       dispatch({
         type: GET_SHOWTIME_SUCCESS,
         payload: {

@@ -64,6 +64,16 @@ const CreateDiscount = lazy(() =>
 );
 const UserProfile = lazy(() => import("./pages/UserProfile"));
 
+const TheaterClusterManagement = lazy(() =>
+  import("./pages/TheaterClusterManagement")
+);
+const CreateTheaterCluster = lazy(() =>
+  import("./pages/TheaterClusterManagement/CreateTheaterCluster")
+);
+const EditTheaterCluster = lazy(() =>
+  import("./pages/TheaterClusterManagement/EditTheaterCluster")
+);
+
 // guards
 const AdminRoute = lazy(() => import("./guards/AdminRoute"));
 const CheckoutRoute = lazy(() => import("./guards/CheckoutRoute"));
@@ -239,6 +249,32 @@ function App() {
                     exact
                     path="/admin/theater/edit/:theaterId"
                     component={TheaterEdit}
+                  />
+                </AdminLayout>
+              </Route>
+              <Route
+                exact
+                path={[
+                  "/admin/theater-cluster/list",
+                  "/admin/theater-cluster/create",
+                  "/admin/theater-cluster/edit/:theaterClusterId",
+                ]}
+              >
+                <AdminLayout>
+                  <AdminRoute
+                    exact
+                    path="/admin/theater-cluster/list"
+                    component={TheaterClusterManagement}
+                  />
+                  <AdminRoute
+                    exact
+                    path="/admin/theater-cluster/create"
+                    component={CreateTheaterCluster}
+                  />
+                  <AdminRoute
+                    exact
+                    path="/admin/theater-cluster/edit/:theaterClusterId"
+                    component={EditTheaterCluster}
                   />
                 </AdminLayout>
               </Route>
