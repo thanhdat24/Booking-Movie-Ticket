@@ -102,7 +102,7 @@ export default function UserProfile() {
                       icon="bi:ticket-perforated-fill"
                     />
                   }
-                  label="Lịch sử đặt vé"
+                  label="Vé của tôi"
                   value="3"
                 />
               </TabList>

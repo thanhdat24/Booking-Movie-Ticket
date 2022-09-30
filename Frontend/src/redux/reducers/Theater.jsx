@@ -15,6 +15,7 @@ import {
   GET_THEATER_REQUEST,
   GET_THEATER_SUCCESS,
   RESET_CREATE_THEATER,
+  RESET_THEATER_DETAIL,
   UPDATE_THEATER_FAIL,
   UPDATE_THEATER_REQUEST,
   UPDATE_THEATER_SUCCESS,
@@ -191,6 +192,16 @@ export const TheaterReducer = (state = stateDefault, action) => {
         successUpdateTheater: "",
       };
     }
+
+    case RESET_THEATER_DETAIL: {
+      return {
+        ...state,
+        successDetailTheater: "",
+        loadingDetailTheater: false,
+        errorDetailTheater: null,
+      };
+    }
+
     case RESET_CREATE_THEATER: {
       state.loadingCreateTheater = false;
       state.successCreateTheater = null;

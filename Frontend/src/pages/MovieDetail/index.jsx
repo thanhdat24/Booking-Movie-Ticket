@@ -12,12 +12,15 @@ export default function MovieDetail() {
   );
   const params = useParams();
   const dispatch = useDispatch();
-  useEffect(function () {
-    dispatch(getDetailMovie(params.idMovie));
-    return () => {
-      dispatch({ type: RESET_MOVIE_DETAIL });
-    };
-  }, []);
+  useEffect(
+    function () {
+      dispatch(getDetailMovie(params.idMovie));
+      return () => {
+        dispatch({ type: RESET_MOVIE_DETAIL });
+      };
+    },
+    [params.idMovie]
+  );
 
   if (errorDetailMovie) {
     return <div>{errorDetailMovie}</div>;

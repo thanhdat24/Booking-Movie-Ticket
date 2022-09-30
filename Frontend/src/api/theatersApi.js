@@ -11,11 +11,7 @@ const theatersApi = {
   },
   postCreateTheaters: (data) => {
     const path = `/v1/theaters`;
-    const formData = new FormData();
-    for (const key in data) {
-      formData.append(key, data[key]);
-    }
-    return axiosClient.post(path, formData);
+    return axiosClient.post(path, data);
   },
   deleteTheater: (_id) => {
     const path = `/v1/theaters/${_id}`;

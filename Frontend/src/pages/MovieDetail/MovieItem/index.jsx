@@ -14,6 +14,7 @@ export default function MovieItem({ successDetailMovie: data }) {
   const params = useParams();
   const [onClickBtnMuave, setOnClickBtnMuave] = useState(0);
   const [quantityComment, setQuantityComment] = useState(0);
+  const [readHide, setReadHide] = useState(false);
   const { commentList } = useSelector((state) =>
     selectCommentByMaPhimAndCommentTest(state, params.idMovie)
   );
@@ -74,8 +75,24 @@ export default function MovieItem({ successDetailMovie: data }) {
             <div
               className={`${classes.movieTitle} mt-2 text-sm leading-relaxed  text-opacity-70`}
             >
-              {data?.description}
+              {readHide ? data?.description : data?.description.slice(0, 258)}
+              {readHide ? (
+                <span
+                  onClick={(e) => setReadHide(!readHide)}
+                  className="read-or-hide cursor-pointer pl-1  hover:underline text-yellow-300 text-sm"
+                >
+                  Thu gọn
+                </span>
+              ) : (
+                <span
+                  onClick={(e) => setReadHide(!readHide)}
+                  className="read-or-hide cursor-pointer pl-1  hover:underline text-yellow-300 text-sm"
+                >
+                  ...Xem thêm
+                </span>
+              )}
             </div>
+
             <div className="mt-3 text-sm">
               <div className="mb-2 flex flex-nowrap space-x-4 md:space-x-5">
                 <div>
@@ -86,7 +103,9 @@ export default function MovieItem({ successDetailMovie: data }) {
                 </div>
                 <div>
                   <div className={classes.movieTitle}>Thể loại</div>
-                  <div className=" mt-1 font-bold text-white">{data?.genre}</div>
+                  <div className=" mt-1 font-bold text-white">
+                    {data?.genre}
+                  </div>
                 </div>
                 <div>
                   <div className={classes.movieTitle}>Quốc gia</div>
@@ -109,7 +128,7 @@ export default function MovieItem({ successDetailMovie: data }) {
             )} */}
 
             <button className={classes.btnMuaVe} onClick={handleBtnMuaVe}>
-              {location.state?.comingMovie ? "Thông tin phim" : "Mua vé"}
+              {!data?.nowShowing ? "Thông tin phim" : "Mua vé"}
             </button>
           </div>
           <div className={classes.rate}>

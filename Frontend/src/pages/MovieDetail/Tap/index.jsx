@@ -299,7 +299,7 @@ export default function CenteredTabs({
           centered
           classes={{ indicator: classes.indicator }}
         >
-          {(!location.state?.comingMovie ? true : "") && (
+          {data?.nowShowing && (
             <Tab
               disableRipple
               label="Lịch Chiếu"
@@ -321,13 +321,13 @@ export default function CenteredTabs({
 
       <TabPanel
         value={valueTab}
-        index={location.state?.comingMovie ? "hide" : 0}
+        index={!data?.nowShowing ? "hide" : 0}
         className="pb-4 pt-6"
       >
         {<LichChieu data={data} />}
       </TabPanel>
 
-      <TabPanel value={valueTab} index={location.state?.comingMovie ? 0 : 1}>
+      <TabPanel value={valueTab} index={!data?.nowShowing ? 0 : 1}>
         <div className={`row text-white ${classes.detailMovie}`}>
           <div className="col-sm-6 col-xs-12">
             <div className="row mb-2">

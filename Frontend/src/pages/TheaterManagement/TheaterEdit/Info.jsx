@@ -29,7 +29,7 @@ import {
   updateTheater,
 } from "../../../redux/actions/Theater";
 
-export default function Info() {
+export default function Info({ successDetailTheater }) {
   const dispatch = useDispatch();
   const history = useHistory();
   // useEffect(() => {
@@ -38,7 +38,6 @@ export default function Info() {
   const {
     loadingDetailTheater,
     loadingUpdateTheater,
-    successDetailTheater,
     successUpdateTheater,
     errorUpdateTheater,
   } = useSelector((state) => state.TheaterReducer);
@@ -46,14 +45,16 @@ export default function Info() {
   const UpdateSchema = Yup.object().shape({
     name: Yup.string().required("*Tên rạp không được bỏ trống !"),
     type: Yup.string().required("*Loại rạp không được bỏ trống !"),
-    seatsTotal: Yup.string().required("*Số lượng ghế không được bỏ trống !"),
   });
+  const { theaterClusterList } = useSelector(
+    (state) => state.TheaterClusterReducer
+  );
 
   const formik = useFormik({
     initialValues: {
       name: successDetailTheater?.name,
       type: successDetailTheater?.type,
-      seatsTotal: successDetailTheater?.seatsTotal,
+      idTheaterCluster: successDetailTheater?.idTheaterCluster._id,
     },
 
     validationSchema: UpdateSchema,
@@ -156,16 +157,32 @@ export default function Info() {
                             />
                           </FormControl>
                         </Stack>
-                        <TextField
+                        <FormControl
                           fullWidth
-                          type="text"
-                          label="Số lượng ghế"
-                          {...getFieldProps("seatsTotal")}
                           error={Boolean(
-                            touched.seatsTotal && errors.seatsTotal
+                            touched.idTheaterCluster && errors.idTheaterCluster
                           )}
-                          helperText={touched.seatsTotal && errors.seatsTotal}
-                        />
+                          helperText={
+                            touched.idTheaterCluster && errors.idTheaterCluster
+                          }
+                        >
+                          <InputLabel id="theater-cluster">
+                            Chọn cụm rạp
+                          </InputLabel>
+                          <Select
+                            labelId="theater-cluster"
+                            id="theater-cluster"
+                            label="Chọn cụm rạp"
+                            {...getFieldProps("idTheaterCluster")}
+                            disabled
+                          >
+                            {theaterClusterList?.data?.map((item) => (
+                              <MenuItem key={item._id} value={item._id}>
+                                {item.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
 
                         <Box
                           sx={{

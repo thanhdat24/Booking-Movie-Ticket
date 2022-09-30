@@ -75,6 +75,7 @@ export const createTheater = (data) => {
         type: CREATE_THEATER_REQUEST,
       });
       const result = await theatersApi.postCreateTheaters(data);
+      console.log("result", result);
       dispatch({
         type: CREATE_THEATER_SUCCESS,
         payload: {

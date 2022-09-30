@@ -74,7 +74,7 @@ function applySortFilter(array, comparator, query) {
     return filter(
       array,
       (_theater) =>
-        _theater.name.toLowerCase().indexOf(query.toLowerCase()) !== -1
+        _theater.name?.indexOf(query) !== -1
     );
   }
   return stabilizedThis?.map((el) => el[0]);

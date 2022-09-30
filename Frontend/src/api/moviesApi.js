@@ -29,6 +29,10 @@ const moviesApi = {
     }
     return axiosClient.post(path, formData);
   },
+  searchMovie: (name) => {
+    const path = "/v1/movies/search-movie";
+    return axiosClient.post(path, name);
+  },
 };
 
 export default moviesApi;

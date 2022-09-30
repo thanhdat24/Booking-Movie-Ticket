@@ -9,8 +9,26 @@ import {
   Stack,
 } from "@mui/material";
 import Info from "./Info";
+import { useDispatch, useSelector } from "react-redux";
+import { getDetailTheater } from "../../../redux/actions/Theater";
+import { useParams } from "react-router-dom";
+import { RESET_THEATER_DETAIL } from "../../../redux/constants/Theater";
+import { getTheaterClusterList } from "../../../redux/actions/TheaterCluster";
 
 export default function TheaterEdit() {
+  const { successDetailTheater } = useSelector((state) => state.TheaterReducer);
+  const params = useParams();
+  const dispatch = useDispatch();
+  useEffect(function () {
+    dispatch(getDetailTheater(params.theaterId));
+    return () => {
+      dispatch({ type: RESET_THEATER_DETAIL });
+    };
+  }, []);
+
+  useEffect(() => {
+    dispatch(getTheaterClusterList());
+  }, []);
   const breadcrumbs = [
     <Link
       underline="hover"
@@ -55,7 +73,9 @@ export default function TheaterEdit() {
         </Stack>
       </Stack>
       <Box sx={{ width: "100%", typography: "body1" }}>
-        <Info />
+        {successDetailTheater && (
+          <Info successDetailTheater={successDetailTheater} />
+        )}
       </Box>
     </Container>
   );

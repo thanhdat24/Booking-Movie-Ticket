@@ -43,7 +43,7 @@ export default function CreateTheater() {
     dispatch(getTheaterClusterList());
   }, []);
   const { enqueueSnackbar } = useSnackbar();
-  const UpdateSchema = Yup.object().shape({
+  const validationSchema = Yup.object().shape({
     name: Yup.string().required("*Tên rạp không được bỏ trống !"),
     type: Yup.string().required("*Loại rạp không được bỏ trống !"),
     idTheaterCluster: Yup.string().required("*Cụm rạp không được bỏ trống !"),
@@ -55,7 +55,7 @@ export default function CreateTheater() {
       idTheaterCluster: "",
     },
 
-    validationSchema: UpdateSchema,
+    validationSchema: validationSchema,
     onSubmit: (theater) => {
       if (loadingCreateTheater || !setIsReadyCreateTheater) {
         return;
@@ -234,29 +234,7 @@ export default function CreateTheater() {
                         </Select>
                       </FormControl>
 
-                      {/* <TextField
-                        select
-                        label="Chọn cụm rạp"
-                        value={theaterCluster}
-                        onChange={handleTheaterCluster}
-                        SelectProps={{
-                          native: true,
-                        }}
-                        {...getFieldProps("idTheaterCluster")}
-                        error={Boolean(
-                          touched.idTheaterCluster && errors.idTheaterCluster
-                        )}
-                        helperText={
-                          touched.idTheaterCluster && errors.idTheaterCluster
-                        }
-                      >
-                        {theaterClusterList?.data?.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.idTheaterCluster.name}
-                          </option>
-                        ))}
-                      </TextField> */}
-
+              
                       <Box
                         sx={{
                           display: "flex",
