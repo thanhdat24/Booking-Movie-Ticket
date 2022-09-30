@@ -6,6 +6,9 @@ const router = express.Router();
 
 //Protect all routers after this middleware
 
+router.post('/search-movie', movieController.searchMovie);
+
+
 router.route('/:id').get(movieController.getDetailMovie);
 router.route('/').get(movieController.getAllMovie);
 

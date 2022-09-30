@@ -4,7 +4,8 @@ const factory = require('../controllers/handlerFactory');
 const multer = require('multer');
 const _ = require('lodash');
 const moment = require('moment');
-
+const fullTextSearch = require('fulltextsearch');
+var fullTextSearchVi = fullTextSearch.vi;
 const catchAsync = require('../utils/catchAsync');
 
 const multerStorage = multer.diskStorage({
@@ -194,4 +195,21 @@ exports.createMovie = factory.createOne(
 );
 exports.getDetailMovie = factory.getOne(Movie, { path: 'showtimes' });
 exports.updateMovie = factory.updateOne(Movie);
-// exports.deleteMovie = factory.deleteOne(Movie);
+
+exports.searchMovie = catchAsync(async (req, res, next) => {
+  const { search } = req.body;
+  var filter = {};
+  if (search != '') {
+    filter.name = new RegExp(fullTextSearchVi(search), 'i');
+  } else {
+    console.log('123');
+  }
+
+  await Movie.find(filter).then((records) => {
+    res.status(200).json({
+      status: 'success',
+      result: records.length,
+      data: records,
+    });
+  });
+});
