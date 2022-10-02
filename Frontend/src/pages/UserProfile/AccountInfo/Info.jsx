@@ -127,7 +127,7 @@ export default function Info() {
 
   return (
     <div className="md:max-w-4xl pt-2 pb-10 mx-auto flex flex-col md:flex-row md:items-start items-center justify-between md:space-x-3">
-      <div className="md:max-w-xs max-w-xl min-w-0 bg-white  w-full ">
+      <div className="md:max-w-xs max-w-xl min-w-0 w-full ">
         <div className="md:max-w-xs max-w-xl min-w-0 py-4 px-3 bg-white  w-full rounded-xl shadow space-y-3 top-20 left-0 space-y-2 md:space-y-3 mb-2 block">
           <div
             className="text-lg font-semibold w-full border-b pb-2 text-green-600"

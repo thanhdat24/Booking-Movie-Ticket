@@ -5,10 +5,15 @@ import Trailer from "../../../../components/Trailer";
 import { customScrollbar, underLine } from "../../../../styles/materialUi";
 import ListShowtime from "./ListShowtime";
 import { useStyles } from "./styles";
+import moment from "moment";
 
 function ListMovie(props) {
+  const sortedArray = props.listMovie.sort(function (left, right) {
+    return moment.utc(left.dateShow).diff(moment.utc(right.dateShow));
+  });
+  console.log("sortedArray", sortedArray);
   const classes = useStyles({ customScrollbar, underLine });
-  let groupByTheaterCluster = _(props.listMovie)
+  let groupByTheaterCluster = _(sortedArray)
     .groupBy((x) => x.idMovie.name)
     .map((value, key) => ({ name: key, movieSchedule: value }))
     .value();
@@ -23,6 +28,7 @@ function ListMovie(props) {
       trailer: item.movieSchedule[0].idMovie.trailer,
     };
   });
+  console.log("props.listMovie", props.listMovie);
   return (
     <div className={classes.lstPhim} hidden={props.hidden}>
       {/* div root danh sách phim */}

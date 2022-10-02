@@ -9,6 +9,7 @@ const formatDate = (dateIn) => {
       dateShort: "loading...",
       dateFull: "loading...",
       dDMmYy: "loading...",
+      dDMm: "loading...",
     };
   }
   if (dateIn?.indexOf("/") !== -1) {
@@ -26,22 +27,22 @@ const formatDate = (dateIn) => {
     dayToday = "Chủ nhật";
   }
   if (dayNumber === 1) {
-    dayToday = "Thứ hai";
+    dayToday = "Thứ 2";
   }
   if (dayNumber === 2) {
-    dayToday = "Thứ ba";
+    dayToday = "Thứ 3";
   }
   if (dayNumber === 3) {
-    dayToday = "Thứ tư";
+    dayToday = "Thứ 4";
   }
   if (dayNumber === 4) {
-    dayToday = "Thứ năm";
+    dayToday = "Thứ 5";
   }
   if (dayNumber === 5) {
-    dayToday = "Thứ sáu";
+    dayToday = "Thứ 6";
   }
   if (dayNumber === 6) {
-    dayToday = "Thứ bảy";
+    dayToday = "Thứ 7";
   }
   if (dateNowFormat === dateObjFormat) {
     dayToday = "Hôm nay";
@@ -64,6 +65,7 @@ const formatDate = (dateIn) => {
     YyMmDd: `${year}.${month}.${date}`,
     getTime,
     dDMmYy: `${date}/${month}/${year}`,
+    dDMm: `${date}/${month}`,
   };
 };
 
