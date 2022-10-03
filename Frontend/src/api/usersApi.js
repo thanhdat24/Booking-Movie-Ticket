@@ -29,11 +29,7 @@ const usersApi = {
   },
   updateCurrentUser: (currentUser) => {
     const path = `/v1/users/updateMe`;
-    const formData = new FormData();
-    for (const key in currentUser) {
-      formData.append(key, currentUser[key]);
-    }
-    return axiosClient.patch(path, formData);
+    return axiosClient.patch(path, currentUser);
   },
   getCurrentUser: () => {
     const path = `/v1/users/getMe`;
@@ -50,11 +46,7 @@ const usersApi = {
 
   updateUser: (user, _id) => {
     const path = `/v1/users/${_id}`;
-    const formData = new FormData();
-    for (const key in user) {
-      formData.append(key, user[key]);
-    }
-    return axiosClient.patch(path, formData);
+    return axiosClient.patch(path, user);
   },
 };
 

@@ -10,6 +10,7 @@ import {
   GET_USER_LIST_FAIL,
   GET_USER_LIST_REQUEST,
   GET_USER_LIST_SUCCESS,
+  RESET_PASSWORD,
   RESET_USER_LIST,
   UPDATE_USER_REQUEST,
   UPDATE_USER_SUCCESS,
@@ -122,6 +123,14 @@ export const resetUserList = () => {
   return (dispatch) => {
     dispatch({
       type: RESET_USER_LIST,
+    });
+  };
+};
+
+export const resetPassword = () => {
+  return (dispatch) => {
+    dispatch({
+      type: RESET_PASSWORD,
     });
   };
 };

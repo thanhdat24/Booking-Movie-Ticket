@@ -9,25 +9,18 @@ const moviesApi = {
     const path = `/v1/movies/${_id}`;
     return axiosClient.delete(path);
   },
-  updateMovie: (movie, _id) => {
+  updateMovie: (data, _id) => {
     const path = `/v1/movies/${_id}`;
-    const formData = new FormData();
-    for (const key in movie) {
-      formData.append(key, movie[key]);
-    }
-    return axiosClient.patch(path, formData);
+    return axiosClient.patch(path, data);
   },
   getDetailMovie: (_id) => {
     const path = `/v1/movies/getMovieShowtimeInfo/${_id}`;
     return axiosClient.get(path);
   },
-  addMovieUploadImg: (movie) => {
+  addMovieUploadImg: (data) => {
     const path = `/v1/movies`;
-    const formData = new FormData();
-    for (const key in movie) {
-      formData.append(key, movie[key]);
-    }
-    return axiosClient.post(path, formData);
+
+    return axiosClient.post(path, data);
   },
   searchMovie: (name) => {
     const path = "/v1/movies/search-movie";

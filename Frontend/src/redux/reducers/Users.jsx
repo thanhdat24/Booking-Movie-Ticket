@@ -8,6 +8,7 @@ import {
   GET_USER_LIST_FAIL,
   GET_USER_LIST_REQUEST,
   GET_USER_LIST_SUCCESS,
+  RESET_PASSWORD,
   RESET_USER_LIST,
   UPDATE_USER_CURRENT_FAIL,
   UPDATE_USER_REQUEST,
@@ -150,6 +151,13 @@ export const UserManagement = (state = stateDefault, action) => {
 
         errorUpdateUser: null,
         successUpdateUser: "",
+      };
+    }
+
+    case RESET_PASSWORD: {
+      return {
+        ...state,
+        successChangePassword: null,
       };
     }
     default:

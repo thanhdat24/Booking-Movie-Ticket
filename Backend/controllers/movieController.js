@@ -28,7 +28,7 @@ const multerFilter = (req, file, cb) => {
     );
   }
 };
-const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
+const upload = multer({ storage: multerStorage, fileFilter: multerFilter ,limits: { fieldSize: 2 * 1024 * 1024 }});
 
 exports.uploadMoviePhoto = upload.single('photo');
 
